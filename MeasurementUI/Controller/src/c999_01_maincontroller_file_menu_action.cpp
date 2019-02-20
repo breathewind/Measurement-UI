@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -11,7 +11,7 @@
  *             Name: handleNew_Project
  *      Function ID: 231
  *      Create date: 18/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Function for handle operations related to New Project.
  ******************************************************************************/
 void MainController::handleNew_Project()
@@ -20,6 +20,13 @@ void MainController::handleNew_Project()
     qDebug() << "+ MainController: handleNew_Project";
 #endif
     _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
+
+//    QDir dir(_project_path);
+//    if(dir.exists()){
+//        dir.removeRecursively();
+//    }
+//    QDir().mkdir(_project_path);
+
 
 }
 

@@ -1,10 +1,13 @@
+# Auto generated files
+# --------------------------------------------------------
 *.autosave
 /.qmake.cache
 /.qmake.stash
 .DS_Store
 
-# Files
-# --------
+# Build files/folders
+# --------------------------------------------------------
+MeasurementUI/MeasurementUI.pro.user
 build-MeasurementUI-Desktop_Qt_5_12_0_clang_64bit-Debug/
 build-MeasurementUI-Desktop_Qt_5_7_1_clang_64bit-Debug/
 build-MeasurementUI-Desktop_Qt_5_12_0_MinGW_64_bit2-Debug/

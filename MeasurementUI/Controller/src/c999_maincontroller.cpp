@@ -247,7 +247,7 @@ void MainController::initStop()
  *             Name: initSettings
  *      Function ID: 218
  *      Create date: 19/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Initilize functions related to Settings operations.
  ******************************************************************************/
 void MainController::initSettings()
@@ -255,15 +255,16 @@ void MainController::initSettings()
     _settings_dialog = new Settings_Dialog(_main_window);
     /** Connect signals and slots related to click Settings menu action button in main window. */
     connect(_main_window, &MainWindow::signal_settings_menu_action_triggered, this, &MainController::slot_settings);
-    connect(_settings_dialog, &Settings_Dialog::accepted, this, &MainController::debug_slot_printDebug_info1);
-    connect(_settings_dialog, &Settings_Dialog::rejected, this, &MainController::debug_slot_printDebug_info2);
+    /** Connect signals and slots related to close Settings dialog. */
+    connect(_settings_dialog, &Settings_Dialog::accepted, _main_window, &MainWindow::slot_close_settings_dialog);
+    connect(_settings_dialog, &Settings_Dialog::rejected, _main_window, &MainWindow::slot_close_settings_dialog);
 }
 
 /******************************************************************************
  *             Name: initCommand_Panel
  *      Function ID: 219
  *      Create date: 19/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Initilize functions related to Command Panel operations.
  ******************************************************************************/
 void MainController::initCommand_Panel()
@@ -271,13 +272,15 @@ void MainController::initCommand_Panel()
     _command_panel = new Command_Panel(_main_window);
     /** Connect signals and slots related to click Command panel menu action button in main window. */
     connect(_main_window, &MainWindow::signal_command_panel_menu_action_triggered, this, &MainController::slot_command_panel);
+    /** Connect signals and slots related to close Command panel. */
+    connect(_command_panel, &Command_Panel::rejected, _main_window, &MainWindow::slot_close_command_panel);
 }
 
 /******************************************************************************
  *             Name: initOutput_Panel
  *      Function ID: 220
  *      Create date: 19/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Initilize functions related to Output Panel operations.
  ******************************************************************************/
 void MainController::initOutput_Panel()
@@ -285,6 +288,8 @@ void MainController::initOutput_Panel()
     _output_panel = new Output_Panel(_main_window);
     /** Connect signals and slots related to click Output menu action button in main window. */
     connect(_main_window, &MainWindow::signal_output_panel_menu_action_triggered, this, &MainController::slot_output_panel);
+    /** Connect signals and slots related to close Output panel. */
+    connect(_output_panel, &Output_Panel::rejected, _main_window, &MainWindow::slot_close_output_panel);
 }
 
 /******************************************************************************
@@ -296,6 +301,7 @@ void MainController::initOutput_Panel()
  ******************************************************************************/
 void MainController::initQuit()
 {
+    /** Connect signals and slots related to click Quit menu action button in main window. */
     connect(_main_window, &MainWindow::signal_quit_menu_action_triggered, this, &MainController::slot_Quit);
     connect(this, &MainController::signal_confirm_quit_application, _main_window, &MainWindow::slot_confirm_quit_application);
 }

@@ -14,6 +14,7 @@
 #define C999_MAINCONTROLLER_H
 
 #include <QObject>
+#include <QDir>
 
 #include "h000_global_parameters.h"
 #include "Entities/inc/c950_global_functions.h"
