@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>Resource/icons/close.png</file>
+        <file>Resource/icons/quit.png</file>
+        <file>Resource/icons/open.png</file>
+        <file>Resource/icons/settings.png</file>
+        <file>Resource/icons/new.png</file>
+        <file>Resource/icons/save.png</file>
+        <file>Resource/icons/save_as.png</file>
+        <file>Resource/icons/information.png</file>
+        <file>Resource/icons/pause.png</file>
+        <file>Resource/icons/start.png</file>
+        <file>Resource/icons/stop.png</file>
+        <file>Resource/icons/pause1.png</file>
+        <file>Resource/icons/start2.png</file>
+        <file>Resource/icons/command.png</file>
+        <file>Resource/icons/monitor.png</file>
+    </qresource>
+</RCC>
