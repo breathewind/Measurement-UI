@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Output Panel dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -18,7 +18,7 @@
  *             Name: Output_Panel
  *      Function ID: 000
  *      Create date: 19/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Construction function.
  ******************************************************************************/
 Output_Panel::Output_Panel(QWidget *parent) :
@@ -26,6 +26,8 @@ Output_Panel::Output_Panel(QWidget *parent) :
     ui(new Ui::Output_Panel)
 {
     ui->setupUi(this);
+
+    setWindowTitle("Output Panel");
 }
 
 /******************************************************************************
@@ -38,4 +40,18 @@ Output_Panel::Output_Panel(QWidget *parent) :
 Output_Panel::~Output_Panel()
 {
     delete ui;
+}
+
+/******************************************************************************
+ *             Name: showDialog
+ *      Function ID: 300
+ *      Create date: 20/02/2019
+ * Last modify date: 20/02/2019
+ *      Description: Show window and record its postion.
+ ******************************************************************************/
+void Output_Panel::showDialog()
+{
+    show();
+    /** Let system remember dialog current position. */
+    move(pos().x(), pos().y());
 }

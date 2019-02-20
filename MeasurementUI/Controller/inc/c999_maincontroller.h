@@ -13,8 +13,13 @@
 #ifndef C999_MAINCONTROLLER_H
 #define C999_MAINCONTROLLER_H
 
+#define MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT "settings_display"
+#define MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT "command_panel_display"
+#define MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT "output_panel_display"
+
 #include <QObject>
 #include <QDir>
+#include <QFile>
 
 #include "h000_global_parameters.h"
 #include "Entities/inc/c950_global_functions.h"
@@ -81,9 +86,9 @@ private:
     void initQuit();
 
     /** Function 231: Function for handle operations related to New Project. */
-    void handleNew_Project();
+    bool handleNew_Project();
     /** Function 232: Function for handle operations related to Open Project. */
-    void handleOpen_Project();
+    bool handleOpen_Project();
     /** Function 233: Function for handle operations related to Save Project. */
     void handleSave_Project();
     /** Function 234: Function for handle operations related to Save Project as. */
@@ -161,6 +166,8 @@ signals:
     void signal_synchronizeCurrent_Path(QString project_path);
     /** Signal 002: Signal for comfirming quit appliaciton. */
     void signal_confirm_quit_application();
+    /** Signal 003: Signal emitted when a warning event occurs. */
+    void signal_warning_occurs(QString text);
 };
 
 #endif // C999_MAINCONTROLLER_H

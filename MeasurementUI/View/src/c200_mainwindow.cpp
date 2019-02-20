@@ -415,6 +415,18 @@ void MainWindow::slot_close_output_panel()
 }
 
 /******************************************************************************
+ *             Name: slot_display_warning_message_box
+ *      Function ID: 755
+ *      Create date: 20/02/2019
+ * Last modify date: 20/02/2019
+ *      Description: Slot for displaying warning message box.
+ ******************************************************************************/
+void MainWindow::slot_display_warning_message_box(QString text)
+{
+    QMessageBox::warning(this, "Warning", text);
+}
+
+/******************************************************************************
  *             Name: setSettings_action_seleted
  *      Function ID: 800
  *      Create date: 19/02/2019

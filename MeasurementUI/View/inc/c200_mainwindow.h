@@ -69,12 +69,16 @@ public slots:
     void slot_update_current_path(QString current_path);
     /** Function 751: Slot for quit application confirmed. */
     void slot_confirm_quit_application();
+
     /** Function 752: Slot for closing Settings dialog. */
     void slot_close_settings_dialog();
     /** Function 753: Slot for closing Command panel. */
     void slot_close_command_panel();
     /** Function 754: Slot for closing Output panel. */
     void slot_close_output_panel();
+
+    /** Function 755: Slot for displaying warning message box. */
+    void slot_display_warning_message_box(QString text);
 private:
     /** Function 002: Run time action group initialization. */
     void initializeRun_time_group();

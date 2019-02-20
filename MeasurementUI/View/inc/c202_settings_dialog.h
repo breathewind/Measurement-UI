@@ -32,6 +32,9 @@ public:
     /** Function 001: Destruction function. */
     ~Settings_Dialog();
 
+    /** Function 300: Show window and record its postion. */
+    void showDialog();
+
 private slots:
     /** Function 700: Slot for Apply pushbutton clicked. */
     void on_pushButton_Apply_clicked();

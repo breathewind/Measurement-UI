@@ -96,13 +96,14 @@ void MainController::updateProject_information(QString project_file_full_path)
  *             Name: initMain_Window
  *      Function ID: 200
  *      Create date: 18/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Initilize functions related to Main Window..
  ******************************************************************************/
 void MainController::initMainwindow()
 {
     _main_window = new MainWindow();
     connect(this, &MainController::signal_synchronizeCurrent_Path, _main_window, &MainWindow::slot_update_current_path);
+    connect(this, &MainController::signal_warning_occurs, _main_window, &MainWindow::slot_display_warning_message_box);
 }
 
 /******************************************************************************
@@ -322,16 +323,17 @@ void MainController::showMainwindow()
  *             Name: slot_create_new_project
  *      Function ID: 700
  *      Create date: 16/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Slot for new project created.
  ******************************************************************************/
 void MainController::slot_create_new_project(QString project_name, QString project_path)
 {
     updateProject_information(project_name, project_path);
 
-    handleNew_Project();
-
-    _main_window->changeDisplay_status(MAINWINDOW_PROJECT_ACTIVATE);
+    if(handleNew_Project()){
+        _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
+        _main_window->changeDisplay_status(MAINWINDOW_PROJECT_ACTIVATE);
+    }
 
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: New Project";
@@ -343,7 +345,7 @@ void MainController::slot_create_new_project(QString project_name, QString proje
  *             Name: slot_open_project
  *      Function ID: 701
  *      Create date: 18/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Slot for open a project.
  ******************************************************************************/
 void MainController::slot_open_project(QString project_file_full_path)
@@ -351,9 +353,10 @@ void MainController::slot_open_project(QString project_file_full_path)
     if(project_file_full_path.length() > 0){
         updateProject_information(project_file_full_path);
 
-        _main_window->changeDisplay_status(MAINWINDOW_PROJECT_ACTIVATE);
-
-        handleOpen_Project();
+        if(handleOpen_Project()){
+            _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
+            _main_window->changeDisplay_status(MAINWINDOW_PROJECT_ACTIVATE);
+        }
     }
 
 #ifdef MAINCONTROLLER_DEBUG
@@ -383,7 +386,7 @@ void MainController::slot_save_project()
  *             Name: slot_save_project_as
  *      Function ID: 703
  *      Create date: 18/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Slot for saving project as another project.
  ******************************************************************************/
 void MainController::slot_save_project_as(QString project_file_full_path)
@@ -505,12 +508,12 @@ void MainController::slot_Quit()
  ******************************************************************************/
 void MainController::printProject_information()
 {
-    qDebug() << "= Project name: " << _project_name;
-    qDebug() << "= Project file: " << _project_file;
-    qDebug() << "= Project path: " << _project_path;
-    qDebug() << "= Project file full path: " <<  _project_file_full_path;
-    qDebug() << "= Current path: " <<  _current_path;
-    qDebug() << "------------------------------------------------------";
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Project name: " << _project_name;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Project file: " << _project_file;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Project path: " << _project_path;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Project file full path: " <<  _project_file_full_path;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Current path: " <<  _current_path;
+    qDebug() << DEBUG_SPLIT_LINE;
 }
 
 /******************************************************************************

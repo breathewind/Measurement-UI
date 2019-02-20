@@ -18,7 +18,7 @@
  *             Name: Settings_Dialog
  *      Function ID: 000
  *      Create date: 19/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Construction function.
  ******************************************************************************/
 Settings_Dialog::Settings_Dialog(QWidget *parent) :
@@ -27,6 +27,7 @@ Settings_Dialog::Settings_Dialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setWindowTitle("Settings");
 //    _current_pos.setX(0);
 //    _current_pos.setY(0);
 //    _first_time_show = true;
@@ -42,6 +43,20 @@ Settings_Dialog::Settings_Dialog(QWidget *parent) :
 Settings_Dialog::~Settings_Dialog()
 {
     delete ui;
+}
+
+/******************************************************************************
+ *             Name: showDialog
+ *      Function ID: 300
+ *      Create date: 20/02/2019
+ * Last modify date: 20/02/2019
+ *      Description: Show window and record its postion.
+ ******************************************************************************/
+void Settings_Dialog::showDialog()
+{
+    show();
+    /** Let system remember dialog current position. */
+    move(pos().x(), pos().y());
 }
 
 /******************************************************************************

@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Output Panel dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -31,6 +31,9 @@ public:
     explicit Output_Panel(QWidget *parent = nullptr);
     /** Function 001: Destruction function. */
     ~Output_Panel();
+
+    /** Function 300: Show window and record its postion. */
+    void showDialog();
 
 private:
     Ui::Output_Panel *ui;

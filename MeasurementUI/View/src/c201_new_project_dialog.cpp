@@ -97,7 +97,7 @@ void New_Project_Dialog::slot_trigger_new_project_dialog()
  *             Name: slot_update_project_path
  *      Function ID: 751
  *      Create date: 18/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Slot for updating current path.
  ******************************************************************************/
 void New_Project_Dialog::slot_update_current_path(QString current_path)
@@ -105,7 +105,7 @@ void New_Project_Dialog::slot_update_current_path(QString current_path)
     _current_path = current_path;
 
 #ifdef NEW_PROJECT_DIALOG_DEBUG
-    qDebug() << "New_Project_Dialog: project path updated to: " << _current_path ;
+    qDebug() << "+ New_Project_Dialog: project path updated to: " << _current_path ;
 #endif
 }
 

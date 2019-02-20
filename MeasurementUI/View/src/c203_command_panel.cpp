@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Command Panel dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -18,7 +18,7 @@
  *             Name: Command_Panel
  *      Function ID: 000
  *      Create date: 19/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Construction function.
  ******************************************************************************/
 Command_Panel::Command_Panel(QWidget *parent) :
@@ -26,6 +26,8 @@ Command_Panel::Command_Panel(QWidget *parent) :
     ui(new Ui::Command_Panel)
 {
     ui->setupUi(this);
+
+    setWindowTitle("Command Panel");
 }
 
 /******************************************************************************
@@ -38,4 +40,18 @@ Command_Panel::Command_Panel(QWidget *parent) :
 Command_Panel::~Command_Panel()
 {
     delete ui;
+}
+
+/******************************************************************************
+ *             Name: showDialog
+ *      Function ID: 300
+ *      Create date: 20/02/2019
+ * Last modify date: 20/02/2019
+ *      Description: Show window and record its postion.
+ ******************************************************************************/
+void Command_Panel::showDialog()
+{
+    show();
+    /** Let system remember dialog current position. */
+    move(pos().x(), pos().y());
 }

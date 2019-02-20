@@ -20,9 +20,7 @@ void MainController::handleSettings()
     qDebug() << "+ MainController: handleSettings";
 #endif
     if(_main_window->getSettings_action_checked()){
-        _settings_dialog->show();
-        /** Let system remember dialog current position. */
-        _settings_dialog->move(_settings_dialog->pos().x(), _settings_dialog->pos().y());
+        _settings_dialog->showDialog();
     } else {
         _settings_dialog->hide();
     }
@@ -41,9 +39,7 @@ void MainController::handleCommand_Panel()
     qDebug() << "+ MainController: handleCommand_Panel";
 #endif
     if(_main_window->getCommand_panel_action_checked()){
-        _command_panel->show();
-        /** Let system remember dialog current position. */
-        _command_panel->move(_command_panel->pos().x(), _command_panel->pos().y());
+        _command_panel->showDialog();
     } else {
         _command_panel->hide();
     }
@@ -62,9 +58,7 @@ void MainController::handleOutput_Panel()
     qDebug() << "+ MainController: handleOutput_Panel";
 #endif
     if(_main_window->getOutput_panel_action_checked()){
-        _output_panel->show();
-        /** Let system remember dialog current position. */
-        _output_panel->move(_output_panel->pos().x(), _output_panel->pos().y());
+        _output_panel->showDialog();
     } else {
         _output_panel->hide();
     }
