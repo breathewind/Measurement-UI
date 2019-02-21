@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 16/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Global parameters.
  ******************************************************************************/
 #ifndef H000_GLOBAL_PARAMETERS_H
@@ -25,10 +25,13 @@
 
 #define MAINCONTROLLER_DEBUG
 #define MAINCONTORLLER_DEBUG_PREFIX "= "
-
 #define MAINWINDOW_DEBUG
+
 #define NEWPROJECT_DEBUG
+
 #define SETTINGS_DIALOG_DEBUG
+#define SETTINGS_DIALOG_DEBUG
+#define SETTINGS_DIALOG_DEBUG_PREFIX "* "
 #endif
 
 

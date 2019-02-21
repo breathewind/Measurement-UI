@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -11,14 +11,28 @@
  *             Name: handleNew_Project
  *      Function ID: 231
  *      Create date: 18/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Function for handle operations related to New Project.
  ******************************************************************************/
 bool MainController::handleNew_Project()
 {
 #ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: handleNew_Project";
+    qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
+
+    _dmm_baudrate    = __serial_definitions.getBaudrate(MEASUREMENTUI_DMM_BAUDRATE);
+    _dmm_databits    = __serial_definitions.getDataBits(MEASUREMENTUI_DMM_DATABITS);
+    _dmm_stopbits    = __serial_definitions.getStopBits(MEASUREMENTUI_DMM_STOPBITS);
+    _dmm_parity      = __serial_definitions.getParity(MEASUREMENTUI_DMM_PARITY);
+    _dmm_flowcontrol = __serial_definitions.getFlowcontrol(MEASUREMENTUI_DMM_FLOWCONTROL);
+
+    _bc_baudrate    = __serial_definitions.getBaudrate(MEASUREMENTUI_BC_BAUDRATE);
+    _bc_databits    = __serial_definitions.getDataBits(MEASUREMENTUI_BC_DATABITS) ;
+    _bc_stopbits    = __serial_definitions.getStopBits(MEASUREMENTUI_BC_STOPBITS);
+    _bc_parity      = __serial_definitions.getParity(MEASUREMENTUI_BC_PARITY);
+    _bc_flowcontrol = __serial_definitions.getFlowcontrol(MEASUREMENTUI_BC_FLOWCONTROL);
+
+
     /** Create directory. */
     QDir dir(_project_path);
     if(dir.exists()){
@@ -32,11 +46,27 @@ bool MainController::handleNew_Project()
         return false;
     }
     QTextStream out_stream(&file);
-    out_stream << MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
+
+    out_stream << MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT      << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT  << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
+
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT    << " " << _dmm_baudrate    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT    << " " << _dmm_databits    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT    << " " << _dmm_stopbits    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_PARITY_TEXT      << " " << _dmm_parity      << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_FLOWCONTROL_TEXT << " " << _dmm_flowcontrol << MEASUREMENTUI_DAFAULT_NEW_LINE;
+
+    out_stream << MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT    << " " << _bc_baudrate    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_DATABITS_TEXT    << " " << _bc_databits    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT    << " " << _bc_stopbits    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT      << " " << _bc_parity      << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT << " " << _bc_flowcontrol << MEASUREMENTUI_DAFAULT_NEW_LINE;
+
     file.flush();
     file.close();
+
+    _setting_dialog_controller->resetAll_frames();
 
     return true;
 }
@@ -45,13 +75,13 @@ bool MainController::handleNew_Project()
  *             Name: handleOpen_Project
  *      Function ID: 232
  *      Create date: 18/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Function for handle operations related to Open Project.
  ******************************************************************************/
 bool MainController::handleOpen_Project()
 {
 #ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: handleOpen_Project";
+    qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
     QFile file(_project_file_full_path);
     if (!file.open(QFile::ReadOnly | QFile::Text )) {
@@ -62,13 +92,9 @@ bool MainController::handleOpen_Project()
     while(!in_stream.atEnd()) {
         QString line = in_stream.readLine();
         QStringList fields = line.split(" ");
-        /*************************
-         * SETTINGS_DISPLAY
-         *************************/
         if(fields.at(0) == MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT) {
-#ifdef MAINCONTROLLER_DEBUG
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT << " " << fields.at(1).toInt();
-#endif
+            /************************* SETTINGS_DISPLAY *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT, fields.at(1));
             if(fields.at(1).toInt()){
                 _main_window->setSettings_action_checked(true);
                 _settings_dialog->showDialog();
@@ -76,14 +102,9 @@ bool MainController::handleOpen_Project()
                 _main_window->setSettings_action_checked(false);
                 _settings_dialog->hide();
             }
-        } else
-        /*************************
-         * COMMAND_PANEL_DISPLAY
-         *************************/
-        if (fields.at(0) == MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT) {
-#ifdef MAINCONTROLLER_DEBUG
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT << " " << fields.at(1).toInt();
-#endif
+        } else if (fields.at(0) == MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT) {
+            /************************* COMMAND_PANEL_DISPLAY *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT, fields.at(1));
             if(fields.at(1).toInt()){
                 _main_window->setCommand_panel_action_checked(true);
                 _command_panel->showDialog();
@@ -91,14 +112,9 @@ bool MainController::handleOpen_Project()
                 _main_window->setCommand_panel_action_checked(false);
                 _command_panel->hide();
             }
-        } else
-        /*************************
-         * OUTPUT_PANEL_DISPLAY
-         *************************/
-        if (fields.at(0) == MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT) {
-#ifdef MAINCONTROLLER_DEBUG
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT << " " << fields.at(1).toInt();
-#endif
+        } else if (fields.at(0) == MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT) {
+            /************************* OUTPUT_PANEL_DISPLAY *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT, fields.at(1));
             if(fields.at(1).toInt()){
                 _main_window->setOutput_panel_action_checked(true);
                 _output_panel->showDialog();
@@ -106,13 +122,56 @@ bool MainController::handleOpen_Project()
                 _main_window->setOutput_panel_action_checked(false);
                 _output_panel->hide();
             }
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT) {
+            /************************* DMM_BAUDRATE *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT, __serial_definitions.getBaudrate_string(fields.at(1).toInt()));
+            _dmm_baudrate = fields.at(1).toInt();
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT) {
+            /************************* DMM_DATABITS *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT, __serial_definitions.getDataBits_string(fields.at(1).toInt()));
+            _dmm_databits = fields.at(1).toInt();
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT) {
+            /************************* DMM_STOPBITS *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT, __serial_definitions.getStopBits_string(fields.at(1).toInt()));
+            _dmm_stopbits = fields.at(1).toInt();
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_DMM_PARITY_TEXT) {
+            /************************* DMM_PARITY *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_DMM_PARITY_TEXT, __serial_definitions.getParity_string(fields.at(1).toInt()));
+            _dmm_parity = fields.at(1).toInt();
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_DMM_FLOWCONTROL_TEXT) {
+            /************************* DMM_FLOWCONTROL *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_DMM_FLOWCONTROL_TEXT, __serial_definitions.getFlowcontrol_string(fields.at(1).toInt()));
+            _dmm_flowcontrol = fields.at(1).toInt();
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT) {
+            /************************* BC_BAUDRATE *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT, __serial_definitions.getBaudrate_string(fields.at(1).toInt()));
+            _bc_baudrate = fields.at(1).toInt();
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_BC_DATABITS_TEXT) {
+            /************************* BC_DATABITS *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_BC_DATABITS_TEXT, __serial_definitions.getDataBits_string(fields.at(1).toInt()));
+            _bc_databits = fields.at(1).toInt();
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT) {
+            /************************* BC_STOPBITS *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT, __serial_definitions.getStopBits_string(fields.at(1).toInt()));
+            _bc_stopbits = fields.at(1).toInt();
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT) {
+            /************************* BC_PARITY *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT, __serial_definitions.getParity_string(fields.at(1).toInt()));
+            _bc_parity = fields.at(1).toInt();
+        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT) {
+            /************************* BC_FLOWCONTROL *************************/
+            printData_read_from_project_file(MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT, __serial_definitions.getFlowcontrol_string(fields.at(1).toInt()));
+            _bc_flowcontrol = fields.at(1).toInt();
         } else {
             file.close();
             emit signal_warning_occurs(QString("Unknow parameter: %1").arg(fields.at(0)));
             return false;
         }
-        file.close();
     }
+    file.close();
+
+    UpdateSettings();
+
     return true;
 }
 
@@ -120,13 +179,13 @@ bool MainController::handleOpen_Project()
  *             Name: handleSave_Project
  *      Function ID: 233
  *      Create date: 18/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Function for handle operations related to Save Project.
  ******************************************************************************/
 void MainController::handleSave_Project()
 {
 #ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: handleSave_Project";
+    qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
     /** Save project file. */
     QFile file(_project_file_full_path);
@@ -138,6 +197,18 @@ void MainController::handleSave_Project()
     out_stream << MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT << " " << _main_window->getSettings_action_checked() << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT << " " << _main_window->getCommand_panel_action_checked() << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT << " " << _main_window->getOutput_panel_action_checked()<< MEASUREMENTUI_DAFAULT_NEW_LINE;
+
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT    << " " << _dmm_baudrate    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT    << " " << _dmm_databits    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT    << " " << _dmm_stopbits    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_PARITY_TEXT      << " " << _dmm_parity      << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_FLOWCONTROL_TEXT << " " << _dmm_flowcontrol << MEASUREMENTUI_DAFAULT_NEW_LINE;
+
+    out_stream << MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT    << " " << _bc_baudrate    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_DATABITS_TEXT    << " " << _bc_databits    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT    << " " << _bc_stopbits    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT      << " " << _bc_parity      << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT << " " << _bc_flowcontrol << MEASUREMENTUI_DAFAULT_NEW_LINE;
     file.flush();
     file.close();
 }
@@ -146,28 +217,28 @@ void MainController::handleSave_Project()
  *             Name: handleSave_Project_As
  *      Function ID: 234
  *      Create date: 18/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Function for handle operations related to Save Project As.
  ******************************************************************************/
 void MainController::handleSave_Project_As()
 {
-    handleSave_Project();
 #ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: handleSave_Project_As";
+    qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
+    handleSave_Project();
 }
 
 /******************************************************************************
  *             Name: handle_CloseProject
  *      Function ID: 235
  *      Create date: 18/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Function for handle operations related to Close Project.
  ******************************************************************************/
 void MainController::handleClose_Project()
 {
 #ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: handle_CloseProject";
+    qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
     _main_window->setWindowTitle(QString(APP_NAME));
 }

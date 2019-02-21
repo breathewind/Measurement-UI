@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 07/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 20/02/2019
  *      Description: New project dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -105,7 +105,7 @@ void New_Project_Dialog::slot_update_current_path(QString current_path)
     _current_path = current_path;
 
 #ifdef NEW_PROJECT_DIALOG_DEBUG
-    qDebug() << "+ New_Project_Dialog: project path updated to: " << _current_path ;
+    qDebug() << "+ New_Project_Dialog " << __FUNCTION__ << ": project path updated to: " << _current_path ;
 #endif
 }
 

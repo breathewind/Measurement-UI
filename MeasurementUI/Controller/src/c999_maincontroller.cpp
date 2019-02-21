@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -22,9 +22,12 @@
 MainController::MainController()
 {
     initMainwindow();
+
     initProject_operaiton();
     initRun_operaiton();
     initFunction_operaiton();
+
+    initSerial_operaiton();
 
     synchronizeCurrent_path(QDir::homePath());
 }
@@ -151,6 +154,18 @@ void MainController::initFunction_operaiton()
 }
 
 /******************************************************************************
+ *             Name: initSerial_operaiton
+ *      Function ID: 204
+ *      Create date: 21/02/2019
+ * Last modify date: 21/02/2019
+ *      Description: Initilize functions related to Serial operations.
+ ******************************************************************************/
+void MainController::initSerial_operaiton()
+{
+
+}
+
+/******************************************************************************
  *             Name: initNew_Project
  *      Function ID: 211
  *      Create date: 16/02/2019
@@ -248,12 +263,13 @@ void MainController::initStop()
  *             Name: initSettings
  *      Function ID: 218
  *      Create date: 19/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Initilize functions related to Settings operations.
  ******************************************************************************/
 void MainController::initSettings()
 {
     _settings_dialog = new Settings_Dialog(_main_window);
+    _setting_dialog_controller = new Settings_Dialog_Controller(_settings_dialog);
     /** Connect signals and slots related to click Settings menu action button in main window. */
     connect(_main_window, &MainWindow::signal_settings_menu_action_triggered, this, &MainController::slot_settings);
     /** Connect signals and slots related to close Settings dialog. */
@@ -317,6 +333,47 @@ void MainController::initQuit()
 void MainController::showMainwindow()
 {
     _main_window->show();
+}
+
+
+/******************************************************************************
+ *             Name: UpdateSettings
+ *      Function ID: 300
+ *      Create date: 21/02/2019
+ * Last modify date: 21/02/2019
+ *      Description: Update all settings opertions.
+ ******************************************************************************/
+void MainController::UpdateSettings()
+{
+    QStringList data_list[2];
+
+    data_list[0].append(__serial_definitions.getBaudrate_string(_dmm_baudrate));
+    data_list[0].append(__serial_definitions.getDataBits_string(_dmm_databits));
+    data_list[0].append(__serial_definitions.getStopBits_string(_dmm_stopbits));
+    data_list[0].append(__serial_definitions.getParity_string(_dmm_parity));
+    data_list[0].append(__serial_definitions.getFlowcontrol_string(_dmm_flowcontrol));
+
+    data_list[1].append(__serial_definitions.getBaudrate_string(_bc_baudrate));
+    data_list[1].append(__serial_definitions.getDataBits_string(_bc_databits));
+    data_list[1].append(__serial_definitions.getStopBits_string(_bc_stopbits));
+    data_list[1].append(__serial_definitions.getParity_string(_bc_parity));
+    data_list[1].append(__serial_definitions.getFlowcontrol_string(_bc_flowcontrol));
+
+    _setting_dialog_controller->updataeAll_frames(data_list);
+}
+
+/******************************************************************************
+ *             Name: printData_read_from_project_file
+ *      Function ID: 600
+ *      Create date: 21/02/2019
+ * Last modify date: 21/02/2019
+ *      Description: Print data read from project file.
+ ******************************************************************************/
+void MainController::printData_read_from_project_file(QString domain, QString content)
+{
+#ifdef MAINCONTROLLER_DEBUG
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << domain << " " << content;
+#endif
 }
 
 /******************************************************************************

@@ -40,7 +40,10 @@ SOURCES += \
     Controller/src/c999_03_maincontroller_function_menu_action.cpp \
     View/src/c202_settings_dialog.cpp \
     View/src/c203_command_panel.cpp \
-    View/src/c204_output_panel.cpp
+    View/src/c204_output_panel.cpp \
+    View/src/c290_settings_dialog_serial_port_frame.cpp \
+    Controller/src/c102_settings_dialog_controller.cpp \
+    Controller/src/c190_settings_dialog_serial_port_frame_controller.cpp
 
 HEADERS += \
         View/inc/c200_mainwindow.h\
@@ -52,7 +55,11 @@ HEADERS += \
     Entities/inc/c950_global_functions.h \
     View/inc/c202_settings_dialog.h \
     View/inc/c203_command_panel.h \
-    View/inc/c204_output_panel.h
+    View/inc/c204_output_panel.h \
+    View/inc/c290_settings_dialog_serial_port_frame.h \
+    h001_serial_parameters.h \
+    Controller/inc/c102_settings_dialog_controller.h \
+    Controller/inc/c190_settings_dialog_serial_port_frame_controller.h
 
 
 FORMS += \
@@ -60,7 +67,8 @@ FORMS += \
     View/forms/c201_new_project_dialog.ui \
     View/forms/c202_settings_dialog.ui \
     View/forms/c203_command_panel.ui \
-    View/forms/c204_output_panel.ui
+    View/forms/c204_output_panel.ui \
+    View/forms/c290_settings_dialog_serial_port_frame.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

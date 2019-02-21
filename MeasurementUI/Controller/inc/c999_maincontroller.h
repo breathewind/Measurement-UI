@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -13,16 +13,32 @@
 #ifndef C999_MAINCONTROLLER_H
 #define C999_MAINCONTROLLER_H
 
-#define MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT "settings_display"
-#define MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT "command_panel_display"
-#define MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT "output_panel_display"
+#define MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT       "settings_display"
+#define MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT  "command_panel_display"
+#define MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT   "output_panel_display"
+
+#define MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT    "dmm_baudrate"
+#define MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT    "dmm_databits"
+#define MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT    "dmm_stapbits"
+#define MAINCONTTROLLER_SERIAL_DMM_PARITY_TEXT      "dmm_parity"
+#define MAINCONTTROLLER_SERIAL_DMM_FLOWCONTROL_TEXT "dmm_flowcontrol"
+
+#define MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT     "bc_baudrate"
+#define MAINCONTTROLLER_SERIAL_BC_DATABITS_TEXT     "bc_databits"
+#define MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT     "bc_stapbits"
+#define MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT       "bc_parity"
+#define MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT  "bc_flowcontrol"
 
 #include <QObject>
 #include <QDir>
 #include <QFile>
 
 #include "h000_global_parameters.h"
+
+#include "Controller/inc/c102_settings_dialog_controller.h"
+
 #include "Entities/inc/c950_global_functions.h"
+
 #include "View/inc/c200_mainwindow.h"
 #include "View/inc/c201_new_project_dialog.h"
 #include "View/inc/c202_settings_dialog.h"
@@ -57,6 +73,8 @@ private:
     void initRun_operaiton();
     /** Function 202: Initilize functions related to Function operations. */
     void initFunction_operaiton();
+    /** Function 203: Initilize functions related to Serial operations. */
+    void initSerial_operaiton();
 
 
     /** Function 211: Initilize functions related to New Project operations. */
@@ -108,6 +126,12 @@ private:
     /** Function 240: Function for handle operations related to Output Panel. */
     void handleOutput_Panel();
 
+    /** Function 300: Update all settings opertions. */
+    void UpdateSettings();
+
+    /** Function 600: Print data read from project file. */
+    void printData_read_from_project_file(QString domain, QString content);
+
 #ifdef MAINCONTROLLER_DEBUG
     /** Function 900: Print project information. -Debug function*/
     void printProject_information();
@@ -120,11 +144,25 @@ private:
     Command_Panel* _command_panel;
     Output_Panel* _output_panel;
 
+    Settings_Dialog_Controller* _setting_dialog_controller;
+
     QString _project_name;
     QString _project_file;
     QString _project_path;
     QString _project_file_full_path;
     QString _current_path;
+
+    qint32 _dmm_baudrate;
+    int _dmm_databits;
+    int _dmm_stopbits;
+    int _dmm_parity;
+    int _dmm_flowcontrol;
+
+    qint32 _bc_baudrate;
+    int _bc_databits;
+    int _bc_stopbits;
+    int _bc_parity;
+    int _bc_flowcontrol;
 
 private slots:
     /** Function 700: Slot for new project created. */

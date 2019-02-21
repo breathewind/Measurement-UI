@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Main window of MeasurementUI application.
  *                   - Functions related to run menu actions.
  ******************************************************************************/
@@ -12,13 +12,13 @@
  *             Name: handleStart_triggered
  *      Function ID: 205
  *      Create date: 18/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Function for Start menu action triggered.
  ******************************************************************************/
 void MainWindow::handleStart_triggered()
 {
 #ifdef MAINWINDOW_DEBUG
-    qDebug() << "+ MainWindow: handleStart_triggered";
+    qDebug() << "+ MainWindow: " << __FUNCTION__;
 #endif
 
 
@@ -49,7 +49,7 @@ void MainWindow::handleStart_triggered()
  *             Name: handleStop_triggered
  *      Function ID: 206
  *      Create date: 18/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 20/02/2019
  *      Description: Function for Stop menu action triggered.
  ******************************************************************************/
 void MainWindow::handleStop_triggered()
@@ -58,7 +58,7 @@ void MainWindow::handleStop_triggered()
     setRun_menu_action_enable(!MAINWINDOW_PROJECT_RUNNING);
 
 #ifdef MAINWINDOW_DEBUG
-    qDebug() << "+ MainWindow: handleStop_triggered";
+    qDebug() << "+ MainWindow: " << __FUNCTION__;
 #endif
 }
 

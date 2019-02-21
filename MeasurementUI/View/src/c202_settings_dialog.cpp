@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Settings dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -18,7 +18,7 @@
  *             Name: Settings_Dialog
  *      Function ID: 000
  *      Create date: 19/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 21/02/2019
  *      Description: Construction function.
  ******************************************************************************/
 Settings_Dialog::Settings_Dialog(QWidget *parent) :
@@ -28,9 +28,6 @@ Settings_Dialog::Settings_Dialog(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowTitle("Settings");
-//    _current_pos.setX(0);
-//    _current_pos.setY(0);
-//    _first_time_show = true;
 }
 
 /******************************************************************************
@@ -43,6 +40,18 @@ Settings_Dialog::Settings_Dialog(QWidget *parent) :
 Settings_Dialog::~Settings_Dialog()
 {
     delete ui;
+}
+
+/******************************************************************************
+ *             Name: setCurrent_frame
+ *      Function ID: 002
+ *      Create date: 20/02/2019
+ * Last modify date: 20/02/2019
+ *      Description: Set current frame.
+ ******************************************************************************/
+void Settings_Dialog::setCurrent_frame(QWidget *frame_to_be_set)
+{
+    ui->verticalLayout_settings->addWidget(frame_to_be_set);
 }
 
 /******************************************************************************
@@ -81,7 +90,7 @@ void Settings_Dialog::on_pushButton_Apply_clicked()
 void Settings_Dialog::accept()
 {
 #ifdef SETTINGS_DIALOG_DEBUG
-    qDebug() << "+ Settings_Dialog: accept";
+    qDebug() << "+ Settings_Dialog: " << __FUNCTION__;
 #endif
     emit accepted();
     hide();
@@ -97,7 +106,7 @@ void Settings_Dialog::accept()
 void Settings_Dialog::reject()
 {
 #ifdef SETTINGS_DIALOG_DEBUG
-    qDebug() << "+ Settings_Dialog: reject";
+    qDebug() << "+ Settings_Dialog: " << __FUNCTION__;
 #endif
     emit rejected();
     hide();

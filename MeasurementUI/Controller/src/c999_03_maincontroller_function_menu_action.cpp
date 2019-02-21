@@ -17,7 +17,7 @@
 void MainController::handleSettings()
 {
 #ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: handleSettings";
+    qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
     if(_main_window->getSettings_action_checked()){
         _settings_dialog->showDialog();
@@ -36,7 +36,7 @@ void MainController::handleSettings()
 void MainController::handleCommand_Panel()
 {
 #ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: handleCommand_Panel";
+    qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
     if(_main_window->getCommand_panel_action_checked()){
         _command_panel->showDialog();
@@ -55,7 +55,7 @@ void MainController::handleCommand_Panel()
 void MainController::handleOutput_Panel()
 {
 #ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: handleOutput_Panel";
+    qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
     if(_main_window->getOutput_panel_action_checked()){
         _output_panel->showDialog();
