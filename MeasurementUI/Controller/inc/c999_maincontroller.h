@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 24/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -19,13 +19,13 @@
 
 #define MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT    "dmm_baudrate"
 #define MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT    "dmm_databits"
-#define MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT    "dmm_stapbits"
+#define MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT    "dmm_stopbits"
 #define MAINCONTTROLLER_SERIAL_DMM_PARITY_TEXT      "dmm_parity"
 #define MAINCONTTROLLER_SERIAL_DMM_FLOWCONTROL_TEXT "dmm_flowcontrol"
 
 #define MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT     "bc_baudrate"
 #define MAINCONTTROLLER_SERIAL_BC_DATABITS_TEXT     "bc_databits"
-#define MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT     "bc_stapbits"
+#define MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT     "bc_stopbits"
 #define MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT       "bc_parity"
 #define MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT  "bc_flowcontrol"
 
@@ -133,8 +133,10 @@ private:
     void printData_read_from_project_file(QString domain, QString content);
 
 #ifdef MAINCONTROLLER_DEBUG
-    /** Function 900: Print project information. -Debug function*/
+    /** Function 900: Print project information. -Debug function */
     void printProject_information();
+    /** Function 903: Print serial information. -Debug function */
+    void debug_printSerial_inforation();
 #endif
 
     MainWindow* _main_window;
@@ -152,17 +154,19 @@ private:
     QString _project_file_full_path;
     QString _current_path;
 
-    qint32 _dmm_baudrate;
-    int _dmm_databits;
-    int _dmm_stopbits;
-    int _dmm_parity;
-    int _dmm_flowcontrol;
+    QString _dmm_port;
+    QString _dmm_baudrate;
+    QString _dmm_databits;
+    QString _dmm_stopbits;
+    QString _dmm_parity;
+    QString _dmm_flowcontrol;
 
-    qint32 _bc_baudrate;
-    int _bc_databits;
-    int _bc_stopbits;
-    int _bc_parity;
-    int _bc_flowcontrol;
+    QString _bc_port;
+    QString _bc_baudrate;
+    QString _bc_databits;
+    QString _bc_stopbits;
+    QString _bc_parity;
+    QString _bc_flowcontrol;
 
 private slots:
     /** Function 700: Slot for new project created. */
@@ -191,6 +195,8 @@ private slots:
     /** Function 711: Slot for quiting application. */
     void slot_Quit();
 
+    /** Function 750: Slot for updating data from settings dialog to main controller. */
+    void slot_update_data_from_settings(QList<QStringList> data_set);
 
 #ifdef MAINCONTROLLER_DEBUG
     /** Function 901: Print debug information. -Debug function*/

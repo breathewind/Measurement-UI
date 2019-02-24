@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Settings dialog controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -16,7 +16,7 @@
  *             Name: Settings_Dialog_Controller
  *      Function ID: 000
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Construction function.
  ******************************************************************************/
 Settings_Dialog_Controller::Settings_Dialog_Controller(Settings_Dialog *setting_dialog) :
@@ -27,6 +27,8 @@ Settings_Dialog_Controller::Settings_Dialog_Controller(Settings_Dialog *setting_
 
     _current_widget = SETTINGS_DIALOG_CONTROLLER_SERIAL_PORT;
     _setting_dialog->setCurrent_frame(_serial_port_frame);
+
+    connect(_setting_dialog, &Settings_Dialog::accepted, this, &Settings_Dialog_Controller::slot_modification_accepted);
 }
 
 /******************************************************************************
@@ -58,11 +60,34 @@ void Settings_Dialog_Controller::resetAll_frames()
  *             Name: updataeAll_frames
  *      Function ID: 301
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Update all frames..
  ******************************************************************************/
 void Settings_Dialog_Controller::updataeAll_frames(QStringList* data)
 {
-    _serial_port_frame_controller->updateDMM(data[0]);
-    _serial_port_frame_controller->updateBC(data[1]);
+    _serial_port_frame_controller->updateDMM(data[SETTINGS_DIALOG_CONTROLLER_DATA_DMM]);
+    _serial_port_frame_controller->updateBC(data[SETTINGS_DIALOG_CONTROLLER_DATA_BC]);
+
+//    for (int i=0; i<SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_SIZE; i++) {
+//        for (int j=0 ; j<5; j++) {
+//            qDebug() << data[i].at(j);
+//        }
+//    }
+}
+
+/******************************************************************************
+ *             Name: slot_modification_accepted
+ *      Function ID: 700
+ *      Create date: 22/02/2019
+ * Last modify date: 22/02/2019
+ *      Description: Slot for retrieving data when accepted signal received
+ *                   from Settings_Dialog..
+ ******************************************************************************/
+void Settings_Dialog_Controller::slot_modification_accepted()
+{
+    QList<QStringList> data_set;
+
+    data_set.append(_serial_port_frame_controller->retrieveData());
+
+    emit signal_modification_confirmed(data_set);
 }

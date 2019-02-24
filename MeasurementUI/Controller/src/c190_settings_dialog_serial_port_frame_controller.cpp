@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Settings dialog serial port frame controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -131,6 +131,22 @@ void Settings_Dialog_Serial_Port_Frame_Controller::setCombobox_default()
     _serial_port_frame->updateDMM_combobox(DMM_data);
     _serial_port_frame->updateBC_combobox(BC_data);
 }
+
+/******************************************************************************
+ *             Name: Retrieve_data
+ *      Function ID: 304
+ *      Create date: 22/02/2019
+ * Last modify date: 22/02/2019
+ *      Description: Retrieve data from all setting options. .
+ ******************************************************************************/
+QList<QStringList> Settings_Dialog_Serial_Port_Frame_Controller::retrieveData()
+{
+    QList<QStringList> data_set;
+    data_set.append(_serial_port_frame->retrieveDMM_data());
+    data_set.append(_serial_port_frame->retrieveBC_data());
+    return data_set;
+}
+
 
 /******************************************************************************
  *             Name: slot_rescan

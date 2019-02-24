@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Settings dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -72,12 +72,12 @@ void Settings_Dialog::showDialog()
  *             Name: on_pushButton_Apply_clicked
  *      Function ID: 700
  *      Create date: 20/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Slot for Apply pushbutton clicked.
  ******************************************************************************/
 void Settings_Dialog::on_pushButton_Apply_clicked()
 {
-
+    emit accepted();
 }
 
 /******************************************************************************

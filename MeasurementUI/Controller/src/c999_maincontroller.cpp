@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 24/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -263,7 +263,7 @@ void MainController::initStop()
  *             Name: initSettings
  *      Function ID: 218
  *      Create date: 19/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 24/02/2019
  *      Description: Initilize functions related to Settings operations.
  ******************************************************************************/
 void MainController::initSettings()
@@ -275,6 +275,8 @@ void MainController::initSettings()
     /** Connect signals and slots related to close Settings dialog. */
     connect(_settings_dialog, &Settings_Dialog::accepted, _main_window, &MainWindow::slot_close_settings_dialog);
     connect(_settings_dialog, &Settings_Dialog::rejected, _main_window, &MainWindow::slot_close_settings_dialog);
+    /** Connect signals and slots related to clicl Apply button in Settings Dialog. */
+    connect(_setting_dialog_controller, &Settings_Dialog_Controller::signal_modification_confirmed, this, &MainController::slot_update_data_from_settings);
 }
 
 /******************************************************************************
@@ -340,24 +342,24 @@ void MainController::showMainwindow()
  *             Name: UpdateSettings
  *      Function ID: 300
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Update all settings opertions.
  ******************************************************************************/
 void MainController::UpdateSettings()
 {
-    QStringList data_list[2];
+    QStringList data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_SIZE];
 
-    data_list[0].append(__serial_definitions.getBaudrate_string(_dmm_baudrate));
-    data_list[0].append(__serial_definitions.getDataBits_string(_dmm_databits));
-    data_list[0].append(__serial_definitions.getStopBits_string(_dmm_stopbits));
-    data_list[0].append(__serial_definitions.getParity_string(_dmm_parity));
-    data_list[0].append(__serial_definitions.getFlowcontrol_string(_dmm_flowcontrol));
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_baudrate);
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_databits);
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_stopbits);
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_parity);
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_flowcontrol);
 
-    data_list[1].append(__serial_definitions.getBaudrate_string(_bc_baudrate));
-    data_list[1].append(__serial_definitions.getDataBits_string(_bc_databits));
-    data_list[1].append(__serial_definitions.getStopBits_string(_bc_stopbits));
-    data_list[1].append(__serial_definitions.getParity_string(_bc_parity));
-    data_list[1].append(__serial_definitions.getFlowcontrol_string(_bc_flowcontrol));
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_baudrate);
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_databits);
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_stopbits);
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_parity);
+    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_flowcontrol);
 
     _setting_dialog_controller->updataeAll_frames(data_list);
 }
@@ -595,5 +597,29 @@ void MainController::debug_slot_printDebug_info1()
 void MainController::debug_slot_printDebug_info2()
 {
     qDebug() << "printDebug_info2";
+}
+
+/******************************************************************************
+ *             Name: debug_printSerial_inforation -Debug function
+ *      Function ID: 904
+ *      Create date: 24/02/2019
+ * Last modify date: 24/02/2019
+ *      Description: Print serial information.
+ ******************************************************************************/
+void MainController::debug_printSerial_inforation()
+{
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_BAUDRATE << _dmm_baudrate;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_DATABITS << _dmm_databits;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_BAUDRATE << _dmm_stopbits;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_PARITY   <<  _dmm_parity;;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_FLOWCONTROL << _dmm_flowcontrol;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "DMM Current Port"            << _dmm_port;
+
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_BAUDRATE << _bc_baudrate;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_DATABITS << _bc_databits;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_BAUDRATE << _bc_stopbits;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_PARITY   <<  _bc_parity;;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_FLOWCONTROL << _bc_flowcontrol;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "BC Current Port"            << _bc_port;
 }
 #endif

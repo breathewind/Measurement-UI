@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 20/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Serial Port frame of Settings dialog.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -49,12 +49,12 @@ Settings_DIalog_Serial_Port_Frame::~Settings_DIalog_Serial_Port_Frame()
  ******************************************************************************/
 void Settings_DIalog_Serial_Port_Frame::initDMM_group(QStringList *data)
 {
-    ui->comboBox_DMM_port->addItems(data[0]);
     ui->comboBox_DMM_baudrate->addItems(data[1]);
     ui->comboBox_DMM_databits->addItems(data[2]);
     ui->comboBox_DMM_stopbits->addItems(data[3]);
     ui->comboBox_DMM_parity->addItems(data[4]);
     ui->comboBox_DMM_flowcontrol->addItems(data[5]);
+    ui->comboBox_DMM_port->addItems(data[0]);
 }
 
 /******************************************************************************
@@ -66,43 +66,43 @@ void Settings_DIalog_Serial_Port_Frame::initDMM_group(QStringList *data)
  ******************************************************************************/
 void Settings_DIalog_Serial_Port_Frame::initBC_group(QStringList *data)
 {
-    ui->comboBox_BC_port->addItems(data[0]);
     ui->comboBox_BC_baudrate->addItems(data[1]);
     ui->comboBox_BC_databits->addItems(data[2]);
     ui->comboBox_BC_stopbits->addItems(data[3]);
     ui->comboBox_BC_parity->addItems(data[4]);
     ui->comboBox_BC_flowcontrol->addItems(data[5]);
+    ui->comboBox_BC_port->addItems(data[0]);
 }
 
 /******************************************************************************
  *             Name: updateDMM_Combobox
  *      Function ID: 004
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Update all DMM combo boxes.
  ******************************************************************************/
 void Settings_DIalog_Serial_Port_Frame::updateDMM_combobox(QStringList data)
 {
-    ui->comboBox_DMM_baudrate->setCurrentText(data.at(0));
-    ui->comboBox_DMM_databits->setCurrentText(data.at(1));
-    ui->comboBox_DMM_stopbits->setCurrentText(data.at(2));
-    ui->comboBox_DMM_parity->setCurrentText(data.at(3));
-    ui->comboBox_DMM_flowcontrol->setCurrentText(data.at(4));
+    ui->comboBox_DMM_baudrate->setCurrentText(data.at(MEASUREMENTUI_INDEX_BAUDRATE));
+    ui->comboBox_DMM_databits->setCurrentText(data.at(MEASUREMENTUI_INDEX_DATABITS));
+    ui->comboBox_DMM_stopbits->setCurrentText(data.at(MEASUREMENTUI_INDEX_STOPBITS));
+    ui->comboBox_DMM_parity->setCurrentText(data.at(MEASUREMENTUI_INDEX_PARITY));
+    ui->comboBox_DMM_flowcontrol->setCurrentText(data.at(MEASUREMENTUI_INDEX_FLOWCONTROL));
 }
 /******************************************************************************
  *             Name: updateBC_Combobox
  *      Function ID: 005
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Update all BC combo boxes.
  ******************************************************************************/
 void Settings_DIalog_Serial_Port_Frame::updateBC_combobox(QStringList data)
 {
-    ui->comboBox_BC_baudrate->setCurrentText(data.at(0));
-    ui->comboBox_BC_databits->setCurrentText(data.at(1));
-    ui->comboBox_BC_stopbits->setCurrentText(data.at(2));
-    ui->comboBox_BC_parity->setCurrentText(data.at(3));
-    ui->comboBox_BC_flowcontrol->setCurrentText(data.at(4));
+    ui->comboBox_BC_baudrate->setCurrentText(data.at(MEASUREMENTUI_INDEX_BAUDRATE));
+    ui->comboBox_BC_databits->setCurrentText(data.at(MEASUREMENTUI_INDEX_DATABITS));
+    ui->comboBox_BC_stopbits->setCurrentText(data.at(MEASUREMENTUI_INDEX_STOPBITS));
+    ui->comboBox_BC_parity->setCurrentText(data.at(MEASUREMENTUI_INDEX_PARITY));
+    ui->comboBox_BC_flowcontrol->setCurrentText(data.at(MEASUREMENTUI_INDEX_FLOWCONTROL));
 }
 
 /******************************************************************************
@@ -125,19 +125,19 @@ void Settings_DIalog_Serial_Port_Frame::updateSerial_port_combobox(QStringList d
  *             Name: retrieveDMM_data
  *      Function ID: 007
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Retrieving data from all DMM combobbox.
  ******************************************************************************/
 QStringList Settings_DIalog_Serial_Port_Frame::retrieveDMM_data()
 {
     QStringList data;
 
-    data.append(ui->comboBox_DMM_port->currentText());
     data.append(ui->comboBox_DMM_baudrate->currentText());
     data.append(ui->comboBox_DMM_databits->currentText());
     data.append(ui->comboBox_DMM_stopbits->currentText());
     data.append(ui->comboBox_DMM_parity->currentText());
     data.append(ui->comboBox_DMM_flowcontrol->currentText());
+    data.append(ui->comboBox_DMM_port->currentText());
 
     return data;
 }
@@ -145,19 +145,19 @@ QStringList Settings_DIalog_Serial_Port_Frame::retrieveDMM_data()
  *             Name: retrieveBC_data
  *      Function ID: 008
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Retrieving data from all BC combobbox.
  ******************************************************************************/
 QStringList Settings_DIalog_Serial_Port_Frame::retrieveBC_data()
 {
     QStringList data;
 
-    data.append(ui->comboBox_BC_port->currentText());
     data.append(ui->comboBox_BC_baudrate->currentText());
     data.append(ui->comboBox_BC_databits->currentText());
     data.append(ui->comboBox_BC_stopbits->currentText());
     data.append(ui->comboBox_BC_parity->currentText());
     data.append(ui->comboBox_BC_flowcontrol->currentText());
+    data.append(ui->comboBox_BC_port->currentText());
 
     return data;
 }

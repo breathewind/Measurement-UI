@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 20/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Global parameters related to serial port.
  ******************************************************************************/
 #ifndef H001_SERIAL_PARAMETERS_H
@@ -19,6 +19,13 @@
 #define MEASUREMENTUI_BC_DATABITS      "8 bits"
 #define MEASUREMENTUI_BC_STOPBITS      "1 bit"
 #define MEASUREMENTUI_BC_FLOWCONTROL   "No Flow Control"
+
+#define MEASUREMENTUI_INDEX_BAUDRATE    0
+#define MEASUREMENTUI_INDEX_DATABITS    1
+#define MEASUREMENTUI_INDEX_STOPBITS    2
+#define MEASUREMENTUI_INDEX_PARITY      3
+#define MEASUREMENTUI_INDEX_FLOWCONTROL 4
+#define MEASUREMENTUI_INDEX_PORT        5
 
 #include "Entities/inc/c900_serial_definitions.h"
 

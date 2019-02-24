@@ -43,7 +43,8 @@ SOURCES += \
     View/src/c204_output_panel.cpp \
     View/src/c290_settings_dialog_serial_port_frame.cpp \
     Controller/src/c102_settings_dialog_controller.cpp \
-    Controller/src/c190_settings_dialog_serial_port_frame_controller.cpp
+    Controller/src/c190_settings_dialog_serial_port_frame_controller.cpp \
+    Controller/src/c999_11_maincontroller_panel_update.cpp
 
 HEADERS += \
         View/inc/c200_mainwindow.h\

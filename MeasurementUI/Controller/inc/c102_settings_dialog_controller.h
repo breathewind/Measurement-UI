@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 22/02/2019
  *      Description: Settings dialog controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -13,7 +13,11 @@
 #ifndef C102_SETTINGS_DIALOG_CONTROLLER_H
 #define C102_SETTINGS_DIALOG_CONTROLLER_H
 
-#define SETTINGS_DIALOG_CONTROLLER_SERIAL_PORT 0;
+#define SETTINGS_DIALOG_CONTROLLER_SERIAL_PORT 0
+
+#define SETTINGS_DIALOG_CONTROLLER_DATA_SIZE 2
+#define SETTINGS_DIALOG_CONTROLLER_DATA_DMM  0
+#define SETTINGS_DIALOG_CONTROLLER_DATA_BC   1
 
 #include <QObject>
 
@@ -42,6 +46,14 @@ private:
     Settings_Dialog_Serial_Port_Frame_Controller* _serial_port_frame_controller;
 
     int _current_widget;
+
+private slots:
+    /** Function 700: Slot for retrieving data when accepted signal received from Settings_Dialog. */
+    void slot_modification_accepted();
+
+signals:
+    /** Signal 001: Signal emitted when the modification of Settings_Dialog is comfirmed. */
+    void signal_modification_confirmed(QList<QStringList> data_set);
 };
 
 #endif // C102_SETTINGS_DIALOG_CONTROLLER_H
