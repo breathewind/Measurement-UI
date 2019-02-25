@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 28/01/2019
- * Last modify date: 31/01/2019
+ * Last modify date: 25/02/2019
  *      Description: Serial port controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -24,7 +24,10 @@ Serial_Controller::Serial_Controller()
     _serial_port = new QSerialPort();
     _data_received_flag = false;
     connect(_serial_port, SIGNAL(readyRead()), this, SLOT(handleReceived_Data()));
+
+#ifdef SERIAL_CONTROLLER_DEBUG
     connect(this, SIGNAL(data_received(QString)), this, SLOT(handleTimeout(QString)));
+#endif
 }
 
 /******************************************************************************
@@ -77,7 +80,7 @@ void Serial_Controller::closeSerial(){
  *             Name: writeDMM_command
  *      Function ID: 303
  *      Create date: 28/01/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 25/02/2019
  *      Description: Send command via serial communication.
  *
  * @return - Number greater than -1: the number of bytes that were actually
@@ -136,23 +139,6 @@ void Serial_Controller::handleReceived_Data()
         }
     }
 }
-
-#ifdef SERIAL_CONTROLLER_DEBUG
-/******************************************************************************
- *             Name: handleTimeout
- *      Function ID: 900
- *      Create date: 29/01/2019
- * Last modify date: 31/01/2019
- *      Description: Handler for received data timeout from serial port.
- *                   Debug function: Print received data from serial
- *                   communiction.
- ******************************************************************************/
-void Serial_Controller::handleTimeout(QString data)
-{
-//    qDebug() << data;
-    qDebug() << QString("Data received: %1.").arg(data.toDouble());
-}
-#endif
 
 /******************************************************************************
  *             Name: setPortName
@@ -309,6 +295,23 @@ QSerialPort *Serial_Controller::getSerial_port()
 {
     return _serial_port;
 }
+
+#ifdef SERIAL_CONTROLLER_DEBUG
+/******************************************************************************
+ *             Name: handleTimeout
+ *      Function ID: 900
+ *      Create date: 29/01/2019
+ * Last modify date: 31/01/2019
+ *      Description: Handler for received data timeout from serial port.
+ *                   Debug function: Print received data from serial
+ *                   communiction.
+ ******************************************************************************/
+void Serial_Controller::handleTimeout(QString data)
+{
+//    qDebug() << data;
+    qDebug() << QString("Data received: %1.").arg(data.toDouble());
+}
+#endif
 
 
 

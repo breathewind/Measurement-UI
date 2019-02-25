@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 16/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 25/02/2019
  *      Description: Global parameters.
  ******************************************************************************/
 #ifndef H000_GLOBAL_PARAMETERS_H
@@ -32,6 +32,8 @@
 #define SETTINGS_DIALOG_DEBUG
 #define SETTINGS_DIALOG_DEBUG
 #define SETTINGS_DIALOG_DEBUG_PREFIX "* "
+
+//#define SERIAL_CONTROLLER_DEBUG
 #endif
 
 

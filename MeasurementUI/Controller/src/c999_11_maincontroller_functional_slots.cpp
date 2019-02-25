@@ -1,10 +1,9 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 22/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 25/02/2019
  *      Description: Main window controller.
- *                   - Functions related to update data from panels and
- *                     dialogs.
+ *                   - Functional slots.
  ******************************************************************************/
 #include "../inc/c999_maincontroller.h"
 
@@ -33,4 +32,51 @@ void MainController::slot_update_data_from_settings(QList<QStringList> data_set)
     _bc_port = data_set.at(SETTINGS_DIALOG_CONTROLLER_DATA_BC).at(MEASUREMENTUI_INDEX_PORT);
 
     debug_printSerial_information();
+}
+
+/******************************************************************************
+ *             Name: slot_retrieveDMM_data
+ *      Function ID: 751
+ *      Create date: 25/02/2019
+ * Last modify date: 25/02/2019
+ *      Description: Slot for retrieving data from DMM when capture timer
+ *                   timeout is reached.
+ ******************************************************************************/
+void MainController::slot_retrieveDMM_data(QString received_data)
+{
+    _data_read_buffer = received_data;
+#ifdef MAINCONTROLLER_DEBUG
+    qint64 elapsed_time = _elapsed_timer.elapsed();
+    qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << elapsed_time << " milliseconds";
+    qDebug() << "+ MainController: " << __FUNCTION__ << "- received_data: " << received_data;
+#endif
+}
+
+/******************************************************************************
+ *             Name: slot_read_serial_buffer
+ *      Function ID: 752
+ *      Create date: 25/02/2019
+ * Last modify date: 25/02/2019
+ *      Description: Slot for reading data from data read buffer when capture
+ *                   timer timeout is reached.
+ ******************************************************************************/
+void MainController::slot_read_serial_buffer()
+{
+    _capture_timer->stop();
+
+    switch(_sampling_command){
+    case MAINCONTROLLER_COMMAND_RUN:
+#ifdef MAINCONTROLLER_DEBUG
+    qDebug() << "+ MainController: " << __FUNCTION__ << "- data: " << QString("%1 V").arg(_data_read_buffer.toDouble());
+#endif
+        captureOne_measurement();
+        break;
+    case MAINCONTROLLER_COMMAND_STOP:
+        _DMM_controller->closeSerial();
+        break;
+    case MAINCONTROLLER_COMMAND_PAUSE:
+        break;
+    default:
+        break;
+    }
 }

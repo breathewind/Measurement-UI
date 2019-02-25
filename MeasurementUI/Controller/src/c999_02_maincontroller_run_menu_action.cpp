@@ -41,6 +41,8 @@ void MainController::handleStart()
     _BC_controller->startSerial();
 
     _DMM_controller->writeDMM_command("SYST:REM", false);
+
+    captureOne_measurement();
 }
 
 
@@ -48,12 +50,12 @@ void MainController::handleStart()
  *             Name: handleStop
  *      Function ID: 237
  *      Create date: 18/02/2019
- * Last modify date: 24/02/2019
+ * Last modify date: 25/02/2019
  *      Description: Function for handle operations related to Stop.
  ******************************************************************************/
 void MainController::handleStop()
 {
-    _DMM_controller->closeSerial();
+    _sampling_command = MAINCONTROLLER_COMMAND_STOP;
     _BC_controller->closeSerial();
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__;

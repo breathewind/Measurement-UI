@@ -44,7 +44,7 @@ SOURCES += \
     View/src/c290_settings_dialog_serial_port_frame.cpp \
     Controller/src/c102_settings_dialog_controller.cpp \
     Controller/src/c190_settings_dialog_serial_port_frame_controller.cpp \
-    Controller/src/c999_11_maincontroller_panel_update.cpp
+    Controller/src/c999_11_maincontroller_functional_slots.cpp
 
 HEADERS += \
         View/inc/c200_mainwindow.h\

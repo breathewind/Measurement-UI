@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 24/02/2019
+ * Last modify date: 25/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -29,6 +29,12 @@
 #define MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT       "bc_parity"
 #define MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT  "bc_flowcontrol"
 
+#define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUR  600
+
+#define MAINCONTROLLER_COMMAND_RUN   0
+#define MAINCONTROLLER_COMMAND_STOP  1
+#define MAINCONTROLLER_COMMAND_PAUSE 2
+
 #include <QObject>
 #include <QDir>
 #include <QFile>
@@ -45,6 +51,10 @@
 #include "View/inc/c202_settings_dialog.h"
 #include "View/inc/c203_command_panel.h"
 #include "View/inc/c204_output_panel.h"
+
+#ifdef MAINCONTROLLER_DEBUG
+#include <QElapsedTimer>
+#endif
 
 class MainController : public QObject
 {
@@ -132,6 +142,8 @@ private:
 
     /** Function 300: Update all settings opertions. */
     void UpdateSettings();
+    /** Function 301: Capture one measurement. */
+    void captureOne_measurement();
 
     /** Function 600: Print data read from project file. */
     void printData_read_from_project_file(QString domain, QString content);
@@ -174,6 +186,14 @@ private:
 
     Serial_Controller *_DMM_controller;
     Serial_Controller *_BC_controller;
+    int _sampling_command;
+    QTimer *_capture_timer;
+    int _capture_timer_timeout;
+    QString _data_read_buffer;
+
+#ifdef MAINCONTROLLER_DEBUG
+    QElapsedTimer _elapsed_timer;
+#endif
 
 private slots:
     /** Function 700: Slot for new project created. */
@@ -204,6 +224,11 @@ private slots:
 
     /** Function 750: Slot for updating data from settings dialog to main controller. */
     void slot_update_data_from_settings(QList<QStringList> data_set);
+
+    /** Function 751: Slot for retrieving data from DMM when one data to read is ready. */
+    void slot_retrieveDMM_data(QString received_data);
+    /** Function 752: Slot for reading data from data read buffer when capture timer timeout is reached. */
+    void slot_read_serial_buffer();
 
 #ifdef MAINCONTROLLER_DEBUG
     /** Function 901: Print debug information. -Debug function*/

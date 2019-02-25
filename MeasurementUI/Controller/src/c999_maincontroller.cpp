@@ -164,6 +164,13 @@ void MainController::initSerial_operaiton()
 {
     _DMM_controller = new Serial_Controller();
     _BC_controller = new Serial_Controller();
+
+    _sampling_command = MAINCONTROLLER_COMMAND_STOP;
+
+    _capture_timer = new QTimer();
+    _capture_timer_timeout = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUR;
+    connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
+    connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
 }
 
 /******************************************************************************
@@ -377,6 +384,25 @@ void MainController::UpdateSettings()
     data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_flowcontrol);
 
     _setting_dialog_controller->updataeAll_frames(data_list);
+}
+
+/******************************************************************************
+ *             Name: captureOne_measurement
+ *      Function ID: 301
+ *      Create date: 25/02/2019
+ * Last modify date: 25/02/2019
+ *      Description:  Capture one measurement.
+ ******************************************************************************/
+void MainController::captureOne_measurement()
+{
+    _sampling_command = MAINCONTROLLER_COMMAND_RUN;
+
+    _DMM_controller->writeDMM_command("SYST:REM", false);
+    _DMM_controller->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
+#ifdef MAINCONTROLLER_DEBUG
+    _elapsed_timer.start();
+#endif
+    _capture_timer->start(_capture_timer_timeout);
 }
 
 /******************************************************************************
