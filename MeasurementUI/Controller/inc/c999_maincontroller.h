@@ -35,6 +35,7 @@
 
 #include "h000_global_parameters.h"
 
+#include "Controller/inc/c100_serial_controller.h"
 #include "Controller/inc/c102_settings_dialog_controller.h"
 
 #include "Entities/inc/c950_global_functions.h"
@@ -103,6 +104,9 @@ private:
     /** Function 222: Initilize functions related to Quit operations. */
     void initQuit();
 
+    /** Function 223: Initilize functions related to serial connection operations. */
+    void initSerial();
+
     /** Function 231: Function for handle operations related to New Project. */
     bool handleNew_Project();
     /** Function 232: Function for handle operations related to Open Project. */
@@ -136,7 +140,7 @@ private:
     /** Function 900: Print project information. -Debug function */
     void printProject_information();
     /** Function 903: Print serial information. -Debug function */
-    void debug_printSerial_inforation();
+    void debug_printSerial_information();
 #endif
 
     MainWindow* _main_window;
@@ -167,6 +171,9 @@ private:
     QString _bc_stopbits;
     QString _bc_parity;
     QString _bc_flowcontrol;
+
+    Serial_Controller *_DMM_controller;
+    Serial_Controller *_BC_controller;
 
 private slots:
     /** Function 700: Slot for new project created. */

@@ -11,7 +11,7 @@
  *             Name: handleNew_Project
  *      Function ID: 231
  *      Create date: 18/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 24/02/2019
  *      Description: Function for handle operations related to New Project.
  ******************************************************************************/
 bool MainController::handleNew_Project()
@@ -23,7 +23,7 @@ bool MainController::handleNew_Project()
     QStringList available_ports = Serial_definitions::getSerial_port_name();
     if(available_ports.size() > 0){
         _dmm_port = available_ports.at(0);
-        _dmm_port = available_ports.at(0);
+        _bc_port = available_ports.at(0);
     } else {
         _dmm_port = QString();
         _bc_port = QString();
@@ -182,7 +182,7 @@ bool MainController::handleOpen_Project()
     QStringList available_ports = Serial_definitions::getSerial_port_name();
     if(available_ports.size() > 0){
         _dmm_port = available_ports.at(0);
-        _dmm_port = available_ports.at(0);
+        _bc_port = available_ports.at(0);
     } else {
         _dmm_port = QString();
         _bc_port = QString();

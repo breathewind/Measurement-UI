@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 28/01/2019
- * Last modify date: 31/01/2019
+ * Last modify date: 26/02/2019
  *      Description: Serial port controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -43,7 +43,7 @@ public:
     /** Function 302: Close serial communication. */
     void closeSerial();
     /** Function 303: Send command via serial communication. */
-    qint64 writeCommand(QString command);
+    qint64 writeDMM_command(QString command, bool command_feedback);
     /** Function 304: Read data via serial communication. */
     QString readData();
 

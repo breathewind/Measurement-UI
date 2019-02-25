@@ -326,6 +326,20 @@ void MainController::initQuit()
 }
 
 /******************************************************************************
+ *             Name: initSerial
+ *      Function ID: 223
+ *      Create date: 24/02/2019
+ * Last modify date: 24/02/2019
+ *      Description: Initilize functions related to serial connection
+ *                   operations.
+ ******************************************************************************/
+void MainController::initSerial()
+{
+    _DMM_controller = new Serial_Controller();
+    _BC_controller = new Serial_Controller();
+}
+
+/******************************************************************************
  *             Name: showMain_Window
  *      Function ID: 300
  *      Create date: 16/02/2019
@@ -606,20 +620,20 @@ void MainController::debug_slot_printDebug_info2()
  * Last modify date: 24/02/2019
  *      Description: Print serial information.
  ******************************************************************************/
-void MainController::debug_printSerial_inforation()
+void MainController::debug_printSerial_information()
 {
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_BAUDRATE << _dmm_baudrate;
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_DATABITS << _dmm_databits;
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_BAUDRATE << _dmm_stopbits;
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_PARITY   <<  _dmm_parity;;
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_DMM_FLOWCONTROL << _dmm_flowcontrol;
     qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "DMM Current Port"            << _dmm_port;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT << _dmm_baudrate;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT << _dmm_databits;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT << _dmm_stopbits;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_DMM_PARITY_TEXT   <<  _dmm_parity;;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_DMM_FLOWCONTROL_TEXT << _dmm_flowcontrol;
 
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_BAUDRATE << _bc_baudrate;
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_DATABITS << _bc_databits;
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_BAUDRATE << _bc_stopbits;
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_PARITY   <<  _bc_parity;;
-    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MEASUREMENTUI_BC_FLOWCONTROL << _bc_flowcontrol;
     qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "BC Current Port"            << _bc_port;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT << _bc_baudrate;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_BC_DATABITS_TEXT << _bc_databits;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT << _bc_stopbits;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT   <<  _bc_parity;;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT << _bc_flowcontrol;
 }
 #endif

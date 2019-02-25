@@ -32,5 +32,5 @@ void MainController::slot_update_data_from_settings(QList<QStringList> data_set)
     _bc_flowcontrol = data_set.at(SETTINGS_DIALOG_CONTROLLER_DATA_BC).at(MEASUREMENTUI_INDEX_FLOWCONTROL);
     _bc_port = data_set.at(SETTINGS_DIALOG_CONTROLLER_DATA_BC).at(MEASUREMENTUI_INDEX_PORT);
 
-    debug_printSerial_inforation();
+    debug_printSerial_information();
 }
