@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 24/02/2019
+ * Last modify date: 25/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -157,12 +157,13 @@ void MainController::initFunction_operaiton()
  *             Name: initSerial_operaiton
  *      Function ID: 204
  *      Create date: 21/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 25/02/2019
  *      Description: Initilize functions related to Serial operations.
  ******************************************************************************/
 void MainController::initSerial_operaiton()
 {
-
+    _DMM_controller = new Serial_Controller();
+    _BC_controller = new Serial_Controller();
 }
 
 /******************************************************************************
