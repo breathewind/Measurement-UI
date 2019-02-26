@@ -44,8 +44,13 @@ public:
     QChartView *getChart_view();
     /** Function 301: Add one new voltage value to chart. */
     void addOne_new_voltage(int step, double voltage_value);
+    /** Function 302: Reset the chart as default values. */
+    void reset();
 
 private:
+    /** Function 002: Set the chart as default values. */
+    void init();
+
     QChart *_chart;
     QLineSeries *_serises;
     QChartView *_chart_view;
@@ -61,6 +66,9 @@ private:
 
     QCategoryAxis *_axisX;
     QCategoryAxis *_axisY;
+
+    QString _chart_title;
+    QString _y_unit;
 };
 
 #endif // C110_CHART_CONTROLLER_H

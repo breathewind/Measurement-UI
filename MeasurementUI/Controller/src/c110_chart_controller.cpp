@@ -19,7 +19,20 @@
  * Last modify date: 26/02/2019
  *      Description: Construction function.
  ******************************************************************************/
-Chart_Controller::Chart_Controller(QString chart_title, QString y_unit)
+Chart_Controller::Chart_Controller(QString chart_title, QString y_unit) :
+    _chart_title(chart_title), _y_unit(y_unit)
+{
+    init();
+}
+
+/******************************************************************************
+ *             Name: init
+ *      Function ID: 302
+ *      Create date: 26/02/2019
+ * Last modify date: 26/02/2019
+ *      Description: Set the chart as default values.
+ ******************************************************************************/
+void Chart_Controller::init()
 {
     _current_ms = 0;
     _time_range = CHART_CONTROLLER_DEFAULT_TIME_RANGE;
@@ -30,15 +43,6 @@ Chart_Controller::Chart_Controller(QString chart_title, QString y_unit)
 
     _serises = new QLineSeries();
     _serises->append(0, 0);
-//    _battery_voltage_serises->append(0.6*100000, 4);
-//    _battery_voltage_serises->append(1.2*100000, 2.7);
-//    _battery_voltage_serises->append(2.4*100000, 2);
-//    _battery_voltage_serises->append(3.0*100000, 3.5);
-//    _battery_voltage_serises->append(3.6*100000, 3.2);
-//    _battery_voltage_serises->append(4.2*100000, 3.73);
-//    _battery_voltage_serises->append(4.8*100000, 3.12);
-//    _battery_voltage_serises->append(5.4*100000, 3.43);
-//    _battery_voltage_serises->append(6.0*100000, 2.73);
 
     _chart = new QChart();
     _chart->legend()->hide();
@@ -49,7 +53,7 @@ Chart_Controller::Chart_Controller(QString chart_title, QString y_unit)
     font.setPixelSize(10);
     _chart->setTitleFont(font);
     _chart->setTitleBrush(QBrush(Qt::black));
-    _chart->setTitle(chart_title);
+    _chart->setTitle(_chart_title);
 
 
     QPen pen;
@@ -78,7 +82,7 @@ Chart_Controller::Chart_Controller(QString chart_title, QString y_unit)
     _axisY->setLabelsPosition(QCategoryAxis::AxisLabelsPositionOnValue);
 
     for (int i=0; i<_y_range; i++) {
-        _axisY->append(QString("%1 %2").arg(i).arg(y_unit) , i);
+        _axisY->append(QString("%1 %2").arg(i).arg(_y_unit) , i);
     }
 
     _chart->setAxisY(_axisY, _serises);
@@ -86,6 +90,7 @@ Chart_Controller::Chart_Controller(QString chart_title, QString y_unit)
     _chart_view = new QChartView(_chart);
     _chart_view->setRenderHint(QPainter::Antialiasing);
 }
+
 
 /******************************************************************************
  *             Name: getChart_view
@@ -129,4 +134,34 @@ void Chart_Controller::addOne_new_voltage(int step, double voltage_value)
 #ifdef CHART_CONTROLLER_DEBUG
     qDebug() << _current_ms << voltage_value;
 #endif
+}
+
+/******************************************************************************
+ *             Name: reset
+ *      Function ID: 302
+ *      Create date: 26/02/2019
+ * Last modify date: 26/02/2019
+ *      Description: Reset the chart as default values.
+ ******************************************************************************/
+void Chart_Controller::reset()
+{
+    for (int i=0; i<11; i++) {
+        _axisX->remove(QString("%1'").arg(_max_minutes-static_cast<qint64>(_time_range/60000)-1+i));
+    }
+
+    _current_ms = 0;
+    _time_range = CHART_CONTROLLER_DEFAULT_TIME_RANGE;
+    _timestep = CHART_CONTROLLER_DEFAULT_TIMESTEP;
+    _y_range = CHART_CONTROLLER_DEFAULT_VOLTAGE_RANGE;
+    _time_range_shift = 0;
+
+    _axisX->setMin(_current_ms);
+    _axisX->setMax(_time_range);
+
+    for (_max_minutes=0; _max_minutes<11; _max_minutes++) {
+        _axisX->append(QString("%1'").arg(_max_minutes) , _max_minutes*_timestep*60);
+    }
+
+    _serises->clear();
+    _serises->append(0, 0);
 }

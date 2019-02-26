@@ -75,6 +75,7 @@ bool MainController::handleNew_Project()
     file.close();
 
     _setting_dialog_controller->resetAll_frames();
+    _battery_voltage_chart_view_controller->reset();
 
     return true;
 }
@@ -187,6 +188,8 @@ bool MainController::handleOpen_Project()
         _dmm_port = QString();
         _bc_port = QString();
     }
+
+    _battery_voltage_chart_view_controller->reset();
 
     return true;
 }
