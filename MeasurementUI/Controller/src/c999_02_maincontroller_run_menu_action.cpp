@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 26/02/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -11,7 +11,7 @@
  *             Name: handleStart
  *      Function ID: 236
  *      Create date: 18/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 26/02/2019
  *      Description: Function for handle operations related to Start.
  ******************************************************************************/
 void MainController::handleStart()
@@ -37,10 +37,13 @@ void MainController::handleStart()
     _BC_controller->setStopBits(static_cast<QSerialPort::StopBits>(__serial_definitions.getStopBits(_bc_stopbits)));
     _BC_controller->setFlowControl(static_cast<QSerialPort::FlowControl>(__serial_definitions.getFlowcontrol(_bc_flowcontrol)));
 
+    _main_elapsed_timer.start();
+    _lasttime_recorder =  _main_elapsed_timer.elapsed();
+
     _DMM_controller->startSerial();
     _BC_controller->startSerial();
 
-    _DMM_controller->writeDMM_command("SYST:REM", false);
+    _DMM_controller->writeDMM_command(":SYST:REM", false);
 
     captureOne_measurement();
 }

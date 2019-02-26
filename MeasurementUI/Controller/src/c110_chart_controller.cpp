@@ -113,20 +113,23 @@ QChartView *Chart_Controller::getChart_view()
  ******************************************************************************/
 void Chart_Controller::addOne_new_voltage(int step, double voltage_value)
 {
-    if(_current_ms+step > _time_range+_time_range_shift){
-        _time_range_shift += step;
+    _current_ms += step;
 
-        _axisX->remove(QString("%1'").arg(_max_minutes-static_cast<qint64>(_time_range/60000)-1));
-        _axisX->append(QString("%1'").arg(_max_minutes) , _max_minutes*_timestep*60);
-        _max_minutes++;
+    if(_current_ms > _time_range+_time_range_shift){
+        _time_range_shift += step;
 
         _axisX->setMin(_time_range_shift);
         _axisX->setMax(_time_range+_time_range_shift);
+        _axisX->setStartValue(_time_range_shift);
 
         _serises->remove(0);
     }
 
-    _current_ms += step;
+    if(_current_ms/60000  > _max_minutes-1){
+        _axisX->remove(QString("%1'").arg(_max_minutes-static_cast<qint64>(_time_range/60000)-1));
+        _axisX->append(QString("%1'").arg(_max_minutes) , _max_minutes*_timestep*60);
+        _max_minutes++;
+    }
 
     _serises->append(_current_ms, voltage_value);
     _chart_view->update();

@@ -38,13 +38,14 @@ void MainController::slot_update_data_from_settings(QList<QStringList> data_set)
  *             Name: slot_retrieveDMM_data
  *      Function ID: 751
  *      Create date: 25/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 26/02/2019
  *      Description: Slot for retrieving data from DMM when capture timer
  *                   timeout is reached.
  ******************************************************************************/
 void MainController::slot_retrieveDMM_data(QString received_data)
 {
     _data_read_buffer = received_data;
+    _thistime_recorder = _main_elapsed_timer.elapsed();
 #ifdef MAINCONTROLLER_DEBUG
     qint64 elapsed_time = _elapsed_timer.elapsed();
     qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << elapsed_time << " milliseconds";
@@ -69,7 +70,8 @@ void MainController::slot_read_serial_buffer()
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__ << "- data: " << QString("%1 V").arg(_data_read_buffer.toDouble());
 #endif
-        _battery_voltage_chart_view_controller->addOne_new_voltage(_capture_timer_timeout, _data_read_buffer.toDouble());
+        _battery_voltage_chart_view_controller->addOne_new_voltage((_thistime_recorder-_lasttime_recorder), _data_read_buffer.toDouble());
+        _lasttime_recorder = _thistime_recorder;
         captureOne_measurement();
         break;
     case MAINCONTROLLER_COMMAND_STOP:

@@ -193,6 +193,10 @@ private:
     int _capture_timer_timeout;
     QString _data_read_buffer;
 
+    QElapsedTimer _main_elapsed_timer;
+    qint64 _thistime_recorder;
+    qint64 _lasttime_recorder;
+
     Chart_Controller* _battery_voltage_chart_view_controller;
 
 #ifdef MAINCONTROLLER_DEBUG

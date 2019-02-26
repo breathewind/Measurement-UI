@@ -404,14 +404,14 @@ void MainController::UpdateSettings()
  *             Name: captureOne_measurement
  *      Function ID: 301
  *      Create date: 25/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 26/02/2019
  *      Description:  Capture one measurement.
  ******************************************************************************/
 void MainController::captureOne_measurement()
 {
     _sampling_command = MAINCONTROLLER_COMMAND_RUN;
 
-    _DMM_controller->writeDMM_command("SYST:REM", false);
+    _DMM_controller->writeDMM_command(":SYST:REM", false);
     _DMM_controller->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
 #ifdef MAINCONTROLLER_DEBUG
     _elapsed_timer.start();
