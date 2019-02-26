@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 22/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 26/02/2019
  *      Description: Main window controller.
  *                   - Functional slots.
  ******************************************************************************/
@@ -56,7 +56,7 @@ void MainController::slot_retrieveDMM_data(QString received_data)
  *             Name: slot_read_serial_buffer
  *      Function ID: 752
  *      Create date: 25/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 26/02/2019
  *      Description: Slot for reading data from data read buffer when capture
  *                   timer timeout is reached.
  ******************************************************************************/
@@ -69,6 +69,7 @@ void MainController::slot_read_serial_buffer()
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__ << "- data: " << QString("%1 V").arg(_data_read_buffer.toDouble());
 #endif
+        _battery_voltage_chart_view_controller->addOne_new_voltage(_capture_timer_timeout, _data_read_buffer.toDouble());
         captureOne_measurement();
         break;
     case MAINCONTROLLER_COMMAND_STOP:

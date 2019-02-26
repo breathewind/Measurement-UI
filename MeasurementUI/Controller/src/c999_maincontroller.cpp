@@ -159,7 +159,7 @@ void MainController::initFunction_operaiton()
  *             Name: initSerial_operaiton
  *      Function ID: 204
  *      Create date: 21/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 26/02/2019
  *      Description: Initilize functions related to Serial operations.
  ******************************************************************************/
 void MainController::initSerial_operaiton()
@@ -170,7 +170,7 @@ void MainController::initSerial_operaiton()
     _sampling_command = MAINCONTROLLER_COMMAND_STOP;
 
     _capture_timer = new QTimer();
-    _capture_timer_timeout = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUR;
+    _capture_timer_timeout = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT;
     connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
     connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
 }

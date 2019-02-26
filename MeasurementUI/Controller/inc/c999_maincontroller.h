@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 26/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -29,7 +29,7 @@
 #define MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT       "bc_parity"
 #define MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT  "bc_flowcontrol"
 
-#define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUR  600
+#define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT  600
 
 #define MAINCONTROLLER_COMMAND_RUN   0
 #define MAINCONTROLLER_COMMAND_STOP  1
