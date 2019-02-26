@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 30/01/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 25/02/2019
  *      Description: Main window of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -181,7 +181,7 @@ void MainWindow::changeDisplay_status(bool display_flag)
 
 /******************************************************************************
  *             Name: resetAll_menu_actions
- *      Function ID: 300
+ *      Function ID: 301
  *      Create date: 19/02/2019
  * Last modify date: 19/02/2019
  *      Description: Reset display status for all the menu actions.

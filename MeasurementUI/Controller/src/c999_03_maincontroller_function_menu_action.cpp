@@ -38,6 +38,7 @@ void MainController::handleCommand_Panel()
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
+    _battery_voltage_chart_view_controller->addOne_new_voltage(60000, 2.1);
     if(_main_window->getCommand_panel_action_checked()){
         _command_panel->showDialog();
     } else {

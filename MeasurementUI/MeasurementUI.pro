@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport
+QT       += core gui serialport charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -44,7 +44,9 @@ SOURCES += \
     View/src/c290_settings_dialog_serial_port_frame.cpp \
     Controller/src/c102_settings_dialog_controller.cpp \
     Controller/src/c190_settings_dialog_serial_port_frame_controller.cpp \
-    Controller/src/c999_11_maincontroller_functional_slots.cpp
+    Controller/src/c999_11_maincontroller_functional_slots.cpp \
+    View/src/c200_21_mainwindow_chart.cpp \
+    Controller/src/c110_chart_controller.cpp
 
 HEADERS += \
         View/inc/c200_mainwindow.h\
@@ -60,7 +62,8 @@ HEADERS += \
     View/inc/c290_settings_dialog_serial_port_frame.h \
     h001_serial_parameters.h \
     Controller/inc/c102_settings_dialog_controller.h \
-    Controller/inc/c190_settings_dialog_serial_port_frame_controller.h
+    Controller/inc/c190_settings_dialog_serial_port_frame_controller.h \
+    Controller/inc/c110_chart_controller.h
 
 
 FORMS += \

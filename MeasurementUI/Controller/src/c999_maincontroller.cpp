@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 26/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -16,7 +16,7 @@
  *             Name: MainController
  *      Function ID: 000
  *      Create date: 14/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 25/02/2019
  *      Description: Construction function.
  ******************************************************************************/
 MainController::MainController()
@@ -28,6 +28,8 @@ MainController::MainController()
     initFunction_operaiton();
 
     initSerial_operaiton();
+
+    initChart_operaiton();
 
     synchronizeCurrent_path(QDir::homePath());
 }
@@ -171,6 +173,18 @@ void MainController::initSerial_operaiton()
     _capture_timer_timeout = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUR;
     connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
     connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
+}
+
+/******************************************************************************
+ *             Name: initChart_operaiton
+ *      Function ID: 205
+ *      Create date: 21/02/2019
+ * Last modify date: 26/02/2019
+ *      Description: Initilize functions related to Chart operations.
+ ******************************************************************************/
+void MainController::initChart_operaiton(){
+    _battery_voltage_chart_view_controller = new Chart_Controller(tr("Battery Voltage"), tr("V"));
+    _main_window->addBettery_voltage_chart_view(_battery_voltage_chart_view_controller->getChart_view());
 }
 
 /******************************************************************************

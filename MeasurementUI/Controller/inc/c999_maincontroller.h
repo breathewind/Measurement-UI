@@ -82,10 +82,12 @@ private:
     void initProject_operaiton();
     /** Function 202: Initilize functions related to Run operations. */
     void initRun_operaiton();
-    /** Function 202: Initilize functions related to Function operations. */
+    /** Function 203: Initilize functions related to Function operations. */
     void initFunction_operaiton();
-    /** Function 203: Initilize functions related to Serial operations. */
+    /** Function 204: Initilize functions related to Serial operations. */
     void initSerial_operaiton();
+    /** Function 205: Initilize functions related to Chart operations. */
+    void initChart_operaiton();
 
 
     /** Function 211: Initilize functions related to New Project operations. */
@@ -190,6 +192,8 @@ private:
     QTimer *_capture_timer;
     int _capture_timer_timeout;
     QString _data_read_buffer;
+
+    Chart_Controller* _battery_voltage_chart_view_controller;
 
 #ifdef MAINCONTROLLER_DEBUG
     QElapsedTimer _elapsed_timer;
