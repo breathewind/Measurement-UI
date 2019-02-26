@@ -46,7 +46,8 @@ SOURCES += \
     Controller/src/c190_settings_dialog_serial_port_frame_controller.cpp \
     Controller/src/c999_11_maincontroller_functional_slots.cpp \
     View/src/c200_21_mainwindow_chart.cpp \
-    Controller/src/c110_chart_controller.cpp
+    Controller/src/c110_chart_controller.cpp \
+    Model/src/c001_wave_block.cpp
 
 HEADERS += \
         View/inc/c200_mainwindow.h\
@@ -63,7 +64,8 @@ HEADERS += \
     h001_serial_parameters.h \
     Controller/inc/c102_settings_dialog_controller.h \
     Controller/inc/c190_settings_dialog_serial_port_frame_controller.h \
-    Controller/inc/c110_chart_controller.h
+    Controller/inc/c110_chart_controller.h \
+    Model/inc/c001_wave_block.h
 
 
 FORMS += \

@@ -52,6 +52,8 @@
 #include "View/inc/c203_command_panel.h"
 #include "View/inc/c204_output_panel.h"
 
+#include "Model/inc/c001_wave_block.h"
+
 #ifdef MAINCONTROLLER_DEBUG
 #include <QElapsedTimer>
 #endif

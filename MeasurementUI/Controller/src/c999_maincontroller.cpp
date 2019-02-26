@@ -32,6 +32,16 @@ MainController::MainController()
     initChart_operaiton();
 
     synchronizeCurrent_path(QDir::homePath());
+
+//    Wave_Block test(1000);
+//    test.setFirst_point(100, 4.1);
+//    test.setSecond_point(900, 4.0);
+//    test.calculate();
+//    qDebug() << "slope: " << test.slope();
+//    qDebug() << "intercept: " << test.intercept();
+//    qDebug() << "y_start: " << test.y_start();
+//    qDebug() << "y_end: " << test.y_end();
+//    qDebug() << "power: " << test.power();
 }
 
 /******************************************************************************
