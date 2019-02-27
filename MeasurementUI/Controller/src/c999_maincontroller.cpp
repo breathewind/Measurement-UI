@@ -181,9 +181,9 @@ void MainController::initSerial_operaiton()
 
     _capture_timer = new QTimer();
     _capture_timer_timeout = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT;
-    connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_read_serial_buffer_for_current);
-//    connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
-    connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
+    connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer_for_current);
+    connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
+//    connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
 
     _execution_timer = new QTimer();
     connect(_execution_timer, &QTimer::timeout, this, &MainController::slot_change_load_current);
@@ -462,7 +462,7 @@ void MainController::startExecution()
 
     qDebug() << "+ MainController: " << __FUNCTION__ <<
                 "- set Value: " << value_to_be_set <<
-                " - " << _BC_controller->MCP41010_calculate_Ohm(static_cast<uint8_t>(value_to_be_set)) << " Ω";
+                " - " << _BC_controller->MCP41010_calculate_Ohm(static_cast<uint8_t>(value_to_be_set)) << " Ohm";
 #endif
 }
 
