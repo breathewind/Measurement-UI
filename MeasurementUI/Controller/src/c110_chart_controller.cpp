@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 25/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Chart controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -16,11 +16,11 @@
  *             Name: Chart_Controller
  *      Function ID: 000
  *      Create date: 25/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Construction function.
  ******************************************************************************/
-Chart_Controller::Chart_Controller(QString chart_title, QString y_unit) :
-    _chart_title(chart_title), _y_unit(y_unit)
+Chart_Controller::Chart_Controller(QString chart_title, qint64 x_range, QString y_unit) :
+    _time_range(x_range), _chart_title(chart_title), _y_unit(y_unit)
 {
     init();
 }
@@ -29,13 +29,13 @@ Chart_Controller::Chart_Controller(QString chart_title, QString y_unit) :
  *             Name: init
  *      Function ID: 302
  *      Create date: 26/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Set the chart as default values.
  ******************************************************************************/
 void Chart_Controller::init()
 {
     _current_ms = 0;
-    _time_range = CHART_CONTROLLER_DEFAULT_TIME_RANGE;
+//    _time_range = CHART_CONTROLLER_DEFAULT_TIME_RANGE;
     _timestep = CHART_CONTROLLER_DEFAULT_TIMESTEP;
     _y_range = CHART_CONTROLLER_DEFAULT_VOLTAGE_RANGE;
     _time_range_shift = 0;
@@ -69,7 +69,7 @@ void Chart_Controller::init()
     _axisX->setLabelsPosition(QCategoryAxis::AxisLabelsPositionOnValue);
 //    axisX->setStartValue(0);
 
-    for (_max_minutes=0; _max_minutes<11; _max_minutes++) {
+    for (_max_minutes=0; _max_minutes<static_cast<int>(_time_range/60000+1); _max_minutes++) {
         _axisX->append(QString("%1'").arg(_max_minutes) , _max_minutes*_timestep*60);
     }
 
@@ -120,7 +120,7 @@ void Chart_Controller::addOne_new_voltage(int step, double voltage_value)
 
         _axisX->setMin(_time_range_shift);
         _axisX->setMax(_time_range+_time_range_shift);
-        _axisX->setStartValue(_time_range_shift);
+//        _axisX->setStartValue(_time_range_shift);
 
         _serises->remove(0);
     }
@@ -143,7 +143,7 @@ void Chart_Controller::addOne_new_voltage(int step, double voltage_value)
  *             Name: reset
  *      Function ID: 302
  *      Create date: 26/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Reset the chart as default values.
  ******************************************************************************/
 void Chart_Controller::reset()
@@ -153,7 +153,7 @@ void Chart_Controller::reset()
     }
 
     _current_ms = 0;
-    _time_range = CHART_CONTROLLER_DEFAULT_TIME_RANGE;
+//    _time_range = CHART_CONTROLLER_DEFAULT_TIME_RANGE;
     _timestep = CHART_CONTROLLER_DEFAULT_TIMESTEP;
     _y_range = CHART_CONTROLLER_DEFAULT_VOLTAGE_RANGE;
     _time_range_shift = 0;
@@ -161,7 +161,7 @@ void Chart_Controller::reset()
     _axisX->setMin(_current_ms);
     _axisX->setMax(_time_range);
 
-    for (_max_minutes=0; _max_minutes<11; _max_minutes++) {
+    for (_max_minutes=0; _max_minutes<static_cast<int>(_time_range/60000+1); _max_minutes++) {
         _axisX->append(QString("%1'").arg(_max_minutes) , _max_minutes*_timestep*60);
     }
 

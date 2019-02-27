@@ -29,12 +29,20 @@
 #define MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT       "bc_parity"
 #define MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT  "bc_flowcontrol"
 
-#define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT   600
-#define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 1200
+#define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT   1000
+#define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 2000
 
 #define MAINCONTROLLER_COMMAND_RUN   0
 #define MAINCONTROLLER_COMMAND_STOP  1
 #define MAINCONTROLLER_COMMAND_PAUSE 2
+
+#define MAINCONTROLLER_EXE_COMMAND_RUN   0
+#define MAINCONTROLLER_EXE_COMMAND_STOP  1
+#define MAINCONTROLLER_EXE_COMMAND_PAUSE 2
+
+
+#define MAINCONTROLLER_FIRST_HALF true
+#define MAINCONTROLLER_SECOND_HALF false
 
 #include <QObject>
 #include <QDir>
@@ -200,6 +208,8 @@ private:
 
     int _execution_period;
     QTimer *_execution_timer;
+    int _execution_command;
+    bool _half_counter;
 
     QElapsedTimer _main_elapsed_timer;
     qint64 _thistime_recorder;
@@ -248,7 +258,9 @@ private slots:
     void slot_retrieveDMM_data(QString received_data);
     /** Function 752: Slot for reading data from data read buffer when capture timer timeout is reached. */
     void slot_read_serial_buffer();
-    /** Function 753: Slot for changing load current when execution timer timeout is reached. */
+    /** Function 753: Slot for reading data from data read buffer during current measurement when capture timer timeout is reached. */
+    void slot_read_serial_buffer_for_current();
+    /** Function 754: Slot for changing load current when execution timer timeout is reached. */
     void slot_change_load_current();
 
 #ifdef MAINCONTROLLER_DEBUG

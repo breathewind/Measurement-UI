@@ -38,7 +38,7 @@ class Chart_Controller : public QObject
     Q_OBJECT
 public:
     /** Function 000: Construction function. */
-    Chart_Controller(QString chart_title, QString y_unit);
+    Chart_Controller(QString chart_title, qint64 x_range, QString y_unit);
 
     /** Function 300: Get chart view. */
     QChartView *getChart_view();

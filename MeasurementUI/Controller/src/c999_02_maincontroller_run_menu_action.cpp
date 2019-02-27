@@ -41,17 +41,20 @@ void MainController::handleStart()
     _main_elapsed_timer.start();
     _lasttime_recorder =  _main_elapsed_timer.elapsed();
 
+    _battery_voltage_chart_view_controller->reset();
+    _load_current_chart_view_controller->reset();
+
     _DMM_controller->startSerial();
     _BC_controller->startSerial();
 
     _DMM_controller->writeDMM_command(":SYST:REM", false);
 
-//    captureOne_measurement();
 #ifdef MAINCONTROLLER_DEBUG
     test_counter = 0;
 #endif
+    _half_counter = MAINCONTROLLER_FIRST_HALF;
     startExecution();
-
+    captureOne_measurement();
 }
 
 
@@ -59,13 +62,15 @@ void MainController::handleStart()
  *             Name: handleStop
  *      Function ID: 237
  *      Create date: 18/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Function for handle operations related to Stop.
  ******************************************************************************/
 void MainController::handleStop()
 {
     _sampling_command = MAINCONTROLLER_COMMAND_STOP;
-    _BC_controller->closeSerial();
+
+    _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
+
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__;
 #endif

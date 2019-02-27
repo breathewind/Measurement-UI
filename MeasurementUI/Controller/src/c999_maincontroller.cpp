@@ -181,7 +181,8 @@ void MainController::initSerial_operaiton()
 
     _capture_timer = new QTimer();
     _capture_timer_timeout = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT;
-    connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
+    connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_read_serial_buffer_for_current);
+//    connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
     connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
 
     _execution_timer = new QTimer();
@@ -196,9 +197,9 @@ void MainController::initSerial_operaiton()
  *      Description: Initilize functions related to Chart operations.
  ******************************************************************************/
 void MainController::initChart_operaiton(){
-    _battery_voltage_chart_view_controller = new Chart_Controller(tr("Battery Voltage"), tr("V"));
+    _battery_voltage_chart_view_controller = new Chart_Controller(tr("Battery Voltage"), 120000, tr("V"));
     _main_window->addBettery_voltage_chart_view(_battery_voltage_chart_view_controller->getChart_view());
-    _load_current_chart_view_controller = new Chart_Controller(tr("Load Current"), tr("A"));
+    _load_current_chart_view_controller = new Chart_Controller(tr("Load Current"), CHART_CONTROLLER_DEFAULT_TIME_RANGE, tr("A"));
     _main_window->addLoad_current_chart_view(_load_current_chart_view_controller->getChart_view());
 }
 
@@ -444,6 +445,12 @@ void MainController::captureOne_measurement()
 void MainController::startExecution()
 {
     _execution_timer->start(_execution_period);
+
+    _execution_command = MAINCONTROLLER_EXE_COMMAND_RUN;
+    if(_half_counter == MAINCONTROLLER_FIRST_HALF){
+        _half_counter = MAINCONTROLLER_SECOND_HALF;
+    }
+
 #ifdef MAINCONTROLLER_DEBUG
     int value_to_be_set;
     if(test_counter == 4) {
