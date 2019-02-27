@@ -195,7 +195,7 @@ void MainController::initSerial_operaiton()
 void MainController::initChart_operaiton(){
     _battery_voltage_chart_view_controller = new Chart_Controller(tr("Battery Voltage"), tr("V"));
     _main_window->addBettery_voltage_chart_view(_battery_voltage_chart_view_controller->getChart_view());
-    _load_current_chart_view_controller = new Chart_Controller(tr("Load Current"), tr("I"));
+    _load_current_chart_view_controller = new Chart_Controller(tr("Load Current"), tr("A"));
     _main_window->addLoad_current_chart_view(_load_current_chart_view_controller->getChart_view());
 }
 
