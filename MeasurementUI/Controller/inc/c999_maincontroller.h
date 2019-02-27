@@ -200,6 +200,7 @@ private:
     qint64 _lasttime_recorder;
 
     Chart_Controller* _battery_voltage_chart_view_controller;
+    Chart_Controller* _load_current_chart_view_controller;
 
 #ifdef MAINCONTROLLER_DEBUG
     QElapsedTimer _elapsed_timer;

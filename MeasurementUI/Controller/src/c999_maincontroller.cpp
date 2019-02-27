@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 2/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -189,12 +189,14 @@ void MainController::initSerial_operaiton()
  *             Name: initChart_operaiton
  *      Function ID: 205
  *      Create date: 21/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Initilize functions related to Chart operations.
  ******************************************************************************/
 void MainController::initChart_operaiton(){
     _battery_voltage_chart_view_controller = new Chart_Controller(tr("Battery Voltage"), tr("V"));
     _main_window->addBettery_voltage_chart_view(_battery_voltage_chart_view_controller->getChart_view());
+    _load_current_chart_view_controller = new Chart_Controller(tr("Load Current"), tr("I"));
+    _main_window->addLoad_current_chart_view(_load_current_chart_view_controller->getChart_view());
 }
 
 /******************************************************************************

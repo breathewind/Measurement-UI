@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 30/01/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Main window of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -55,6 +55,10 @@ public:
     void addBettery_voltage_chart_view(QChartView *battery_volage_chart_view);
     /** Function 311: Remove battery chart view from main window. */
     void removeBettery_voltage_chart_view(QChartView *battery_volage_chart_view);
+    /** Function 312: Add load current chart view to main window. */
+    void addLoad_current_chart_view(QChartView *load_current_chart_view);
+    /** Function 313: Remove load current chart view from main window. */
+    void removeLoad_current_chart_view(QChartView *load_current_chart_view);
 
 
     /** Function 800: Set Settings menu action seleted. */
