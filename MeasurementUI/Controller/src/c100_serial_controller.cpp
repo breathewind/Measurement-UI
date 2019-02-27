@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 28/01/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Serial port controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -119,6 +119,53 @@ qint64 Serial_Controller::writeDMM_command(QString command,  bool command_feedba
 QString Serial_Controller::readData()
 {
     return QString::fromStdString(_serial_port->readAll().toStdString());
+}
+
+/******************************************************************************
+ *             Name: sendMCU_Value
+ *      Function ID: 305
+ *      Create date: 27/02/2019
+ * Last modify date: 27/02/2019
+ *      Description: Send a value to control digital potentiometer via serial
+ *                   communication.
+ ******************************************************************************/
+qint64 Serial_Controller::sendMCU_Value(char value)
+{
+    qint64 ret = 0;
+    char command = static_cast<char>(MEASUREMENTUI_SEND_VALUE_COMMAND);
+#ifdef SERIAL_CONTROLLER_DEBUG
+    qDebug() << command;
+#endif
+    ret += _serial_port->write(&command, 1);
+
+    command = value;
+#ifdef SERIAL_CONTROLLER_DEBUG
+    qDebug() << command;
+#endif
+    ret += _serial_port->write(&command, 1);
+
+    return ret;
+}
+
+
+/******************************************************************************
+ *             Name: MCP41010_calculate_Ohm
+ *      Function ID: 390
+ *      Create date: 27/02/2019
+ * Last modify date: 27/02/2019
+ *      Description: Calculate Ohm-value by set-value. ( Set-value in direct
+ *                   proportion to Ohm-value)
+ *
+ *  @param set_value: The set-value to be calculated. (between 0 to 255)
+ *  @return value not small than 0: The Ohm-value calculated by set-valuer.
+ *          MCP41010_NEGATIVE_OHM_VALUE(-1): The Ohm value is negative.
+ *          MCP41010_LESS_THEN_WIPER_RESISTANCE(-2): The Ohm value is less than
+ *            wiper resistance.
+ ******************************************************************************/
+int Serial_Controller::MCP41010_calculate_Ohm(uint8_t set_value)
+{
+    double Ohm_value = set_value/255.0 * MCP41010_MAX_RESISTANCE + MCP41010_WIPER_RESISTANCE;
+    return static_cast<int>(Ohm_value);
 }
 
 /******************************************************************************

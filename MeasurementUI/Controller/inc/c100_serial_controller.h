@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 28/01/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Serial port controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -19,6 +19,7 @@
 #include <QTimer>
 
 #include "h000_global_parameters.h"
+#include "h001_serial_parameters.h"
 
 #define SERIAL_CONTROLLER_READ_TIMEOUT 100
 
@@ -46,6 +47,12 @@ public:
     qint64 writeDMM_command(QString command, bool command_feedback = true);
     /** Function 304: Read data via serial communication. */
     QString readData();
+    /** Function 305: Send a value to control digital potentiometer via serial communication. */
+    qint64 sendMCU_Value(char value);
+
+    /** Function 390: Calculate Ohm-value by set-value. */
+    int MCP41010_calculate_Ohm(uint8_t set_value);
+
 
     /** Function 800: Set name of serial port. */
     void setPortName(QString portName);

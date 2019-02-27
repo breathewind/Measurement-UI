@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -11,7 +11,7 @@
  *             Name: handleStart
  *      Function ID: 236
  *      Create date: 18/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Function for handle operations related to Start.
  ******************************************************************************/
 void MainController::handleStart()
@@ -20,6 +20,7 @@ void MainController::handleStart()
     qDebug() << "+ MainController: " << __FUNCTION__;
     debug_printSerial_information();
 #endif
+    _execution_period = MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT;
 
 /** Serial port configuration */
     /** DMM controller */
@@ -45,7 +46,12 @@ void MainController::handleStart()
 
     _DMM_controller->writeDMM_command(":SYST:REM", false);
 
-    captureOne_measurement();
+//    captureOne_measurement();
+#ifdef MAINCONTROLLER_DEBUG
+    test_counter = 0;
+#endif
+    startExecution();
+
 }
 
 

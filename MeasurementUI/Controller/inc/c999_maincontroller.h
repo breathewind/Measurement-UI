@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -29,7 +29,8 @@
 #define MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT       "bc_parity"
 #define MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT  "bc_flowcontrol"
 
-#define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT  600
+#define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT   600
+#define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 1200
 
 #define MAINCONTROLLER_COMMAND_RUN   0
 #define MAINCONTROLLER_COMMAND_STOP  1
@@ -148,6 +149,8 @@ private:
     void UpdateSettings();
     /** Function 301: Capture one measurement. */
     void captureOne_measurement();
+    /** Function 302: Start exeuction of meausuremnt.. */
+    void startExecution();
 
     /** Function 600: Print data read from project file. */
     void printData_read_from_project_file(QString domain, QString content);
@@ -195,6 +198,9 @@ private:
     int _capture_timer_timeout;
     QString _data_read_buffer;
 
+    int _execution_period;
+    QTimer *_execution_timer;
+
     QElapsedTimer _main_elapsed_timer;
     qint64 _thistime_recorder;
     qint64 _lasttime_recorder;
@@ -204,6 +210,8 @@ private:
 
 #ifdef MAINCONTROLLER_DEBUG
     QElapsedTimer _elapsed_timer;
+
+    uint8_t test_counter;
 #endif
 
 private slots:
@@ -240,6 +248,8 @@ private slots:
     void slot_retrieveDMM_data(QString received_data);
     /** Function 752: Slot for reading data from data read buffer when capture timer timeout is reached. */
     void slot_read_serial_buffer();
+    /** Function 753: Slot for changing load current when execution timer timeout is reached. */
+    void slot_change_load_current();
 
 #ifdef MAINCONTROLLER_DEBUG
     /** Function 901: Print debug information. -Debug function*/

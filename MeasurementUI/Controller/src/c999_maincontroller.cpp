@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 2/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -169,7 +169,7 @@ void MainController::initFunction_operaiton()
  *             Name: initSerial_operaiton
  *      Function ID: 204
  *      Create date: 21/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Initilize functions related to Serial operations.
  ******************************************************************************/
 void MainController::initSerial_operaiton()
@@ -183,6 +183,9 @@ void MainController::initSerial_operaiton()
     _capture_timer_timeout = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT;
     connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
     connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
+
+    _execution_timer = new QTimer();
+    connect(_execution_timer, &QTimer::timeout, this, &MainController::slot_change_load_current);
 }
 
 /******************************************************************************
@@ -417,7 +420,7 @@ void MainController::UpdateSettings()
  *      Function ID: 301
  *      Create date: 25/02/2019
  * Last modify date: 26/02/2019
- *      Description:  Capture one measurement.
+ *      Description: Capture one measurement.
  ******************************************************************************/
 void MainController::captureOne_measurement()
 {
@@ -429,6 +432,31 @@ void MainController::captureOne_measurement()
     _elapsed_timer.start();
 #endif
     _capture_timer->start(_capture_timer_timeout);
+}
+
+/******************************************************************************
+ *             Name: startExecution
+ *      Function ID: 302
+ *      Create date: 27/02/2019
+ * Last modify date: 27/02/2019
+ *      Description: Start exeuction of meausuremnt.
+ ******************************************************************************/
+void MainController::startExecution()
+{
+    _execution_timer->start(_execution_period);
+#ifdef MAINCONTROLLER_DEBUG
+    int value_to_be_set;
+    if(test_counter == 4) {
+        test_counter = 0;
+    }
+    value_to_be_set = test_counter*80;
+    test_counter++;
+    _BC_controller->sendMCU_Value(static_cast<char>(value_to_be_set));
+
+    qDebug() << "+ MainController: " << __FUNCTION__ <<
+                "- set Value: " << value_to_be_set <<
+                " - " << _BC_controller->MCP41010_calculate_Ohm(static_cast<uint8_t>(value_to_be_set)) << " Ω";
+#endif
 }
 
 /******************************************************************************

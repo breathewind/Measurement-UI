@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 22/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 27/02/2019
  *      Description: Main window controller.
  *                   - Functional slots.
  ******************************************************************************/
@@ -70,7 +70,7 @@ void MainController::slot_read_serial_buffer()
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__ << "- data: " << QString("%1 V").arg(_data_read_buffer.toDouble());
 #endif
-        _battery_voltage_chart_view_controller->addOne_new_voltage((_thistime_recorder-_lasttime_recorder), _data_read_buffer.toDouble());
+        _battery_voltage_chart_view_controller->addOne_new_voltage(static_cast<int>(_thistime_recorder-_lasttime_recorder), _data_read_buffer.toDouble());
         _lasttime_recorder = _thistime_recorder;
         captureOne_measurement();
         break;
@@ -83,3 +83,19 @@ void MainController::slot_read_serial_buffer()
         break;
     }
 }
+
+/******************************************************************************
+ *             Name: slot_change_load_current
+ *      Function ID: 753
+ *      Create date: 27/02/2019
+ * Last modify date: 27/02/2019
+ *      Description: Slot for changing load current when execution timer
+ *                   timeout is reached.
+ ******************************************************************************/
+void MainController::slot_change_load_current()
+{
+    _execution_timer->stop();
+
+    startExecution();
+}
+
