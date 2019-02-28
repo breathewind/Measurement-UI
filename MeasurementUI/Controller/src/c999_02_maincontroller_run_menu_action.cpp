@@ -53,7 +53,8 @@ void MainController::handleStart()
     test_counter = 0;
 #endif
 
-    startExecution();
+    startCalibration(1.0);
+//    startExecution(80);
 //    captureOne_measurement();
 }
 

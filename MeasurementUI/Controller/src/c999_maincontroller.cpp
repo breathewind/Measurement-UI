@@ -16,11 +16,13 @@
  *             Name: MainController
  *      Function ID: 000
  *      Create date: 14/02/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Construction function.
  ******************************************************************************/
 MainController::MainController()
 {
+    _sense_resistance = MAINCONTTROLLER_RESISTANCE;
+    _control_resistance = 0;
     initMainwindow();
 
     initProject_operaiton();
@@ -108,6 +110,47 @@ void MainController::updateProject_information(QString project_file_full_path)
 }
 
 /******************************************************************************
+ *             Name: createWave_block
+ *      Function ID: 006
+ *      Create date: 28/02/2019
+ * Last modify date: 28/02/2019
+ *      Description: Create a new wave block by current measurement and
+ *                   update it to chart.
+ ******************************************************************************/
+void MainController::createWave_block(int current_time)
+{
+    if(_half_counter == MAINCONTROLLER_FIRST_HALF){
+        int relax_time = _execution_period/2 - current_time;
+        if(relax_time > 0){
+            _execution_capture_timer->start(relax_time);
+            _half_counter = MAINCONTROLLER_SECOND_HALF;
+            _first_x = current_time;
+            _first_y = _data_read_buffer_current;
+#ifdef MAINCONTROLLER_DEBUG
+        qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << current_time << " milliseconds";
+#endif
+        }
+    }else {
+        _half_counter = MAINCONTROLLER_FIRST_HALF;
+        qint64 second_x = current_time;
+        double second_y = _data_read_buffer_current;
+
+        Wave_Block new_block(_execution_period);
+        new_block.setFirst_point(_first_x, _first_y);
+        new_block.setSecond_point(second_x, second_y);
+        new_block.calculate();
+        _load_current_chart_view_controller->addOne_new_point(1, new_block.y_start());
+        _load_current_chart_view_controller->addOne_new_point(_execution_period-1, new_block.y_end());
+
+#ifdef MAINCONTROLLER_DEBUG
+        qDebug() << "+ MainController: " << __FUNCTION__ << " The first point: (" << _first_x << ", " << _first_y << ")";
+        qDebug() << "+ MainController: " << __FUNCTION__ << " The second point: (" << second_x << ", " << second_y << ")";
+        qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << current_time -_execution_period/2 << " milliseconds";
+#endif
+    }
+}
+
+/******************************************************************************
  *             Name: initMain_Window
  *      Function ID: 200
  *      Create date: 18/02/2019
@@ -185,6 +228,7 @@ void MainController::initSerial_operaiton()
     _execution_capture_timer = new QTimer();
     connect(_execution_capture_timer, &QTimer::timeout, this, &MainController::slot_start_second_half_meausurement);
     _execution_elapsed_timer = new QElapsedTimer();
+    _execution_calibrate_timer = new QTimer();
 
     /** Battery voltage measurement serial settings */
     _DMM_controller = new Serial_Controller();
@@ -456,7 +500,7 @@ void MainController::captureOne_measurement()
  * Last modify date: 28/02/2019
  *      Description: Start exeuction of meausuremnt.
  ******************************************************************************/
-void MainController::startExecution()
+void MainController::startExecution(uint8_t resistance)
 {
     _execution_timer->start(_execution_period);
     _execution_elapsed_timer->start();
@@ -481,6 +525,28 @@ void MainController::startExecution()
                 "- set Value: " << value_to_be_set <<
                 " - " << _BC_controller->MCP41010_calculate_Ohm(static_cast<uint8_t>(value_to_be_set)) << " Ohm";
 #endif
+}
+
+/******************************************************************************
+ *             Name: startCalibration
+ *      Function ID: 303
+ *      Create date: 28/02/2019
+ * Last modify date: 28/02/2019
+ *      Description: Start calibration of meausuremnt.
+ ******************************************************************************/
+void MainController::startCalibration(double target_current)
+{
+    _execution_command = MAINCONTROLLER_EXE_COMMAND_CALIBRATION;
+    _control_resistance = 0;
+    _target_current = target_current;
+    _calibration_factor = 0;
+
+    _execution_elapsed_timer->start(); // not really used during calibration
+
+    _BC_controller->sendMCU_Value(static_cast<char>(_control_resistance));
+
+    _DMM_controller_current->writeDMM_command(":SYST:REM", false);
+    _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
 }
 
 /******************************************************************************

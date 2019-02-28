@@ -98,36 +98,45 @@ void MainController::slot_read_serial_buffer()
 void MainController::slot_retrieveDMM_data_for_current(QString received_data)
 {
     int execution_time_recorder = static_cast<int>(_execution_elapsed_timer->elapsed());
-    _data_read_buffer_current = received_data.toDouble();
+    _data_read_buffer_current = received_data.toDouble()/_sense_resistance;
 
-    if(_half_counter == MAINCONTROLLER_FIRST_HALF){
-        int relax_time = _execution_period/2 - execution_time_recorder;
-        if(relax_time > 0){
-            _execution_capture_timer->start(relax_time);
-            _half_counter = MAINCONTROLLER_SECOND_HALF;
-            _first_x = execution_time_recorder;
-            _first_y = _data_read_buffer_current;
+    switch (_execution_command) {
+    case MAINCONTROLLER_EXE_COMMAND_RUN:
+        createWave_block(execution_time_recorder);
+        break;
+    case MAINCONTROLLER_EXE_COMMAND_CALIBRATION:
+        if( _calibration_factor == 8) {
 #ifdef MAINCONTROLLER_DEBUG
-        qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << execution_time_recorder << " milliseconds";
+    qDebug() << "+ MainController: " << __FUNCTION__ << "Calibration finished";
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Final value: " << _control_resistance;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Final current: " << _data_read_buffer_current;
 #endif
+            _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
+            _DMM_controller_current->closeSerial();
+            _BC_controller->closeSerial();
+            return;
         }
-    }else {
-        _half_counter = MAINCONTROLLER_FIRST_HALF;
-        qint64 second_x = execution_time_recorder;
-        double second_y = _data_read_buffer_current;
-
-        Wave_Block new_block(_execution_period);
-        new_block.setFirst_point(_first_x, _first_y);
-        new_block.setSecond_point(second_x, second_y);
-        new_block.calculate();
-        _load_current_chart_view_controller->addOne_new_point(1, new_block.y_start());
-        _load_current_chart_view_controller->addOne_new_point(_execution_period-1, new_block.y_end());
-
+        if(_data_read_buffer_current < _target_current && _calibration_factor == 1){
 #ifdef MAINCONTROLLER_DEBUG
-        qDebug() << "+ MainController: " << __FUNCTION__ << " The first point: (" << _first_x << ", " << _first_y << ")";
-        qDebug() << "+ MainController: " << __FUNCTION__ << " The second point: (" << second_x << ", " << second_y << ")";
-        qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << execution_time_recorder -_execution_period/2 << " milliseconds";
+    qDebug() << "+ MainController: " << __FUNCTION__ << "Target current is larger than the maximum current";
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Target current: " << _target_current;
+    qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Maximum current: " << _data_read_buffer_current;
 #endif
+//            return;
+        }
+        if(_data_read_buffer_current > _target_current){
+            _control_resistance += (128>>_calibration_factor);
+        } else {
+             _control_resistance -= (128>>_calibration_factor);
+        }
+        _calibration_factor++;
+        _BC_controller->sendMCU_Value(static_cast<char>(_control_resistance));
+        _execution_capture_timer->start(0);
+//        _DMM_controller_current->writeDMM_command(":SYST:REM", false);
+//        _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
+        break;
+    default:
+        break;
     }
 
 #ifdef MAINCONTROLLER_DEBUG
@@ -163,7 +172,7 @@ void MainController::slot_change_load_current()
     _execution_timer->stop();
     switch(_execution_command){
     case MAINCONTROLLER_EXE_COMMAND_RUN:
-        startExecution();
+        startExecution(80);
         break;
     case MAINCONTROLLER_EXE_COMMAND_STOP:
         _BC_controller->closeSerial();

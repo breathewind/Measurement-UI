@@ -32,6 +32,8 @@
 #define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT   1000
 #define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 1500
 
+#define MAINCONTTROLLER_RESISTANCE 0.53
+
 #define MAINCONTROLLER_VOLT_COMMAND_RUN   0
 #define MAINCONTROLLER_VOLT_COMMAND_STOP  1
 #define MAINCONTROLLER_VOLT_COMMAND_PAUSE 2
@@ -43,6 +45,7 @@
 #define MAINCONTROLLER_EXE_COMMAND_RUN   0
 #define MAINCONTROLLER_EXE_COMMAND_STOP  1
 #define MAINCONTROLLER_EXE_COMMAND_PAUSE 2
+#define MAINCONTROLLER_EXE_COMMAND_CALIBRATION 3
 
 
 #define MAINCONTROLLER_FIRST_HALF true
@@ -90,6 +93,8 @@ private:
     void updateProject_information(QString project_name, QString project_path);
     /** Function 005: Update project information according to project file full path. */
     void updateProject_information(QString project_file_full_path);
+    /** Function 006: Create a new wave block by current measurement and update it to chart. */
+    void createWave_block(int current_time);
 
     /** Function 200: Initilize functions related to Main Window. */
     void initMainwindow();
@@ -162,7 +167,9 @@ private:
     /** Function 301: Capture one measurement. */
     void captureOne_measurement();
     /** Function 302: Start exeuction of meausuremnt.. */
-    void startExecution();
+    void startExecution(uint8_t resistance);
+    /** Function 303: Start calibration of meausuremnt.. */
+    void startCalibration(double target_current);
 
     /** Function 600: Print data read from project file. */
     void printData_read_from_project_file(QString domain, QString content);
@@ -220,6 +227,7 @@ private:
     int _execution_period;
     QTimer *_execution_timer;
     QTimer *_execution_capture_timer;
+    QTimer *_execution_calibrate_timer;
     int _execution_command;
     bool _half_counter;
 
@@ -234,6 +242,11 @@ private:
 
     Chart_Controller* _battery_voltage_chart_view_controller;
     Chart_Controller* _load_current_chart_view_controller;
+
+    double _sense_resistance;
+    uint8_t _control_resistance;
+    double _target_current;
+    int _calibration_factor;
 
 #ifdef MAINCONTROLLER_DEBUG
     QElapsedTimer _elapsed_timer;
