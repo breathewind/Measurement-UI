@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 25/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Chart controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -43,7 +43,7 @@ public:
     /** Function 300: Get chart view. */
     QChartView *getChart_view();
     /** Function 301: Add one new voltage value to chart. */
-    void addOne_new_voltage(int step, double voltage_value);
+    void addOne_new_point(int step, double voltage_value);
     /** Function 302: Reset the chart as default values. */
     void reset();
 

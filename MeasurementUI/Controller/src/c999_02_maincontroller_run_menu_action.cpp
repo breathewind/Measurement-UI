@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -39,7 +39,7 @@ void MainController::handleStart()
     _BC_controller->setFlowControl(static_cast<QSerialPort::FlowControl>(__serial_definitions.getFlowcontrol(_bc_flowcontrol)));
 
     _main_elapsed_timer.start();
-    _lasttime_recorder =  _main_elapsed_timer.elapsed();
+//    _lastime_recorder =  _main_elapsed_timer.elapsed();
 
     _battery_voltage_chart_view_controller->reset();
     _load_current_chart_view_controller->reset();
@@ -52,9 +52,9 @@ void MainController::handleStart()
 #ifdef MAINCONTROLLER_DEBUG
     test_counter = 0;
 #endif
-    _half_counter = MAINCONTROLLER_FIRST_HALF;
+
     startExecution();
-    captureOne_measurement();
+//    captureOne_measurement();
 }
 
 
@@ -62,12 +62,13 @@ void MainController::handleStart()
  *             Name: handleStop
  *      Function ID: 237
  *      Create date: 18/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Function for handle operations related to Stop.
  ******************************************************************************/
 void MainController::handleStop()
 {
-    _sampling_command = MAINCONTROLLER_COMMAND_STOP;
+    _sampling_command = MAINCONTROLLER_VOLT_COMMAND_STOP;
+//    _sampling_command_current = MAINCONTROLLER_CURR_COMMAND_STOP;
 
     _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
 

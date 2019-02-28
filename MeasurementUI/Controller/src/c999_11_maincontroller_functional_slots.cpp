@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 22/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Main window controller.
  *                   - Functional slots.
  ******************************************************************************/
@@ -57,7 +57,7 @@ void MainController::slot_retrieveDMM_data(QString received_data)
  *             Name: slot_read_serial_buffer
  *      Function ID: 752
  *      Create date: 25/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Slot for reading data from data read buffer when capture
  *                   timer timeout is reached.
  ******************************************************************************/
@@ -66,62 +66,91 @@ void MainController::slot_read_serial_buffer()
     _capture_timer->stop();
 
     switch(_sampling_command){
-    case MAINCONTROLLER_COMMAND_RUN:
+    case MAINCONTROLLER_VOLT_COMMAND_RUN:
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__ << "- data: " << QString("%1 V").arg(_data_read_buffer.toDouble());
 #endif
-        _battery_voltage_chart_view_controller->addOne_new_voltage(static_cast<int>(_thistime_recorder-_lasttime_recorder), _data_read_buffer.toDouble());
+        _battery_voltage_chart_view_controller->addOne_new_point(static_cast<int>(_thistime_recorder-_lastime_recorder), _data_read_buffer.toDouble());
 
-        _lasttime_recorder = _thistime_recorder;
+        _lastime_recorder = _thistime_recorder;
         captureOne_measurement();
         break;
-    case MAINCONTROLLER_COMMAND_STOP:
+    case MAINCONTROLLER_VOLT_COMMAND_STOP:
         _DMM_controller->closeSerial();
         break;
-    case MAINCONTROLLER_COMMAND_PAUSE:
+    case MAINCONTROLLER_VOLT_COMMAND_PAUSE:
         break;
     default:
         break;
     }
+}
+
+/******************************************************************************
+ *             Name: slot_retrieveDMM_data_for_current
+ *      Function ID: 753
+ *      Create date: 28/02/2019
+ * Last modify date: 28/02/2019
+ *      Description: Slot for retrieving data from DMM during current
+ *                   measurement when one data to read is ready.
+ ******************************************************************************/
+void MainController::slot_retrieveDMM_data_for_current(QString received_data)
+{
+    int execution_time_recorder = static_cast<int>(_execution_elapsed_timer->elapsed());
+    _data_read_buffer_current = received_data.toDouble();
+
+    if(_half_counter == MAINCONTROLLER_FIRST_HALF){
+        int relax_time = _execution_period/2 - execution_time_recorder;
+        if(relax_time > 0){
+            _execution_capture_timer->start(relax_time);
+            _half_counter = MAINCONTROLLER_SECOND_HALF;
+            _first_x = execution_time_recorder;
+            _first_y = _data_read_buffer_current;
+#ifdef MAINCONTROLLER_DEBUG
+        qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << execution_time_recorder << " milliseconds";
+#endif
+        }
+    }else {
+        _half_counter = MAINCONTROLLER_FIRST_HALF;
+        qint64 second_x = execution_time_recorder;
+        double second_y = _data_read_buffer_current;
+
+        Wave_Block new_block(_execution_period);
+        new_block.setFirst_point(_first_x, _first_y);
+        new_block.setSecond_point(second_x, second_y);
+        new_block.calculate();
+        _load_current_chart_view_controller->addOne_new_point(1, new_block.y_start());
+        _load_current_chart_view_controller->addOne_new_point(_execution_period*2-1, new_block.y_end());
+
+#ifdef MAINCONTROLLER_DEBUG
+        qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << execution_time_recorder -_execution_period/2 << " milliseconds";
+#endif
+    }
+
+#ifdef MAINCONTROLLER_DEBUG
+    qDebug() << "+ MainController: " << __FUNCTION__ << "- received_data: " << received_data;
+#endif
 }
 
 /******************************************************************************
  *             Name: slot_read_serial_buffer_for_current
- *      Function ID: 753
+ *      Function ID: 754
  *      Create date: 27/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Slot for reading data from data read buffer during current
  *                   measurement when capture timer timeout is reached.
  ******************************************************************************/
-void MainController::slot_read_serial_buffer_for_current()
-{
-    _capture_timer->stop();
-
-    switch(_sampling_command){
-    case MAINCONTROLLER_COMMAND_RUN:
-#ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: " << __FUNCTION__ << "- data: " << QString("%1 V").arg(_data_read_buffer.toDouble());
-#endif
-        _battery_voltage_chart_view_controller->addOne_new_voltage(static_cast<int>(_thistime_recorder-_lasttime_recorder), _data_read_buffer.toDouble());
-
-        _lasttime_recorder = _thistime_recorder;
-        captureOne_measurement();
-        break;
-    case MAINCONTROLLER_COMMAND_STOP:
-        _DMM_controller->closeSerial();
-        break;
-    case MAINCONTROLLER_COMMAND_PAUSE:
-        break;
-    default:
-        break;
-    }
-}
+//void MainController::slot_read_serial_buffer_for_current()
+//{
+//    _capture_timer_current->stop();
+//    _DMM_controller->writeDMM_command(":SYST:REM", false);
+//    _DMM_controller->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
+//}
 
 /******************************************************************************
  *             Name: slot_change_load_current
- *      Function ID: 754
+ *      Function ID: 755
  *      Create date: 27/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Slot for changing load current when execution timer
  *                   timeout is reached.
  ******************************************************************************/
@@ -134,9 +163,25 @@ void MainController::slot_change_load_current()
         break;
     case MAINCONTROLLER_EXE_COMMAND_STOP:
         _BC_controller->closeSerial();
+        _DMM_controller_current->closeSerial();
         break;
     default:
         break;
     }
+}
+
+/******************************************************************************
+ *             Name: slot_start_second_half_meausurement
+ *      Function ID: 756
+ *      Create date: 28/02/2019
+ * Last modify date: 28/02/2019
+ *      Description: Slot for startomg second half load current meausurement
+ *                   when execution capture timer timeout is reached.
+ ******************************************************************************/
+void MainController::slot_start_second_half_meausurement()
+{
+    _execution_capture_timer->stop();
+    _DMM_controller_current->writeDMM_command(":SYST:REM", false);
+    _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
 }
 

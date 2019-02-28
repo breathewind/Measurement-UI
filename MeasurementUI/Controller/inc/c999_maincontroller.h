@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -32,9 +32,13 @@
 #define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT   1000
 #define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 2000
 
-#define MAINCONTROLLER_COMMAND_RUN   0
-#define MAINCONTROLLER_COMMAND_STOP  1
-#define MAINCONTROLLER_COMMAND_PAUSE 2
+#define MAINCONTROLLER_VOLT_COMMAND_RUN   0
+#define MAINCONTROLLER_VOLT_COMMAND_STOP  1
+#define MAINCONTROLLER_VOLT_COMMAND_PAUSE 2
+
+#define MAINCONTROLLER_CURR_COMMAND_RUN   0
+#define MAINCONTROLLER_CURR_COMMAND_STOP  1
+#define MAINCONTROLLER_CURR_COMMAND_PAUSE 2
 
 #define MAINCONTROLLER_EXE_COMMAND_RUN   0
 #define MAINCONTROLLER_EXE_COMMAND_STOP  1
@@ -200,20 +204,33 @@ private:
     QString _bc_flowcontrol;
 
     Serial_Controller *_DMM_controller;
+    Serial_Controller *_DMM_controller_current;
     Serial_Controller *_BC_controller;
+
     int _sampling_command;
     QTimer *_capture_timer;
     int _capture_timer_timeout;
     QString _data_read_buffer;
 
+//    int _sampling_command_current;
+//    QTimer *_capture_timer_current;
+//    int _capture_timer_timeout_current;
+    double _data_read_buffer_current;
+
     int _execution_period;
     QTimer *_execution_timer;
+    QTimer *_execution_capture_timer;
     int _execution_command;
     bool _half_counter;
 
+    QElapsedTimer *_execution_elapsed_timer;
+
     QElapsedTimer _main_elapsed_timer;
     qint64 _thistime_recorder;
-    qint64 _lasttime_recorder;
+    qint64 _lastime_recorder;
+
+    qint64 _first_x;
+    double _first_y;
 
     Chart_Controller* _battery_voltage_chart_view_controller;
     Chart_Controller* _load_current_chart_view_controller;
@@ -258,10 +275,14 @@ private slots:
     void slot_retrieveDMM_data(QString received_data);
     /** Function 752: Slot for reading data from data read buffer when capture timer timeout is reached. */
     void slot_read_serial_buffer();
-    /** Function 753: Slot for reading data from data read buffer during current measurement when capture timer timeout is reached. */
-    void slot_read_serial_buffer_for_current();
-    /** Function 754: Slot for changing load current when execution timer timeout is reached. */
+    /** Function 753: Slot for retrieving data from DMM during current measurement when one data to read is ready. */
+    void slot_retrieveDMM_data_for_current(QString received_data);
+    /** Function 754: Slot for reading data from data read buffer during current measurement when capture timer timeout is reached. */
+//    void slot_read_serial_buffer_for_current();
+    /** Function 755: Slot for changing load current when execution timer timeout is reached. */
     void slot_change_load_current();
+    /** Function 756: Slot for startomg second half load current meausurement when execution capture timer timeout is reached. */
+    void slot_start_second_half_meausurement();
 
 #ifdef MAINCONTROLLER_DEBUG
     /** Function 901: Print debug information. -Debug function*/

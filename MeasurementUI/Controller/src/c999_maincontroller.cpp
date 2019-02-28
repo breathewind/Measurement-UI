@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -169,35 +169,49 @@ void MainController::initFunction_operaiton()
  *             Name: initSerial_operaiton
  *      Function ID: 204
  *      Create date: 21/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Initilize functions related to Serial operations.
  ******************************************************************************/
 void MainController::initSerial_operaiton()
 {
-    _DMM_controller = new Serial_Controller();
+    _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
+    _sampling_command = MAINCONTROLLER_VOLT_COMMAND_STOP;
+//    _sampling_command_current = MAINCONTROLLER_CURR_COMMAND_STOP;
+    /** Battery control serial settings */
     _BC_controller = new Serial_Controller();
-
-    _sampling_command = MAINCONTROLLER_COMMAND_STOP;
-
-    _capture_timer = new QTimer();
-    _capture_timer_timeout = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT;
-    connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer_for_current);
-    connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
-//    connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
 
     _execution_timer = new QTimer();
     connect(_execution_timer, &QTimer::timeout, this, &MainController::slot_change_load_current);
+    _execution_capture_timer = new QTimer();
+    connect(_execution_capture_timer, &QTimer::timeout, this, &MainController::slot_start_second_half_meausurement);
+    _execution_elapsed_timer = new QElapsedTimer();
+
+    /** Battery voltage measurement serial settings */
+    _DMM_controller = new Serial_Controller();
+    connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
+
+    _capture_timer = new QTimer();
+    _capture_timer_timeout = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT;
+    connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
+
+    /** Load current measurement serial settings */
+    _DMM_controller_current = new Serial_Controller();
+    connect(_DMM_controller_current, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data_for_current);
+
+//    _capture_timer_current = new QTimer();
+//    _capture_timer_timeout_current = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT;
+//    connect(_capture_timer_current, &QTimer::timeout, this, &MainController::slot_read_serial_buffer_for_current);
 }
 
 /******************************************************************************
  *             Name: initChart_operaiton
  *      Function ID: 205
  *      Create date: 21/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Initilize functions related to Chart operations.
  ******************************************************************************/
 void MainController::initChart_operaiton(){
-    _battery_voltage_chart_view_controller = new Chart_Controller(tr("Battery Voltage"), 120000, tr("V"));
+    _battery_voltage_chart_view_controller = new Chart_Controller(tr("Battery Voltage"), CHART_CONTROLLER_DEFAULT_TIME_RANGE, tr("V"));
     _main_window->addBettery_voltage_chart_view(_battery_voltage_chart_view_controller->getChart_view());
     _load_current_chart_view_controller = new Chart_Controller(tr("Load Current"), CHART_CONTROLLER_DEFAULT_TIME_RANGE, tr("A"));
     _main_window->addLoad_current_chart_view(_load_current_chart_view_controller->getChart_view());
@@ -425,7 +439,7 @@ void MainController::UpdateSettings()
  ******************************************************************************/
 void MainController::captureOne_measurement()
 {
-    _sampling_command = MAINCONTROLLER_COMMAND_RUN;
+    _sampling_command = MAINCONTROLLER_VOLT_COMMAND_RUN;
 
     _DMM_controller->writeDMM_command(":SYST:REM", false);
     _DMM_controller->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
@@ -439,17 +453,15 @@ void MainController::captureOne_measurement()
  *             Name: startExecution
  *      Function ID: 302
  *      Create date: 27/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 28/02/2019
  *      Description: Start exeuction of meausuremnt.
  ******************************************************************************/
 void MainController::startExecution()
 {
     _execution_timer->start(_execution_period);
-
+    _execution_elapsed_timer->start();
     _execution_command = MAINCONTROLLER_EXE_COMMAND_RUN;
-    if(_half_counter == MAINCONTROLLER_FIRST_HALF){
-        _half_counter = MAINCONTROLLER_SECOND_HALF;
-    }
+    _half_counter = MAINCONTROLLER_FIRST_HALF;
 
 #ifdef MAINCONTROLLER_DEBUG
     int value_to_be_set;
@@ -459,7 +471,12 @@ void MainController::startExecution()
     value_to_be_set = test_counter*80;
     test_counter++;
     _BC_controller->sendMCU_Value(static_cast<char>(value_to_be_set));
+#endif
 
+    _DMM_controller_current->writeDMM_command(":SYST:REM", false);
+    _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
+
+#ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__ <<
                 "- set Value: " << value_to_be_set <<
                 " - " << _BC_controller->MCP41010_calculate_Ohm(static_cast<uint8_t>(value_to_be_set)) << " Ohm";
