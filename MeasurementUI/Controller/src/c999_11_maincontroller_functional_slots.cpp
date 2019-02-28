@@ -31,7 +31,9 @@ void MainController::slot_update_data_from_settings(QList<QStringList> data_set)
     _bc_flowcontrol = data_set.at(SETTINGS_DIALOG_CONTROLLER_DATA_BC).at(MEASUREMENTUI_INDEX_FLOWCONTROL);
     _bc_port = data_set.at(SETTINGS_DIALOG_CONTROLLER_DATA_BC).at(MEASUREMENTUI_INDEX_PORT);
 
+#ifdef MAINCONTROLLER_DEBUG
     debug_printSerial_information();
+#endif
 }
 
 /******************************************************************************
@@ -119,9 +121,11 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
         new_block.setSecond_point(second_x, second_y);
         new_block.calculate();
         _load_current_chart_view_controller->addOne_new_point(1, new_block.y_start());
-        _load_current_chart_view_controller->addOne_new_point(_execution_period*2-1, new_block.y_end());
+        _load_current_chart_view_controller->addOne_new_point(_execution_period-1, new_block.y_end());
 
 #ifdef MAINCONTROLLER_DEBUG
+        qDebug() << "+ MainController: " << __FUNCTION__ << " The first point: (" << _first_x << ", " << _first_y << ")";
+        qDebug() << "+ MainController: " << __FUNCTION__ << " The second point: (" << second_x << ", " << second_y << ")";
         qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << execution_time_recorder -_execution_period/2 << " milliseconds";
 #endif
     }
