@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 01/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -131,7 +131,7 @@ void MainController::createWave_block(int current_time)
 #endif
         }
     }else {
-        _half_counter = MAINCONTROLLER_FIRST_HALF;
+//        _half_counter = MAINCONTROLLER_FIRST_HALF;
         qint64 second_x = current_time;
         double second_y = _data_read_buffer_current;
 
@@ -497,7 +497,7 @@ void MainController::captureOne_measurement()
  *             Name: startExecution
  *      Function ID: 302
  *      Create date: 27/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 01/03/2019
  *      Description: Start exeuction of meausuremnt.
  ******************************************************************************/
 void MainController::startExecution(uint8_t resistance)
@@ -508,22 +508,23 @@ void MainController::startExecution(uint8_t resistance)
     _half_counter = MAINCONTROLLER_FIRST_HALF;
 
 #ifdef MAINCONTROLLER_DEBUG
-    int value_to_be_set;
-    if(test_counter == 4) {
-        test_counter = 0;
-    }
-    value_to_be_set = test_counter*80;
-    test_counter++;
-    _BC_controller->sendMCU_Value(static_cast<char>(value_to_be_set));
+//    int value_to_be_set;
+//    if(test_counter == 4) {
+//        test_counter = 0;
+//    }
+//    value_to_be_set = test_counter*80;
+//    test_counter++;
+//    _BC_controller->sendMCU_Value(static_cast<char>(value_to_be_set));
 #endif
 
-    _DMM_controller_current->writeDMM_command(":SYST:REM", false);
-    _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
+    _BC_controller->sendMCU_Value(static_cast<char>(resistance));
+
+    _execution_capture_timer->start(0);
+//    _DMM_controller_current->writeDMM_command(":SYST:REM", false);
+//    _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
 
 #ifdef MAINCONTROLLER_DEBUG
-    qDebug() << "+ MainController: " << __FUNCTION__ <<
-                "- set Value: " << value_to_be_set <<
-                " - " << _BC_controller->MCP41010_calculate_Ohm(static_cast<uint8_t>(value_to_be_set)) << " Ohm";
+    qDebug() << "+ MainController: " << __FUNCTION__ << "- set Value: " << resistance;
 #endif
 }
 
@@ -537,7 +538,7 @@ void MainController::startExecution(uint8_t resistance)
 void MainController::startCalibration(double target_current)
 {
     _execution_command = MAINCONTROLLER_EXE_COMMAND_CALIBRATION;
-    _control_resistance = 0;
+    _control_resistance = 255;
     _target_current = target_current;
     _calibration_factor = 0;
 

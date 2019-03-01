@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 01/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -30,7 +30,7 @@
 #define MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT  "bc_flowcontrol"
 
 #define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT   1000
-#define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 1500
+#define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 2000
 
 #define MAINCONTTROLLER_RESISTANCE 0.53
 
@@ -50,6 +50,9 @@
 
 #define MAINCONTROLLER_FIRST_HALF true
 #define MAINCONTROLLER_SECOND_HALF false
+
+#define MAINCONTROLLER_TOGGLE_FLAG_ON true
+#define MAINCONTROLLER_TOGGLE_FLAG_OFF false
 
 #include <QObject>
 #include <QDir>
@@ -230,6 +233,7 @@ private:
     QTimer *_execution_calibrate_timer;
     int _execution_command;
     bool _half_counter;
+    bool _toggle_flag;
 
     QElapsedTimer *_execution_elapsed_timer;
 

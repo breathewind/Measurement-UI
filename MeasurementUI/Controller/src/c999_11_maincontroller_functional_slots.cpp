@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 22/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 01/03/2019
  *      Description: Main window controller.
  *                   - Functional slots.
  ******************************************************************************/
@@ -91,7 +91,7 @@ void MainController::slot_read_serial_buffer()
  *             Name: slot_retrieveDMM_data_for_current
  *      Function ID: 753
  *      Create date: 28/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 01/03/2019
  *      Description: Slot for retrieving data from DMM during current
  *                   measurement when one data to read is ready.
  ******************************************************************************/
@@ -111,29 +111,29 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
     qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Final value: " << _control_resistance;
     qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Final current: " << _data_read_buffer_current;
 #endif
-            _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
-            _DMM_controller_current->closeSerial();
-            _BC_controller->closeSerial();
+//            _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
+//            _DMM_controller_current->closeSerial();
+//            _BC_controller->closeSerial();
+            _toggle_flag = MAINCONTROLLER_TOGGLE_FLAG_ON;
+            startExecution(_control_resistance);
             return;
         }
-        if(_data_read_buffer_current < _target_current && _calibration_factor == 1){
+        if(_data_read_buffer_current < _target_current && _calibration_factor == 0){
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__ << "Target current is larger than the maximum current";
     qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Target current: " << _target_current;
     qDebug() << MAINCONTORLLER_DEBUG_PREFIX << "Maximum current: " << _data_read_buffer_current;
 #endif
-//            return;
+            return;
         }
         if(_data_read_buffer_current > _target_current){
-            _control_resistance += (128>>_calibration_factor);
+            _control_resistance -= (128>>_calibration_factor);
         } else {
-             _control_resistance -= (128>>_calibration_factor);
+             _control_resistance += (128>>_calibration_factor);
         }
         _calibration_factor++;
         _BC_controller->sendMCU_Value(static_cast<char>(_control_resistance));
-        _execution_capture_timer->start(0);
-//        _DMM_controller_current->writeDMM_command(":SYST:REM", false);
-//        _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
+        _execution_capture_timer->start(1000);
         break;
     default:
         break;
@@ -163,7 +163,7 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
  *             Name: slot_change_load_current
  *      Function ID: 755
  *      Create date: 27/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 01/03/2019
  *      Description: Slot for changing load current when execution timer
  *                   timeout is reached.
  ******************************************************************************/
@@ -172,7 +172,12 @@ void MainController::slot_change_load_current()
     _execution_timer->stop();
     switch(_execution_command){
     case MAINCONTROLLER_EXE_COMMAND_RUN:
-        startExecution(80);
+        if(_toggle_flag == MAINCONTROLLER_TOGGLE_FLAG_ON){
+            startExecution(_control_resistance);
+        } else {
+            startExecution(0);
+        }
+        _toggle_flag = !_toggle_flag;
         break;
     case MAINCONTROLLER_EXE_COMMAND_STOP:
         _BC_controller->closeSerial();
