@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 25/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Chart controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -167,4 +167,17 @@ void Chart_Controller::reset()
 
     _serises->clear();
     _serises->append(0, 0);
+}
+
+/******************************************************************************
+ *             Name: setY_range
+ *      Function ID: 303
+ *      Create date: 04/03/2019
+ * Last modify date: 04/03/2019
+ *      Description:  Set display range of  Y axis.
+ ******************************************************************************/
+void Chart_Controller::setY_range(double y_range_min, double y_range_max)
+{
+    _axisY->setMin(y_range_min);
+    _axisY->setMax(y_range_max);
 }

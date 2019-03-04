@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 25/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Chart controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -46,6 +46,8 @@ public:
     void addOne_new_point(int step, double voltage_value);
     /** Function 302: Reset the chart as default values. */
     void reset();
+    /** Function 303: Set display range of  Y axis. */
+    void setY_range(double y_range_min, double y_range_max);
 
 private:
     /** Function 002: Set the chart as default values. */
