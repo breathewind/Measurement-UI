@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 01/03/2019
+ * Last modify date: 04/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -98,6 +98,8 @@ private:
     void updateProject_information(QString project_file_full_path);
     /** Function 006: Create a new wave block by current measurement and update it to chart. */
     void createWave_block(int current_time);
+    /** Function 007: Save wave data to file with specific file path. */
+    int saveWave_data(QString file_path, qint64 time1, double value1, qint64 time2, double value2);
 
     /** Function 200: Initilize functions related to Main Window. */
     void initMainwindow();
@@ -198,6 +200,10 @@ private:
     QString _project_path;
     QString _project_file_full_path;
     QString _current_path;
+
+    QString _project_output_path;
+    QString _output_file_name;
+    QString _raw_output_file_name;
 
     QString _dmm_port;
     QString _dmm_baudrate;

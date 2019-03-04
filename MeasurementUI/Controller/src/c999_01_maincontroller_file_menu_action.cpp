@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -11,7 +11,7 @@
  *             Name: handleNew_Project
  *      Function ID: 231
  *      Create date: 18/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Function for handle operations related to New Project.
  ******************************************************************************/
 bool MainController::handleNew_Project()
@@ -47,6 +47,7 @@ bool MainController::handleNew_Project()
         dir.removeRecursively();
     }
     QDir().mkdir(_project_path);
+    QDir().mkdir(_project_output_path);
     /** Create project file. */
     QFile file(_project_file_full_path);
     if (!file.open(QFile::WriteOnly | QFile::Text )) {

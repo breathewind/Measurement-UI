@@ -46,8 +46,11 @@ public:
     void addOne_new_point(int step, double voltage_value);
     /** Function 302: Reset the chart as default values. */
     void reset();
-    /** Function 303: Set display range of  Y axis. */
+
+    /** Function 800: Set display range of  Y axis. */
     void setY_range(double y_range_min, double y_range_max);
+    /** Function 801: Get current time in ms. */
+    qint64 current_time();
 
 private:
     /** Function 002: Set the chart as default values. */

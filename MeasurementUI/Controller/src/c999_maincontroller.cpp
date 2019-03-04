@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 01/03/2019
+ * Last modify date: 04/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -16,13 +16,17 @@
  *             Name: MainController
  *      Function ID: 000
  *      Create date: 14/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Construction function.
  ******************************************************************************/
 MainController::MainController()
 {
     _sense_resistance = MAINCONTTROLLER_RESISTANCE;
     _control_resistance = 0;
+
+    _output_file_name = MEASUREMENTUI_DEFAUTL_OUTPUT_FILE_NAME;
+    _raw_output_file_name = MEASUREMENTUI_DEFAUTL_RAW_OUTPUT_FILE_NAME;
+
     initMainwindow();
 
     initProject_operaiton();
@@ -50,7 +54,7 @@ MainController::MainController()
  *             Name: MainController
  *      Function ID: 002
  *      Create date: 18/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Clear all project information.
  ******************************************************************************/
 void MainController::clearProject_information()
@@ -59,6 +63,7 @@ void MainController::clearProject_information()
     _project_file.clear();
     _project_path.clear();
     _project_file_full_path.clear();
+    _project_output_path.clear();
 }
 
 /******************************************************************************
@@ -78,7 +83,7 @@ void MainController::synchronizeCurrent_path(QString current_path)
  *             Name: updateProject_information
  *      Function ID: 004
  *      Create date: 18/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Update project information according to project name and
  *                   project path.
  ******************************************************************************/
@@ -89,6 +94,7 @@ void MainController::updateProject_information(QString project_name, QString pro
     _project_path = project_path + MEASUREMENTUI_DIR_SYMBOL + _project_name;
     _project_file_full_path = _project_path + MEASUREMENTUI_DIR_SYMBOL +
                               _project_name + MEASUREMENTUI_DAFAULT_PROJECT_SUFFIX;
+    _project_output_path = _project_path + MEASUREMENTUI_DIR_SYMBOL + MEASUREMENTUI_DEFAUTL_OUTPUT_PAHT;
     synchronizeCurrent_path(project_path);
 }
 
@@ -113,7 +119,7 @@ void MainController::updateProject_information(QString project_file_full_path)
  *             Name: createWave_block
  *      Function ID: 006
  *      Create date: 28/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Create a new wave block by current measurement and
  *                   update it to chart.
  ******************************************************************************/
@@ -139,13 +145,46 @@ void MainController::createWave_block(int current_time)
         new_block.setFirst_point(_first_x, _first_y);
         new_block.setSecond_point(second_x, second_y);
         new_block.calculate();
+
+        qint64 time_before_this_block = _load_current_chart_view_controller->current_time();
         _load_current_chart_view_controller->addOne_new_point(1, new_block.y_start());
         _load_current_chart_view_controller->addOne_new_point(_execution_period-1, new_block.y_end());
+
+        saveWave_data(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _output_file_name,
+                      time_before_this_block+1, new_block.y_start(),
+                      time_before_this_block+2000, new_block.y_end() );
+
+        saveWave_data(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _raw_output_file_name,
+                      time_before_this_block+_first_x, _first_y,
+                      time_before_this_block+second_x, second_y);
 
 #ifdef MAINCONTROLLER_DEBUG
         qDebug() << "+ MainController: " << __FUNCTION__ << " The first point: (" << _first_x << ", " << _first_y << ")";
         qDebug() << "+ MainController: " << __FUNCTION__ << " The second point: (" << second_x << ", " << second_y << ")";
         qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << current_time -_execution_period/2 << " milliseconds";
+#endif
+    }
+}
+
+/******************************************************************************
+ *             Name: saveWave_data
+ *      Function ID: 007
+ *      Create date: 04/03/2019
+ * Last modify date: 04/03/2019
+ *      Description: Save wave data to file with specific file path.
+ ******************************************************************************/
+int MainController::saveWave_data(QString file_path, qint64 time1, double value1, qint64 time2, double value2)
+{
+    QFile output_file(file_path);
+    if (output_file.open(QFile::WriteOnly | QFile::Text | QFile::Append)) {
+            QTextStream out_stream(&output_file);
+            out_stream << time1 << " " << value1 << MEASUREMENTUI_DAFAULT_NEW_LINE;
+            out_stream << time2 << " " << value2 << MEASUREMENTUI_DAFAULT_NEW_LINE;
+            out_stream.flush();
+            output_file.close();
+    } else {
+#ifdef MAINCONTROLLER_DEBUG
+            qDebug() << "+ MainController: " << __FUNCTION__ << " Fail to open file: " << file_path;
 #endif
     }
 }

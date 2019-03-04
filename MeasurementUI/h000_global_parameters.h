@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 16/02/2019
- * Last modify date: 26/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Global parameters.
  ******************************************************************************/
 #ifndef H000_GLOBAL_PARAMETERS_H
@@ -15,6 +15,10 @@
 #define MEASUREMENTUI_DAFAULT_PROJECT_FILE_TYPE tr("Project File (*.proj)")
 #define MEASUREMENTUI_DAFAULT_NEW_LINE "\n"
 //#define MEASUREMENTUI_DAFAULT_PROJECT_FILE_TYPE tr("Project File (*.proj);;All Files (*.*)")
+
+#define MEASUREMENTUI_DEFAUTL_OUTPUT_PAHT "output"
+#define MEASUREMENTUI_DEFAUTL_OUTPUT_FILE_NAME "result.txt"
+#define MEASUREMENTUI_DEFAUTL_RAW_OUTPUT_FILE_NAME "result_raw.txt"
 
 #define MEASUREMENTUI_DEBUG
 
