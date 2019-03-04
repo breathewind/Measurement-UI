@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 20/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Global parameters related to serial port.
  ******************************************************************************/
 #ifndef H001_SERIAL_PARAMETERS_H
@@ -32,6 +32,7 @@
 #include "Entities/inc/c900_serial_definitions.h"
 
 #define MEASUREMENTUI_SEND_VALUE_COMMAND 200U
+#define MEASUREMENTUI_READ_VOLTAGE_COMMAND 201U
 #define MCP41010_WIPER_RESISTANCE 52.0
 #define MCP41010_MAX_RESISTANCE   10000.0
 

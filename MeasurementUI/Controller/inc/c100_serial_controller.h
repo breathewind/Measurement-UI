@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 28/01/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Serial port controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -26,6 +26,10 @@
 #define SERIAL_CONTROLLER_WRITE_ERROR    -1
 #define SERIAL_CONTROLLER_WRITE_TIME_OUT -2
 
+
+#define SERIAL_CONTROLLER_TYPE_DMM 0
+#define SERIAL_CONTROLLER_TYPE_BC 1
+
 #ifdef SERIAL_CONTROLLER_DEBUG
 #include <QDebug>
 #endif
@@ -34,7 +38,7 @@ class Serial_Controller : public QObject
     Q_OBJECT
 public:
     /** Function 000: Construction function. */
-    Serial_Controller();
+    Serial_Controller(int controller_type);
 
     /** Function 300: Get the names of all serial ports currently connected. */
     QStringList getSerial_port_name();
@@ -49,6 +53,8 @@ public:
     QString readData();
     /** Function 305: Send a value to control digital potentiometer via serial communication. */
     qint64 sendMCU_Value(char value);
+    /** Function 306: Read voltage via serial communication. */
+    qint64 readVoltage();
 
     /** Function 390: Calculate Ohm-value by set-value. */
     int MCP41010_calculate_Ohm(uint8_t set_value);
@@ -90,6 +96,9 @@ public:
 public slots:
     /** Function 700: Handler for dealing with received data from serial port. */
     void handleReceived_Data();
+
+    /** Function 701: Slot for receiving data from serial port. */
+    void slot_received_data();
 #ifdef SERIAL_CONTROLLER_DEBUG
     /** Function 900: Handler for received data timeout from serial port.
      *    - Debug function: Print received data from serial communiction.  */
@@ -110,6 +119,7 @@ private:
     bool _data_received_flag;
 signals:
     void data_received(QString data);
+    void signal_pure_data_received(QString data);
 };
 
 #endif // C000_SERIAL_CONTROLLER_H

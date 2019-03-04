@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 28/01/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Serial port controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -16,14 +16,23 @@
  *             Name: Serial_Controller
  *      Function ID: 000
  *      Create date: 28/01/2019
- * Last modify date: 31/01/2019
+ * Last modify date: 04/03/2019
  *      Description: Construction function.
  ******************************************************************************/
-Serial_Controller::Serial_Controller()
+Serial_Controller::Serial_Controller(int controller_type)
 {
     _serial_port = new QSerialPort();
     _data_received_flag = false;
-    connect(_serial_port, SIGNAL(readyRead()), this, SLOT(handleReceived_Data()));
+    switch(controller_type){
+    case SERIAL_CONTROLLER_TYPE_DMM:
+        connect(_serial_port, SIGNAL(readyRead()), this, SLOT(handleReceived_Data()));
+        break;
+    case SERIAL_CONTROLLER_TYPE_BC:
+        connect(_serial_port, SIGNAL(readyRead()), this, SLOT(slot_received_data()));
+        break;
+    default:
+        break;
+    }
 
 #ifdef SERIAL_CONTROLLER_DEBUG
     connect(this, SIGNAL(data_received(QString)), this, SLOT(handleTimeout(QString)));
@@ -147,6 +156,20 @@ qint64 Serial_Controller::sendMCU_Value(char value)
     return ret;
 }
 
+/******************************************************************************
+ *             Name: readVoltage
+ *      Function ID: 306
+ *      Create date: 04/03/2019
+ * Last modify date: 04/03/2019
+ *      Description: Read voltage via serial communication.
+ ******************************************************************************/
+qint64 Serial_Controller::readVoltage()
+{
+    char command = static_cast<char>(MEASUREMENTUI_READ_VOLTAGE_COMMAND);
+
+    return _serial_port->write(&command, 1);
+}
+
 
 /******************************************************************************
  *             Name: MCP41010_calculate_Ohm
@@ -184,6 +207,24 @@ void Serial_Controller::handleReceived_Data()
             emit data_received(_databuffer);
             _data_received_flag = false;
         }
+    }
+}
+
+/******************************************************************************
+ *             Name: receivedData_Handler
+ *      Function ID: 701
+ *      Create date: 04/03/2019
+ * Last modify date: 04/03/2019
+ *      Description: Slot for receiving data from serial port.
+ ******************************************************************************/
+void Serial_Controller::slot_received_data()
+{
+    _databuffer.append(readData());
+    if(_databuffer.contains("\r\n")){
+        _databuffer = _databuffer.split("\r\n").at(0);
+        if(_databuffer.size() > 0)
+            emit signal_pure_data_received(_databuffer);
+        _databuffer.clear();
     }
 }
 

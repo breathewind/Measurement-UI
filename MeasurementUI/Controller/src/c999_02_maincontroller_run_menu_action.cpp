@@ -38,11 +38,15 @@ void MainController::handleStart()
     _BC_controller->setStopBits(static_cast<QSerialPort::StopBits>(__serial_definitions.getStopBits(_bc_stopbits)));
     _BC_controller->setFlowControl(static_cast<QSerialPort::FlowControl>(__serial_definitions.getFlowcontrol(_bc_flowcontrol)));
 
-    _main_elapsed_timer.start();
-//    _lastime_recorder =  _main_elapsed_timer.elapsed();
-
     _battery_voltage_chart_view_controller->reset();
     _load_current_chart_view_controller->reset();
+
+    _main_elapsed_timer.start();
+    _last_elapsed_time = _main_elapsed_timer.elapsed();
+//    _lastime_recorder =  _main_elapsed_timer.elapsed();
+    _voltage_timer_timeout = 100;
+    _voltage_capture_timer->start(_voltage_timer_timeout);
+
 
     _DMM_controller_current->startSerial();
     _BC_controller->startSerial();
@@ -64,7 +68,7 @@ void MainController::handleStart()
  *             Name: handleStop
  *      Function ID: 237
  *      Create date: 18/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Function for handle operations related to Stop.
  ******************************************************************************/
 void MainController::handleStop()
@@ -74,6 +78,7 @@ void MainController::handleStop()
 
     _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
 
+    _voltage_capture_timer->stop();
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__;
 #endif

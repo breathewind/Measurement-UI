@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 22/02/2019
- * Last modify date: 01/03/2019
+ * Last modify date: 04/03/2019
  *      Description: Main window controller.
  *                   - Functional slots.
  ******************************************************************************/
@@ -91,7 +91,7 @@ void MainController::slot_read_serial_buffer()
  *             Name: slot_retrieveDMM_data_for_current
  *      Function ID: 753
  *      Create date: 28/02/2019
- * Last modify date: 01/03/2019
+ * Last modify date: 04/03/2019
  *      Description: Slot for retrieving data from DMM during current
  *                   measurement when one data to read is ready.
  ******************************************************************************/
@@ -114,8 +114,16 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
 //            _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
 //            _DMM_controller_current->closeSerial();
 //            _BC_controller->closeSerial();
+             startExecution(_control_resistance);
+             _resistance_change_flag = false;
             _toggle_flag = MAINCONTROLLER_TOGGLE_FLAG_ON;
-            startExecution(_control_resistance);
+            if(_last_step_current > _data_read_buffer_current){
+                _min_step_current = _last_step_current - _data_read_buffer_current;
+            } else {
+                _min_step_current = _data_read_buffer_current - _last_step_current;
+            }
+            _last_step_current = _data_read_buffer_current;
+            _last_last_step_current = _data_read_buffer_current;
             return;
         }
         if(_data_read_buffer_current < _target_current && _calibration_factor == 0){
@@ -134,6 +142,7 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
         _calibration_factor++;
         _BC_controller->sendMCU_Value(static_cast<char>(_control_resistance));
         _execution_capture_timer->start(1000);
+        _last_step_current = _data_read_buffer_current;
         break;
     default:
         break;
@@ -141,6 +150,8 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
 
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__ << "- received_data: " << received_data;
+    qDebug() << "+ MainController: " << __FUNCTION__ << "- _current: " << _data_read_buffer_current;
+    qDebug() << "+ MainController: " << __FUNCTION__ << "- _min_step_current: " << _min_step_current;
 #endif
 }
 
@@ -163,7 +174,7 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
  *             Name: slot_change_load_current
  *      Function ID: 755
  *      Create date: 27/02/2019
- * Last modify date: 01/03/2019
+ * Last modify date: 04/03/2019
  *      Description: Slot for changing load current when execution timer
  *                   timeout is reached.
  ******************************************************************************/
@@ -173,9 +184,39 @@ void MainController::slot_change_load_current()
     switch(_execution_command){
     case MAINCONTROLLER_EXE_COMMAND_RUN:
         if(_toggle_flag == MAINCONTROLLER_TOGGLE_FLAG_ON){
-            startExecution(_control_resistance);
-        } else {
             startExecution(0);
+            if(_resistance_change_flag){
+                _min_step_current = (_last_last_step_current-_last_step_current)/static_cast<double>(_different_factor);
+#ifdef MAINCONTROLLER_DEBUG
+                qDebug() << "+ MainController: " << __FUNCTION__ << "- new _min_step_current: " << _min_step_current;
+#endif
+            }
+
+             _last_last_step_current = _last_step_current;
+            _last_step_current = _data_read_buffer_current;
+#ifdef MAINCONTROLLER_DEBUG
+            qDebug() << "+ MainController: " << __FUNCTION__ << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%";
+            qDebug() << "+ MainController: " << __FUNCTION__ << "- _last_last_step_current: " << _last_last_step_current;
+            qDebug() << "+ MainController: " << __FUNCTION__ << "- _last_step_current: " << _last_step_current;
+#endif
+            _different_factor =  static_cast<char>((_target_current-_last_step_current)/_min_step_current);
+            if(_different_factor >0){
+                _control_resistance += _different_factor;
+                _resistance_change_flag = true;
+#ifdef MAINCONTROLLER_DEBUG
+                qDebug() << "+ MainController: " << __FUNCTION__ << "-------------------------------------------------------- ";
+                qDebug() << "+ MainController: " << __FUNCTION__ << "- different_factor: " << static_cast<double>(_different_factor);
+#endif
+            } else if(_different_factor < 0) {
+                _control_resistance -= static_cast<uint8_t>((_last_step_current- _target_current)/_min_step_current) ;
+                _resistance_change_flag = true;
+#ifdef MAINCONTROLLER_DEBUG
+                qDebug() << "+ MainController: " << __FUNCTION__ << "n-------------------------------------------------------- ";
+                qDebug() << "+ MainController: " << __FUNCTION__ << "- different_factor: " << static_cast<double>(_different_factor);
+#endif
+            }
+        } else {
+            startExecution(_control_resistance);
         }
         _toggle_flag = !_toggle_flag;
         break;
@@ -201,5 +242,43 @@ void MainController::slot_start_second_half_meausurement()
     _execution_capture_timer->stop();
     _DMM_controller_current->writeDMM_command(":SYST:REM", false);
     _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
+}
+
+/******************************************************************************
+ *             Name: slot_battery_voltage_received
+ *      Function ID: 757
+ *      Create date: 04/03/2019
+ * Last modify date: 04/03/2019
+ *      Description: Slot for voltage current received from battery monitor.
+ ******************************************************************************/
+void MainController::slot_battery_voltage_received(QString voltage_value)
+{
+    qint64 current_time;
+    current_time = _main_elapsed_timer.elapsed();
+    if(_execution_command == MAINCONTROLLER_EXE_COMMAND_RUN){
+        _battery_voltage_chart_view_controller->addOne_new_point(static_cast<int>(current_time-_last_elapsed_time),  voltage_value.toDouble()/1024.0*5.0);
+    }
+//#ifdef MAINCONTROLLER_DEBUG
+//                qDebug() << "+ MainController: " << __FUNCTION__ << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ";
+//                qDebug() << "+ MainController: " << __FUNCTION__ << "- voltage_value: " << voltage_value;
+//                qDebug() << "+ MainController: " << __FUNCTION__ << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ";
+//#endif
+
+    _last_elapsed_time = current_time;
+}
+
+/******************************************************************************
+ *             Name: slot_read_battery_voltage
+ *      Function ID: 758
+ *      Create date: 04/03/2019
+ * Last modify date: 04/03/2019
+ *      Description: Slot for sending read voltage comand to MCU when voltage
+ *                    capture timer timeout is reached.
+ ******************************************************************************/
+void MainController::slot_read_battery_voltage()
+{
+    _voltage_capture_timer->stop();
+    _BC_controller->readVoltage();
+    _voltage_capture_timer->start(_voltage_timer_timeout);
 }
 

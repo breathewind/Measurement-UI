@@ -141,9 +141,6 @@ private:
     /** Function 222: Initilize functions related to Quit operations. */
     void initQuit();
 
-    /** Function 223: Initilize functions related to serial connection operations. */
-    void initSerial();
-
     /** Function 231: Function for handle operations related to New Project. */
     bool handleNew_Project();
     /** Function 232: Function for handle operations related to Open Project. */
@@ -228,6 +225,9 @@ private:
     int _capture_timer_timeout;
     QString _data_read_buffer;
 
+    QTimer *_voltage_capture_timer;
+    int _voltage_timer_timeout;
+
 //    int _sampling_command_current;
 //    QTimer *_capture_timer_current;
 //    int _capture_timer_timeout_current;
@@ -257,6 +257,13 @@ private:
     uint8_t _control_resistance;
     double _target_current;
     int _calibration_factor;
+    double _min_step_current;
+    double _last_step_current;
+    double _last_last_step_current;
+    bool _resistance_change_flag;
+    char _different_factor;
+
+    qint64 _last_elapsed_time;
 
 #ifdef MAINCONTROLLER_DEBUG
     QElapsedTimer _elapsed_timer;
@@ -304,8 +311,13 @@ private slots:
 //    void slot_read_serial_buffer_for_current();
     /** Function 755: Slot for changing load current when execution timer timeout is reached. */
     void slot_change_load_current();
-    /** Function 756: Slot for startomg second half load current meausurement when execution capture timer timeout is reached. */
+    /** Function 756: Slot for starting second half load current meausurement when execution capture timer timeout is reached. */
     void slot_start_second_half_meausurement();
+    /** Function 757: Slot for voltage current received from battery monitor. */
+    void slot_battery_voltage_received(QString voltage_value);
+
+    /** Function 758: Slot for sending read voltage comand to MCU when voltage capture timer timeout is reached. */
+    void slot_read_battery_voltage();
 
 #ifdef MAINCONTROLLER_DEBUG
     /** Function 901: Print debug information. -Debug function*/

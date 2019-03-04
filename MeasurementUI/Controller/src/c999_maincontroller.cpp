@@ -186,7 +186,9 @@ int MainController::saveWave_data(QString file_path, qint64 time1, double value1
 #ifdef MAINCONTROLLER_DEBUG
             qDebug() << "+ MainController: " << __FUNCTION__ << " Fail to open file: " << file_path;
 #endif
+            return 1;
     }
+    return 0;
 }
 
 /******************************************************************************
@@ -251,7 +253,7 @@ void MainController::initFunction_operaiton()
  *             Name: initSerial_operaiton
  *      Function ID: 204
  *      Create date: 21/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 04/03/2019
  *      Description: Initilize functions related to Serial operations.
  ******************************************************************************/
 void MainController::initSerial_operaiton()
@@ -260,7 +262,8 @@ void MainController::initSerial_operaiton()
     _sampling_command = MAINCONTROLLER_VOLT_COMMAND_STOP;
 //    _sampling_command_current = MAINCONTROLLER_CURR_COMMAND_STOP;
     /** Battery control serial settings */
-    _BC_controller = new Serial_Controller();
+    _BC_controller = new Serial_Controller(SERIAL_CONTROLLER_TYPE_BC);
+    connect(_BC_controller, &Serial_Controller::signal_pure_data_received, this, &MainController::slot_battery_voltage_received);
 
     _execution_timer = new QTimer();
     connect(_execution_timer, &QTimer::timeout, this, &MainController::slot_change_load_current);
@@ -270,7 +273,7 @@ void MainController::initSerial_operaiton()
     _execution_calibrate_timer = new QTimer();
 
     /** Battery voltage measurement serial settings */
-    _DMM_controller = new Serial_Controller();
+    _DMM_controller = new Serial_Controller(SERIAL_CONTROLLER_TYPE_DMM);
     connect(_DMM_controller, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data);
 
     _capture_timer = new QTimer();
@@ -278,12 +281,15 @@ void MainController::initSerial_operaiton()
     connect(_capture_timer, &QTimer::timeout, this, &MainController::slot_read_serial_buffer);
 
     /** Load current measurement serial settings */
-    _DMM_controller_current = new Serial_Controller();
+    _DMM_controller_current = new Serial_Controller(SERIAL_CONTROLLER_TYPE_DMM);
     connect(_DMM_controller_current, &Serial_Controller::data_received, this, &MainController::slot_retrieveDMM_data_for_current);
+//    connect(_DMM_controller_current, &Serial_Controller::signal_pure_data_received, this, &MainController::slot_battery_voltage_received);
 
 //    _capture_timer_current = new QTimer();
 //    _capture_timer_timeout_current = MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT;
 //    connect(_capture_timer_current, &QTimer::timeout, this, &MainController::slot_read_serial_buffer_for_current);
+    _voltage_capture_timer = new QTimer();
+     connect(_voltage_capture_timer, &QTimer::timeout, this, &MainController::slot_read_battery_voltage);
 }
 
 /******************************************************************************
@@ -458,20 +464,6 @@ void MainController::initQuit()
     /** Connect signals and slots related to click Quit menu action button in main window. */
     connect(_main_window, &MainWindow::signal_quit_menu_action_triggered, this, &MainController::slot_Quit);
     connect(this, &MainController::signal_confirm_quit_application, _main_window, &MainWindow::slot_confirm_quit_application);
-}
-
-/******************************************************************************
- *             Name: initSerial
- *      Function ID: 223
- *      Create date: 24/02/2019
- * Last modify date: 24/02/2019
- *      Description: Initilize functions related to serial connection
- *                   operations.
- ******************************************************************************/
-void MainController::initSerial()
-{
-    _DMM_controller = new Serial_Controller();
-    _BC_controller = new Serial_Controller();
 }
 
 /******************************************************************************
