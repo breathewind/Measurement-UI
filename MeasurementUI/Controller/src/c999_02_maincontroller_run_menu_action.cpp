@@ -40,17 +40,20 @@ void MainController::handleStart()
 
     _battery_voltage_chart_view_controller->reset();
     _load_current_chart_view_controller->reset();
+    _battery_capacity_pie_controller->reset();
+    _target_capacity_pie_controller->reset();
 
     _main_elapsed_timer.start();
     _last_elapsed_time = _main_elapsed_timer.elapsed();
+
+    _DMM_controller_current->startSerial();
+    _BC_controller->startSerial();
+
 //    _lastime_recorder =  _main_elapsed_timer.elapsed();
     _voltage_timer_timeout = 100;
     _voltage_capture_timer->start(_voltage_timer_timeout);
 
     _total_mAh = 0;
-
-    _DMM_controller_current->startSerial();
-    _BC_controller->startSerial();
 
     _DMM_controller_current->writeDMM_command(":SYST:REM", false);
 
@@ -58,8 +61,10 @@ void MainController::handleStart()
     test_counter = 0;
 #endif
 
-    startCalibration(1.0);
-    _load_current_chart_view_controller->setY_range(0, 2);
+    _load_current_chart_view_controller->setY_range(0, 1);
+    _battery_voltage_chart_view_controller->setY_range(2.5, 4.5);
+
+    startMeasurement(0.5);
 //    startExecution(80);
 //    captureOne_measurement();
 }

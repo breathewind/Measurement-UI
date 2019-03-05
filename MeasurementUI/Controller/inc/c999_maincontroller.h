@@ -33,6 +33,7 @@
 #define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 2000
 
 #define MAINCONTTROLLER_TARGET_MAH 500
+#define MAINCONTTROLLER_PWM false
 
 #define MAINCONTTROLLER_RESISTANCE 0.53
 
@@ -102,6 +103,8 @@ private:
     void createWave_block(int current_time);
     /** Function 007: Save wave data to file with specific file path. */
     int saveWave_data(QString file_path, qint64 time1, double value1, qint64 time2, double value2, double power_consumption);
+    /** Function 008: Write OCV to file with specific file path. */
+    int writeOCV(QString file_path, double value);
 
     /** Function 200: Initilize functions related to Main Window. */
     void initMainwindow();
@@ -173,7 +176,9 @@ private:
     /** Function 302: Start exeuction of meausuremnt.. */
     void startExecution(uint8_t resistance);
     /** Function 303: Start calibration of meausuremnt.. */
-    void startCalibration(double target_current);
+    void startCalibration();
+    /** Function 304: Start meausuremnt from capturing OCV. */
+    void startMeasurement(double target_current);
 
     /** Function 600: Print data read from project file. */
     void printData_read_from_project_file(QString domain, QString content);
@@ -245,6 +250,8 @@ private:
     bool _half_counter;
     bool _toggle_flag;
 
+    QTimer *_OCV_timer;
+
     QElapsedTimer *_execution_elapsed_timer;
 
     QElapsedTimer _main_elapsed_timer;
@@ -260,6 +267,7 @@ private:
     Chart_Controller* _battery_voltage_chart_view_controller;
     Chart_Controller* _load_current_chart_view_controller;
     Pie_Controller* _battery_capacity_pie_controller;
+    Pie_Controller* _target_capacity_pie_controller;
 
     double _sense_resistance;
     uint8_t _control_resistance;
@@ -326,6 +334,10 @@ private slots:
 
     /** Function 758: Slot for sending read voltage comand to MCU when voltage capture timer timeout is reached. */
     void slot_read_battery_voltage();
+
+    /** Function 759: Slot for writing OCV to file when OCV capture timer timeout is reached. */
+    void slot_save_OCV();
+
 
 #ifdef MAINCONTROLLER_DEBUG
     /** Function 901: Print debug information. -Debug function*/

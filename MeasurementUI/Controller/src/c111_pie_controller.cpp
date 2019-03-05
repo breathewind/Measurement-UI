@@ -19,9 +19,10 @@
  * Last modify date: 05/03/2019
  *      Description: Construction function.
  ******************************************************************************/
-Pie_Controller::Pie_Controller(QObject *parent) : QObject(parent)
+Pie_Controller::Pie_Controller(QString chart_title, double target_capacity, QObject *parent) : QObject(parent),
+    _target_capacity(target_capacity)
 {
-    init();
+    init(chart_title);
 }
 
 /******************************************************************************
@@ -31,7 +32,7 @@ Pie_Controller::Pie_Controller(QObject *parent) : QObject(parent)
  * Last modify date: 05/03/2019
  *      Description: Set the chart using default values.
  ******************************************************************************/
-void Pie_Controller::init()
+void Pie_Controller::init(QString chart_title)
 {
     _series = new QPieSeries();
     _series->append("Used", 0);
@@ -49,25 +50,23 @@ void Pie_Controller::init()
 
     _chart = new QChart();
     _chart->addSeries(_series);
-    _chart->setTitle("Bettery Capacity (mAh)");
+    _chart->setTitle(chart_title);
 //    _chart->legend()->hide();
 
     _chart_view = new QChartView(_chart);
     _chart_view->setRenderHint(QPainter::Antialiasing);
-
-    setUsed_percentage(.90);
 }
 
 /******************************************************************************
- *             Name: setUsed_percentage
+ *             Name: setUsed_capacity
  *      Function ID: 300
  *      Create date: 05/03/2019
  * Last modify date: 05/03/2019
- *      Description: Set the percentage of slice0. slice1 will be kept
- *                   consistent with the percentage of slice0.
+ *      Description: Set the current capacity and calculate used percenetage.
  ******************************************************************************/
-void Pie_Controller::setUsed_percentage(qreal used_percentage)
+void Pie_Controller::setUsed_capacity(double current_capacity)
 {
+    double used_percentage = current_capacity/_target_capacity;
     _slice0->setValue(used_percentage);
     _slice1->setValue(1-used_percentage);
 }
@@ -81,7 +80,7 @@ void Pie_Controller::setUsed_percentage(qreal used_percentage)
  ******************************************************************************/
 void Pie_Controller::reset()
 {
-    setUsed_percentage(0);
+    setUsed_capacity(0);
 }
 
 /******************************************************************************

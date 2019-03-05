@@ -177,7 +177,7 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
  *             Name: slot_change_load_current
  *      Function ID: 755
  *      Create date: 27/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Slot for changing load current when execution timer
  *                   timeout is reached.
  ******************************************************************************/
@@ -187,7 +187,11 @@ void MainController::slot_change_load_current()
     switch(_execution_command){
     case MAINCONTROLLER_EXE_COMMAND_RUN:
         if(_toggle_flag == MAINCONTROLLER_TOGGLE_FLAG_ON){
-            startExecution(0);
+            if(MAINCONTTROLLER_PWM){
+                startExecution(0);
+            } else {
+                startExecution(_control_resistance);
+            }
             if(_resistance_change_flag){
                 _min_step_current = (_last_last_step_current-_last_step_current)/static_cast<double>(_different_factor);
 #ifdef MAINCONTROLLER_DEBUG
@@ -224,6 +228,8 @@ void MainController::slot_change_load_current()
         _toggle_flag = !_toggle_flag;
         break;
     case MAINCONTROLLER_EXE_COMMAND_STOP:
+        writeOCV(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _output_file_name, _realtime_battery_voltage);
+        writeOCV(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _raw_output_file_name, _realtime_battery_voltage);
         _BC_controller->closeSerial();
         _DMM_controller_current->closeSerial();
         break;
@@ -284,5 +290,24 @@ void MainController::slot_read_battery_voltage()
     _voltage_capture_timer->stop();
     _BC_controller->readVoltage();
     _voltage_capture_timer->start(_voltage_timer_timeout);
+}
+
+/******************************************************************************
+ *             Name: slot_save_OCV
+ *      Function ID: 759
+ *      Create date: 05/03/2019
+ * Last modify date: 05/03/2019
+ *      Description: Slot for writing OCV to file when OCV capture timer
+ *                   timeout is reached.
+ ******************************************************************************/
+void MainController::slot_save_OCV()
+{
+    _OCV_timer->stop();
+    writeOCV(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _output_file_name, _realtime_battery_voltage);
+    writeOCV(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _raw_output_file_name, _realtime_battery_voltage);
+    startCalibration();
+#ifdef MAINCONTROLLER_DEBUG
+    qDebug() << "+ MainController: " << __FUNCTION__ ;
+#endif
 }
 

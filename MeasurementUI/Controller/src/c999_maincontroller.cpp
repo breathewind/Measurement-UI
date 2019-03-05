@@ -163,6 +163,8 @@ void MainController::createWave_block(int current_time)
                       new_block.power());
 
         _total_mAh += new_block.power();
+        _battery_capacity_pie_controller->setUsed_capacity(_total_mAh);
+        _target_capacity_pie_controller->setUsed_capacity(_total_mAh);
 
 #ifdef MAINCONTROLLER_DEBUG
         qDebug() << "+ MainController: " << __FUNCTION__ << " The first point: (" << _first_x << ", " << _first_y << ")";
@@ -188,6 +190,30 @@ int MainController::saveWave_data(QString file_path, qint64 time1, double value1
             QTextStream out_stream(&output_file);
             out_stream << time1 << " " << value1 << MEASUREMENTUI_DAFAULT_NEW_LINE;
             out_stream << time2 << " " << value2 << " " << power_consumption  << " " << _realtime_battery_voltage << MEASUREMENTUI_DAFAULT_NEW_LINE;
+            out_stream.flush();
+            output_file.close();
+    } else {
+#ifdef MAINCONTROLLER_DEBUG
+            qDebug() << "+ MainController: " << __FUNCTION__ << " Fail to open file: " << file_path;
+#endif
+            return 1;
+    }
+    return 0;
+}
+
+/******************************************************************************
+ *             Name: writeOCV
+ *      Function ID: 008
+ *      Create date: 05/03/2019
+ * Last modify date: 05/03/2019
+ *      Description: Write OCV to file with specific file path.
+ ******************************************************************************/
+int MainController::writeOCV(QString file_path, double value)
+{
+    QFile output_file(file_path);
+    if (output_file.open(QFile::WriteOnly | QFile::Text | QFile::Append)) {
+            QTextStream out_stream(&output_file);
+            out_stream << "OCV: " << " " << value << MEASUREMENTUI_DAFAULT_NEW_LINE;
             out_stream.flush();
             output_file.close();
     } else {
@@ -261,7 +287,7 @@ void MainController::initFunction_operaiton()
  *             Name: initSerial_operaiton
  *      Function ID: 204
  *      Create date: 21/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Initilize functions related to Serial operations.
  ******************************************************************************/
 void MainController::initSerial_operaiton()
@@ -298,13 +324,16 @@ void MainController::initSerial_operaiton()
 //    connect(_capture_timer_current, &QTimer::timeout, this, &MainController::slot_read_serial_buffer_for_current);
     _voltage_capture_timer = new QTimer();
      connect(_voltage_capture_timer, &QTimer::timeout, this, &MainController::slot_read_battery_voltage);
+
+     _OCV_timer = new QTimer();
+     connect(_OCV_timer, &QTimer::timeout, this, &MainController::slot_save_OCV);
 }
 
 /******************************************************************************
  *             Name: initChart_operaiton
  *      Function ID: 205
  *      Create date: 21/02/2019
- * Last modify date: 28/02/2019
+ * Last modify date: 05/03/2019
  *      Description: Initilize functions related to Chart operations.
  ******************************************************************************/
 void MainController::initChart_operaiton(){
@@ -312,8 +341,10 @@ void MainController::initChart_operaiton(){
     _main_window->addBettery_voltage_chart_view(_battery_voltage_chart_view_controller->getChart_view());
     _load_current_chart_view_controller = new Chart_Controller(tr("Load Current"), CHART_CONTROLLER_DEFAULT_TIME_RANGE, tr("A"));
     _main_window->addLoad_current_chart_view(_load_current_chart_view_controller->getChart_view());
-    _battery_capacity_pie_controller = new Pie_Controller();
+    _battery_capacity_pie_controller = new Pie_Controller("Battery Capatity 2600mAh", 2600);
     _main_window->addBattery_capacity_chart_view(_battery_capacity_pie_controller->getChart_view());
+    _target_capacity_pie_controller  = new Pie_Controller(QString("Target Capatity %1mAh").arg(MAINCONTTROLLER_TARGET_MAH), MAINCONTTROLLER_TARGET_MAH);
+    _main_window->addTarget_capacity_chart_view(_target_capacity_pie_controller->getChart_view());
 }
 
 /******************************************************************************
@@ -576,11 +607,10 @@ void MainController::startExecution(uint8_t resistance)
  * Last modify date: 28/02/2019
  *      Description: Start calibration of meausuremnt.
  ******************************************************************************/
-void MainController::startCalibration(double target_current)
+void MainController::startCalibration()
 {
     _execution_command = MAINCONTROLLER_EXE_COMMAND_CALIBRATION;
     _control_resistance = 255;
-    _target_current = target_current;
     _calibration_factor = 0;
 
     _execution_elapsed_timer->start(); // not really used during calibration
@@ -589,6 +619,20 @@ void MainController::startCalibration(double target_current)
 
     _DMM_controller_current->writeDMM_command(":SYST:REM", false);
     _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
+}
+
+/******************************************************************************
+ *             Name: startCalibration
+ *      Function ID: 304
+ *      Create date: 05/03/2019
+ * Last modify date: 05/03/2019
+ *      Description: Start meausuremnt from capturing OCV.
+ ******************************************************************************/
+void MainController::startMeasurement(double target_current)
+{
+    _target_current = target_current;
+    _BC_controller->sendMCU_Value(0);
+    _OCV_timer->start(500);
 }
 
 /******************************************************************************

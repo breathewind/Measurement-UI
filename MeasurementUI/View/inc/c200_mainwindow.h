@@ -64,8 +64,10 @@ public:
     void addBattery_capacity_chart_view(QChartView *battery_capacity_chart_view);
     /** Function 315: Remove battery capacity chart view from main window. */
     void removeBattery_capacity_chart_view(QChartView *battery_capacity_chart_view);
-
-
+    /** Function 316: Add target capacity chart view to main window. */
+    void addTarget_capacity_chart_view(QChartView *target_capacity_chart_view);
+    /** Function 317: Remove target capacity chart view from main window. */
+    void removeTarget_capacity_chart_view(QChartView *target_capacity_chart_view);
 
     /** Function 800: Set Settings menu action seleted. */
     void setSettings_action_checked(bool flag);

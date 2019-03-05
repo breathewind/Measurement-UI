@@ -35,10 +35,10 @@ class Pie_Controller : public QObject
     Q_OBJECT
 public:
     /** Function 000: Construction function. */
-    explicit Pie_Controller(QObject *parent = nullptr);
+    explicit Pie_Controller(QString chart_title, double target_capacity, QObject *parent = nullptr);
 
-    /** Function 300: Set the percentage of slice0. slice1 will be kept consistent with the percentage of slice0. */
-    void setUsed_percentage(qreal used_percentage);
+    /** Function 300: Set the current capacity and calculate used percenetage. */
+    void setUsed_capacity(double current_capacity);
     /** Function 301: Reset pie chart. */
     void reset();
 
@@ -49,7 +49,7 @@ public slots:
 
 private:
     /** Function 002: Set the pie chart using default values. */
-    void init();
+    void init(QString chart_title);
 
     QPieSeries *_series;
     QPieSlice *_slice0;
@@ -57,6 +57,8 @@ private:
 
     QChart *_chart;
     QChartView *_chart_view;
+
+    double _target_capacity;
 
 signals:
 };

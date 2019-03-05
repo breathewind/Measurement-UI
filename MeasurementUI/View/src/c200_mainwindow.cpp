@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 30/01/2019
- * Last modify date: 25/02/2019
+ * Last modify date: 05/03/2019
  *      Description: Main window of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions

@@ -61,7 +61,7 @@ void MainWindow::removeLoad_current_chart_view(QChartView *load_current_chart_vi
  *      Function ID: 314
  *      Create date: 05/03/2019
  * Last modify date: 05/03/2019
- *      Description: Remove battery capacity chart view from main window.
+ *      Description: Add battery capacity chart view to main window.
  ******************************************************************************/
 void MainWindow::addBattery_capacity_chart_view(QChartView *battery_capacity_chart_view)
 {
@@ -78,4 +78,28 @@ void MainWindow::addBattery_capacity_chart_view(QChartView *battery_capacity_cha
 void MainWindow::removeBattery_capacity_chart_view(QChartView *battery_capacity_chart_view)
 {
     ui->verticalLayout_battery_capacity->removeWidget(battery_capacity_chart_view);
+}
+
+/******************************************************************************
+ *             Name: addTarget_capacity_chart_view
+ *      Function ID: 316
+ *      Create date: 05/03/2019
+ * Last modify date: 05/03/2019
+ *      Description: Add battery capacity chart view to main window.
+ ******************************************************************************/
+void MainWindow::addTarget_capacity_chart_view(QChartView *target_capacity_chart_view)
+{
+    ui->verticalLayout_target_capacity->addWidget(target_capacity_chart_view);
+}
+
+/******************************************************************************
+ *             Name: removeTarget_capacity_chart_view
+ *      Function ID: 317
+ *      Create date: 05/03/2019
+ * Last modify date: 05/03/2019
+ *      Description: Remove battery capacity chart view from main window.
+ ******************************************************************************/
+void MainWindow::removeTarget_capacity_chart_view(QChartView *target_capacity_chart_view)
+{
+    ui->verticalLayout_target_capacity->removeWidget(target_capacity_chart_view);
 }
