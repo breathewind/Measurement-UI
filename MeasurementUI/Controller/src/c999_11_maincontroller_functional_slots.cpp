@@ -193,8 +193,8 @@ void MainController::slot_change_load_current()
                 startExecution(_control_resistance);
             }
             if(_resistance_change_flag){
-                if(_different_factor != 0){
-                    _min_step_current = (_last_last_step_current-_last_step_current)/static_cast<double>(_different_factor);
+                if(_last_last_step_current>_last_step_current){
+                    _min_step_current = _last_last_step_current-_last_step_current;
                 }
                 _resistance_change_flag = false;
 #ifdef MAINCONTROLLER_DEBUG
@@ -209,22 +209,31 @@ void MainController::slot_change_load_current()
             qDebug() << "+ MainController: " << __FUNCTION__ << "- _last_last_step_current: " << _last_last_step_current;
             qDebug() << "+ MainController: " << __FUNCTION__ << "- _last_step_current: " << _last_step_current;
 #endif
-            _different_factor =  static_cast<char>((_target_current-_last_step_current)/_min_step_current);
-            if(_different_factor >0){
-                _control_resistance += _different_factor;
+//            _different_factor =  static_cast<char>((_target_current-_last_step_current)/_min_step_current);
+
+            if(_last_step_current >_target_current + _min_step_current/2){
+                _control_resistance--;
                 _resistance_change_flag = true;
-#ifdef MAINCONTROLLER_DEBUG
-                qDebug() << "+ MainController: " << __FUNCTION__ << "-------------------------------------------------------- ";
-                qDebug() << "+ MainController: " << __FUNCTION__ << "- different_factor: " << static_cast<double>(_different_factor);
-#endif
-            } else if(_different_factor < 0) {
-                _control_resistance -= static_cast<uint8_t>((_last_step_current- _target_current)/_min_step_current) ;
+            } else if(_last_step_current < _target_current - _min_step_current/2 ){
+                _control_resistance++;
                 _resistance_change_flag = true;
-#ifdef MAINCONTROLLER_DEBUG
-                qDebug() << "+ MainController: " << __FUNCTION__ << "n-------------------------------------------------------- ";
-                qDebug() << "+ MainController: " << __FUNCTION__ << "- different_factor: " << static_cast<double>(_different_factor);
-#endif
             }
+
+//            if(_different_factor >0){
+//                _control_resistance += _different_factor;
+//                _resistance_change_flag = true;
+//#ifdef MAINCONTROLLER_DEBUG
+//                qDebug() << "+ MainController: " << __FUNCTION__ << "-------------------------------------------------------- ";
+//                qDebug() << "+ MainController: " << __FUNCTION__ << "- different_factor: " << static_cast<double>(_different_factor);
+//#endif
+//            } else if(_different_factor < 0) {
+//                _control_resistance -= static_cast<uint8_t>((_last_step_current- _target_current)/_min_step_current) ;
+//                _resistance_change_flag = true;
+//#ifdef MAINCONTROLLER_DEBUG
+//                qDebug() << "+ MainController: " << __FUNCTION__ << "n-------------------------------------------------------- ";
+//                qDebug() << "+ MainController: " << __FUNCTION__ << "- different_factor: " << static_cast<double>(_different_factor);
+//#endif
+//            }
         } else {
             startExecution(_control_resistance);
         }
