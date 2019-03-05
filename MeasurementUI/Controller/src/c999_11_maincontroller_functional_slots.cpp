@@ -193,7 +193,10 @@ void MainController::slot_change_load_current()
                 startExecution(_control_resistance);
             }
             if(_resistance_change_flag){
-                _min_step_current = (_last_last_step_current-_last_step_current)/static_cast<double>(_different_factor);
+                if(_different_factor != 0){
+                    _min_step_current = (_last_last_step_current-_last_step_current)/static_cast<double>(_different_factor);
+                }
+                _resistance_change_flag = false;
 #ifdef MAINCONTROLLER_DEBUG
                 qDebug() << "+ MainController: " << __FUNCTION__ << "- new _min_step_current: " << _min_step_current;
 #endif
