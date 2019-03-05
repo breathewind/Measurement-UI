@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 25/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Chart controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -16,10 +16,10 @@
  *             Name: Chart_Controller
  *      Function ID: 000
  *      Create date: 25/02/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 05/03/2019
  *      Description: Construction function.
  ******************************************************************************/
-Chart_Controller::Chart_Controller(QString chart_title, qint64 x_range, QString y_unit) :
+Chart_Controller::Chart_Controller(QString chart_title, qint64 x_range, QString y_unit, QObject *parent) : QObject(parent),
     _time_range(x_range), _chart_title(chart_title), _y_unit(y_unit)
 {
     init();
@@ -27,10 +27,10 @@ Chart_Controller::Chart_Controller(QString chart_title, qint64 x_range, QString 
 
 /******************************************************************************
  *             Name: init
- *      Function ID: 302
+ *      Function ID: 002
  *      Create date: 26/02/2019
  * Last modify date: 27/02/2019
- *      Description: Set the chart as default values.
+ *      Description: Set the chart using default values.
  ******************************************************************************/
 void Chart_Controller::init()
 {
@@ -89,19 +89,6 @@ void Chart_Controller::init()
 
     _chart_view = new QChartView(_chart);
     _chart_view->setRenderHint(QPainter::Antialiasing);
-}
-
-
-/******************************************************************************
- *             Name: getChart_view
- *      Function ID: 300
- *      Create date: 25/02/2019
- * Last modify date: 26/02/2019
- *      Description: Get chart view.
- ******************************************************************************/
-QChartView *Chart_Controller::getChart_view()
-{
-    return _chart_view;
 }
 
 /******************************************************************************
@@ -170,8 +157,20 @@ void Chart_Controller::reset()
 }
 
 /******************************************************************************
- *             Name: setY_range
+ *             Name: getChart_view
  *      Function ID: 800
+ *      Create date: 25/02/2019
+ * Last modify date: 26/02/2019
+ *      Description: Get chart view.
+ ******************************************************************************/
+QChartView *Chart_Controller::getChart_view()
+{
+    return _chart_view;
+}
+
+/******************************************************************************
+ *             Name: setY_range
+ *      Function ID: 801
  *      Create date: 04/03/2019
  * Last modify date: 04/03/2019
  *      Description:  Set display range of  Y axis.
@@ -184,7 +183,7 @@ void Chart_Controller::setY_range(double y_range_min, double y_range_max)
 
 /******************************************************************************
  *             Name: current_time
- *      Function ID: 801
+ *      Function ID: 802
  *      Create date: 04/03/2019
  * Last modify date: 04/03/2019
  *      Description:  Get current time in ms.

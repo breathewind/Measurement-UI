@@ -40,6 +40,8 @@
 //#define SERIAL_CONTROLLER_DEBUG
 
 //#define CHART_CONTROLLER_DEBUG
+
+#define PIE_CONTROLLER_DEBUG
 #endif
 
 

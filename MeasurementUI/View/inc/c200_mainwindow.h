@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 30/01/2019
- * Last modify date: 27/02/2019
+ * Last modify date: 05/03/2019
  *      Description: Main window of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -30,6 +30,7 @@
 
 #include "h000_global_parameters.h"
 #include "Controller/inc/c110_chart_controller.h"
+#include "Controller/inc/c111_pie_controller.h"
 
 namespace Ui {
 class MainWindow;
@@ -59,6 +60,11 @@ public:
     void addLoad_current_chart_view(QChartView *load_current_chart_view);
     /** Function 313: Remove load current chart view from main window. */
     void removeLoad_current_chart_view(QChartView *load_current_chart_view);
+    /** Function 314: Add battery capacity chart view to main window. */
+    void addBattery_capacity_chart_view(QChartView *battery_capacity_chart_view);
+    /** Function 315: Remove battery capacity chart view from main window. */
+    void removeBattery_capacity_chart_view(QChartView *battery_capacity_chart_view);
+
 
 
     /** Function 800: Set Settings menu action seleted. */

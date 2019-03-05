@@ -312,6 +312,8 @@ void MainController::initChart_operaiton(){
     _main_window->addBettery_voltage_chart_view(_battery_voltage_chart_view_controller->getChart_view());
     _load_current_chart_view_controller = new Chart_Controller(tr("Load Current"), CHART_CONTROLLER_DEFAULT_TIME_RANGE, tr("A"));
     _main_window->addLoad_current_chart_view(_load_current_chart_view_controller->getChart_view());
+    _battery_capacity_pie_controller = new Pie_Controller();
+    _main_window->addBattery_capacity_chart_view(_battery_capacity_pie_controller->getChart_view());
 }
 
 /******************************************************************************

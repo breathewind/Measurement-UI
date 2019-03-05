@@ -259,6 +259,7 @@ private:
 
     Chart_Controller* _battery_voltage_chart_view_controller;
     Chart_Controller* _load_current_chart_view_controller;
+    Pie_Controller* _battery_capacity_pie_controller;
 
     double _sense_resistance;
     uint8_t _control_resistance;

@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 25/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Chart controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -38,22 +38,22 @@ class Chart_Controller : public QObject
     Q_OBJECT
 public:
     /** Function 000: Construction function. */
-    Chart_Controller(QString chart_title, qint64 x_range, QString y_unit);
+    Chart_Controller(QString chart_title, qint64 x_range, QString y_unit, QObject *parent = nullptr);
 
-    /** Function 300: Get chart view. */
-    QChartView *getChart_view();
     /** Function 301: Add one new voltage value to chart. */
     void addOne_new_point(int step, double voltage_value);
     /** Function 302: Reset the chart as default values. */
     void reset();
 
-    /** Function 800: Set display range of  Y axis. */
+    /** Function 800: Get chart view. */
+    QChartView *getChart_view();
+    /** Function 801: Set display range of  Y axis. */
     void setY_range(double y_range_min, double y_range_max);
-    /** Function 801: Get current time in ms. */
+    /** Function 802: Get current time in ms. */
     qint64 current_time();
 
 private:
-    /** Function 002: Set the chart as default values. */
+    /** Function 002: Set the chart using default values. */
     void init();
 
     QChart *_chart;
