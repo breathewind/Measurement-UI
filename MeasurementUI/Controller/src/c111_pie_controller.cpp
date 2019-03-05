@@ -66,7 +66,13 @@ void Pie_Controller::init(QString chart_title)
  ******************************************************************************/
 void Pie_Controller::setUsed_capacity(double current_capacity)
 {
-    double used_percentage = current_capacity/_target_capacity;
+    double used_percentage;
+
+    if(current_capacity <_target_capacity ){
+        used_percentage = current_capacity/_target_capacity;
+    } else {
+        used_percentage = 1;
+    }
     _slice0->setValue(used_percentage);
     _slice1->setValue(1-used_percentage);
 }
