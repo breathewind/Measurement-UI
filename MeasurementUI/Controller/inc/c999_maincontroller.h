@@ -255,6 +255,7 @@ private:
     double _first_y;
 
     double _max_mAh;
+    double _realtime_battery_voltage;
 
     Chart_Controller* _battery_voltage_chart_view_controller;
     Chart_Controller* _load_current_chart_view_controller;

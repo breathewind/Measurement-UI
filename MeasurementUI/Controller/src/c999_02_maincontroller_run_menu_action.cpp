@@ -69,11 +69,12 @@ void MainController::handleStart()
  *             Name: handleStop
  *      Function ID: 237
  *      Create date: 18/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Function for handle operations related to Stop.
  ******************************************************************************/
 void MainController::handleStop()
 {
+    _BC_controller->sendMCU_Value(0);
     _sampling_command = MAINCONTROLLER_VOLT_COMMAND_STOP;
 //    _sampling_command_current = MAINCONTROLLER_CURR_COMMAND_STOP;
 

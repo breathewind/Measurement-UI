@@ -104,7 +104,6 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
     case MAINCONTROLLER_EXE_COMMAND_RUN:
         createWave_block(execution_time_recorder);
         if(_total_mAh > _max_mAh){
-            _BC_controller->sendMCU_Value(0);
             handleStop();
         }
         break;
@@ -252,15 +251,16 @@ void MainController::slot_start_second_half_meausurement()
  *             Name: slot_battery_voltage_received
  *      Function ID: 757
  *      Create date: 04/03/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Slot for voltage current received from battery monitor.
  ******************************************************************************/
 void MainController::slot_battery_voltage_received(QString voltage_value)
 {
     qint64 current_time;
+    _realtime_battery_voltage = voltage_value.toDouble()/1024.0*5.0;
     current_time = _main_elapsed_timer.elapsed();
     if(_execution_command == MAINCONTROLLER_EXE_COMMAND_RUN){
-        _battery_voltage_chart_view_controller->addOne_new_point(static_cast<int>(current_time-_last_elapsed_time),  voltage_value.toDouble()/1024.0*5.0);
+        _battery_voltage_chart_view_controller->addOne_new_point(static_cast<int>(current_time-_last_elapsed_time), _realtime_battery_voltage);
     }
 //#ifdef MAINCONTROLLER_DEBUG
 //                qDebug() << "+ MainController: " << __FUNCTION__ << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ";

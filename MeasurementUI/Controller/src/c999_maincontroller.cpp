@@ -186,8 +186,8 @@ int MainController::saveWave_data(QString file_path, qint64 time1, double value1
     QFile output_file(file_path);
     if (output_file.open(QFile::WriteOnly | QFile::Text | QFile::Append)) {
             QTextStream out_stream(&output_file);
-            out_stream << time1 << " " << value1 << " " << 0 << MEASUREMENTUI_DAFAULT_NEW_LINE;
-            out_stream << time2 << " " << value2 << " " << power_consumption  <<MEASUREMENTUI_DAFAULT_NEW_LINE;
+            out_stream << time1 << " " << value1 << MEASUREMENTUI_DAFAULT_NEW_LINE;
+            out_stream << time2 << " " << value2 << " " << power_consumption  << " " << _realtime_battery_voltage << MEASUREMENTUI_DAFAULT_NEW_LINE;
             out_stream.flush();
             output_file.close();
     } else {
