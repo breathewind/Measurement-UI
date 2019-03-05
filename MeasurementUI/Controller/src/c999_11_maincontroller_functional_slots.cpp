@@ -91,7 +91,7 @@ void MainController::slot_read_serial_buffer()
  *             Name: slot_retrieveDMM_data_for_current
  *      Function ID: 753
  *      Create date: 28/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Slot for retrieving data from DMM during current
  *                   measurement when one data to read is ready.
  ******************************************************************************/
@@ -103,6 +103,10 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
     switch (_execution_command) {
     case MAINCONTROLLER_EXE_COMMAND_RUN:
         createWave_block(execution_time_recorder);
+        if(_total_mAh > _max_mAh){
+            _BC_controller->sendMCU_Value(0);
+            handleStop();
+        }
         break;
     case MAINCONTROLLER_EXE_COMMAND_CALIBRATION:
         if( _calibration_factor == 8) {

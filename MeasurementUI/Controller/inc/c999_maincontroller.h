@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -31,6 +31,8 @@
 
 #define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT   1000
 #define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 2000
+
+#define MAINCONTTROLLER_TARGET_MAH 500
 
 #define MAINCONTTROLLER_RESISTANCE 0.53
 
@@ -99,7 +101,7 @@ private:
     /** Function 006: Create a new wave block by current measurement and update it to chart. */
     void createWave_block(int current_time);
     /** Function 007: Save wave data to file with specific file path. */
-    int saveWave_data(QString file_path, qint64 time1, double value1, qint64 time2, double value2);
+    int saveWave_data(QString file_path, qint64 time1, double value1, qint64 time2, double value2, double power_consumption);
 
     /** Function 200: Initilize functions related to Main Window. */
     void initMainwindow();
@@ -233,6 +235,8 @@ private:
 //    int _capture_timer_timeout_current;
     double _data_read_buffer_current;
 
+    double _total_mAh;
+
     int _execution_period;
     QTimer *_execution_timer;
     QTimer *_execution_capture_timer;
@@ -249,6 +253,8 @@ private:
 
     qint64 _first_x;
     double _first_y;
+
+    double _max_mAh;
 
     Chart_Controller* _battery_voltage_chart_view_controller;
     Chart_Controller* _load_current_chart_view_controller;

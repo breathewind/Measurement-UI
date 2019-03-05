@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -11,7 +11,7 @@
  *             Name: handleStart
  *      Function ID: 236
  *      Create date: 18/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Function for handle operations related to Start.
  ******************************************************************************/
 void MainController::handleStart()
@@ -47,6 +47,7 @@ void MainController::handleStart()
     _voltage_timer_timeout = 100;
     _voltage_capture_timer->start(_voltage_timer_timeout);
 
+    _total_mAh = 0;
 
     _DMM_controller_current->startSerial();
     _BC_controller->startSerial();

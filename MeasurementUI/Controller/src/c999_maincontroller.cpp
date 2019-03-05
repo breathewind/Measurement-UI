@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -16,7 +16,7 @@
  *             Name: MainController
  *      Function ID: 000
  *      Create date: 14/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Construction function.
  ******************************************************************************/
 MainController::MainController()
@@ -26,6 +26,8 @@ MainController::MainController()
 
     _output_file_name = MEASUREMENTUI_DEFAUTL_OUTPUT_FILE_NAME;
     _raw_output_file_name = MEASUREMENTUI_DEFAUTL_RAW_OUTPUT_FILE_NAME;
+
+    _max_mAh = MAINCONTTROLLER_TARGET_MAH;
 
     initMainwindow();
 
@@ -119,7 +121,7 @@ void MainController::updateProject_information(QString project_file_full_path)
  *             Name: createWave_block
  *      Function ID: 006
  *      Create date: 28/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Create a new wave block by current measurement and
  *                   update it to chart.
  ******************************************************************************/
@@ -152,15 +154,21 @@ void MainController::createWave_block(int current_time)
 
         saveWave_data(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _output_file_name,
                       time_before_this_block+1, new_block.y_start(),
-                      time_before_this_block+2000, new_block.y_end() );
+                      time_before_this_block+2000, new_block.y_end(),
+                      new_block.power());
 
         saveWave_data(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _raw_output_file_name,
                       time_before_this_block+_first_x, _first_y,
-                      time_before_this_block+second_x, second_y);
+                      time_before_this_block+second_x, second_y,
+                      new_block.power());
+
+        _total_mAh += new_block.power();
 
 #ifdef MAINCONTROLLER_DEBUG
         qDebug() << "+ MainController: " << __FUNCTION__ << " The first point: (" << _first_x << ", " << _first_y << ")";
         qDebug() << "+ MainController: " << __FUNCTION__ << " The second point: (" << second_x << ", " << second_y << ")";
+        qDebug() << "+ MainController: " << __FUNCTION__ << " Power: " << new_block.power();
+        qDebug() << "+ MainController: " << __FUNCTION__ << " Total power: " << _total_mAh;
         qDebug() << "+ MainController: " << __FUNCTION__ << " The measurement operation took: " << current_time -_execution_period/2 << " milliseconds";
 #endif
     }
@@ -170,16 +178,16 @@ void MainController::createWave_block(int current_time)
  *             Name: saveWave_data
  *      Function ID: 007
  *      Create date: 04/03/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 05/03/2019
  *      Description: Save wave data to file with specific file path.
  ******************************************************************************/
-int MainController::saveWave_data(QString file_path, qint64 time1, double value1, qint64 time2, double value2)
+int MainController::saveWave_data(QString file_path, qint64 time1, double value1, qint64 time2, double value2, double power_consumption)
 {
     QFile output_file(file_path);
     if (output_file.open(QFile::WriteOnly | QFile::Text | QFile::Append)) {
             QTextStream out_stream(&output_file);
-            out_stream << time1 << " " << value1 << MEASUREMENTUI_DAFAULT_NEW_LINE;
-            out_stream << time2 << " " << value2 << MEASUREMENTUI_DAFAULT_NEW_LINE;
+            out_stream << time1 << " " << value1 << " " << 0 << MEASUREMENTUI_DAFAULT_NEW_LINE;
+            out_stream << time2 << " " << value2 << " " << power_consumption  <<MEASUREMENTUI_DAFAULT_NEW_LINE;
             out_stream.flush();
             output_file.close();
     } else {
