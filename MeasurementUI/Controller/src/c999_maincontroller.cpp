@@ -41,6 +41,7 @@ MainController::MainController()
 
     synchronizeCurrent_path(QDir::homePath());
 
+
 //    Wave_Block test(1000);
 //    test.setFirst_point(100, 4.1);
 //    test.setSecond_point(900, 4.0);
