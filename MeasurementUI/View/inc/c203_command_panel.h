@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 06/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Command Panel dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -17,7 +17,7 @@
 #define COMMNAD_PANEL_DISCHARGE_TYPE_SQUARE_WAVE      0
 #define COMMNAD_PANEL_DISCHARGE_TYPE_CONSTANT_CURRENT 1
 
-#define COMMAND_PANEL_DISCHARGE_TYPE_TYPE_INDEX        0
+#define COMMAND_PANEL_DISCHARGE_TYPE_INDEX        0
 
 #define COMMAND_PANEL_SW_MIN_CURRENT_INDEX 1
 #define COMMAND_PANEL_SW_MAX_CURRENT_INDEX 2
@@ -28,7 +28,7 @@
 #define COMMAND_PANEL_TERMINATION_TYPE_COULOMB_COUNTING 0
 #define COMMAND_PANEL_TERMINATION_TYPE_OCV              1
 
-#define COMMAND_PANEL_TERMINATION_TYPE_TYPE_INDEX    0
+#define COMMAND_PANEL_TERMINATION_TYPE_INDEX    0
 
 #define COMMAND_PANEL_TCC_COULOMB_INDEX 1
 

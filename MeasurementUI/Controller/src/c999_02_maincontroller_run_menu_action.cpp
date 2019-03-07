@@ -20,7 +20,6 @@ void MainController::handleStart()
     qDebug() << "+ MainController: " << __FUNCTION__;
     debug_printSerial_information();
 #endif
-    _execution_period = MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT;
 
 /** Serial port configuration */
     /** DMM_current controller */

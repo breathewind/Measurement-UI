@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 06/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Command Panel dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -18,7 +18,7 @@
  *             Name: Command_Panel
  *      Function ID: 000
  *      Create date: 19/02/2019
- * Last modify date: 06/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Construction function.
  ******************************************************************************/
 Command_Panel::Command_Panel(QWidget *parent) :
@@ -34,6 +34,8 @@ Command_Panel::Command_Panel(QWidget *parent) :
 
     ui->radioButton_TCC->setChecked(true);
     ui->radioButton_TOCV->setChecked(false);
+
+    setFixedSize(480,465);
 }
 
 /******************************************************************************

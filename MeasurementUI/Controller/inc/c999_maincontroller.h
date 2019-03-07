@@ -32,7 +32,11 @@
 #define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT   1000
 #define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 2000
 
-#define MAINCONTTROLLER_TARGET_MAH 500
+#define MAINCONTTROLLER_DEFAULT_PREDISCHARGE_VALUE 100
+
+#define MAINCONTTROLLER_DEFAULT_START_EXECUTION_OCV 4.10
+
+//#define MAINCONTTROLLER_TARGET_MAH 500
 //#define MAINCONTTROLLER_PWM false
 
 #define MAINCONTTROLLER_RESISTANCE 0.53
@@ -48,7 +52,8 @@
 #define MAINCONTROLLER_EXE_COMMAND_RUN   0
 #define MAINCONTROLLER_EXE_COMMAND_STOP  1
 #define MAINCONTROLLER_EXE_COMMAND_PAUSE 2
-#define MAINCONTROLLER_EXE_COMMAND_CALIBRATION 3
+#define MAINCONTROLLER_EXE_COMMAND_CALIBRATION_MAX 3
+#define MAINCONTROLLER_EXE_COMMAND_CALIBRATION_MIN 4
 
 
 #define MAINCONTROLLER_FIRST_HALF true
@@ -177,9 +182,11 @@ private:
     void captureOne_measurement();
     /** Function 302: Start exeuction of meausuremnt.. */
     void startExecution(uint8_t resistance);
-    /** Function 303: Start calibration of meausuremnt.. */
-    void startCalibration();
-    /** Function 304: Start meausuremnt from capturing OCV. */
+    /** Function 303: Start calibration of max current. */
+    void startCalibration_max();
+    /** Function 304: Start calibration of min current. */
+    void startCalibration_min();
+    /** Function 305: Start meausuremnt from capturing OCV. */
     void startMeasurement();
 
     /** Function 600: Print data read from project file. */
@@ -265,6 +272,7 @@ private:
 
     double _max_mAh;
     double _realtime_battery_voltage;
+    double _start_exe_OCV;
 
     Chart_Controller* _battery_voltage_chart_view_controller;
     Chart_Controller* _load_current_chart_view_controller;
@@ -272,12 +280,16 @@ private:
     Pie_Controller* _target_capacity_pie_controller;
 
     double _sense_resistance;
-    uint8_t _control_resistance;
-    double _target_current;
+    uint8_t _control_resistance_max;
+    uint8_t _control_resistance_min;
+    double _target_current_max;
+    double _target_current_min;
     int _calibration_factor;
-    double _min_step_current;
-    double _last_step_current;
-    double _last_last_step_current;
+    double _min_step_current_max;
+    double _min_step_current_min;
+    double _last_step_current_max;
+    double _last_step_current_min;
+//    double _last_last_step_current;
     bool _resistance_change_flag;
     char _different_factor;
 
@@ -286,7 +298,7 @@ private:
     int _discharge_type;
     double _SW_min_current;
     double _SW_max_current;
-    qint64 _SW_period;
+    int _SW_period;
     double _CC_current;
 
     int _termination_type;
@@ -294,6 +306,8 @@ private:
     double _TVOC_voltage;
 
     double _battery_capacity;
+
+    bool _start_record;
 
 #ifdef MAINCONTROLLER_DEBUG
     QElapsedTimer _elapsed_timer;

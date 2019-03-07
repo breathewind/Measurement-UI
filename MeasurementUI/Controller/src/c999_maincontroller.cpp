@@ -16,18 +16,19 @@
  *             Name: MainController
  *      Function ID: 000
  *      Create date: 14/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Construction function.
  ******************************************************************************/
 MainController::MainController()
 {
     _sense_resistance = MAINCONTTROLLER_RESISTANCE;
-    _control_resistance = 0;
+    _control_resistance_max = 0;
+    _start_exe_OCV = MAINCONTTROLLER_DEFAULT_START_EXECUTION_OCV;
 
     _output_file_name = MEASUREMENTUI_DEFAUTL_OUTPUT_FILE_NAME;
     _raw_output_file_name = MEASUREMENTUI_DEFAUTL_RAW_OUTPUT_FILE_NAME;
 
-    _max_mAh = MAINCONTTROLLER_TARGET_MAH;
+    _max_mAh = 0;
 
     initMainwindow();
 
@@ -237,28 +238,33 @@ int MainController::writeOCV(QString file_path, double value)
 void MainController::retrieveCommand_panel_data()
 {
     QList<double> info = _command_panel->getDischarge_information();
-    _discharge_type = static_cast<int>(info.at(COMMAND_PANEL_DISCHARGE_TYPE_TYPE_INDEX));
+    _discharge_type = static_cast<int>(info.at(COMMAND_PANEL_DISCHARGE_TYPE_INDEX));
     if(_discharge_type == COMMNAD_PANEL_DISCHARGE_TYPE_SQUARE_WAVE){
         _SW_min_current = info.at(COMMAND_PANEL_SW_MIN_CURRENT_INDEX);
         _SW_max_current = info.at(COMMAND_PANEL_SW_MAX_CURRENT_INDEX);
-        _SW_period = static_cast<qint64>(info.at(COMMAND_PANEL_SW_PERIOD_INDEX));
+        _SW_period = static_cast<int>(info.at(COMMAND_PANEL_SW_PERIOD_INDEX));
+        _execution_period = _SW_period/2;
 
         _load_current_chart_view_controller->setY_range(_SW_min_current-0.5>0?_SW_min_current-0.5:0, _SW_max_current+0.5);
 
-        _target_current = _SW_max_current;
+        _target_current_max = _SW_max_current;
+        _target_current_min = _SW_min_current;
     }else {
         _CC_current = info.at(COMMAND_PANEL_CC_CURRENT_INDEX);
 
+        _execution_period = MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT;
+
         _load_current_chart_view_controller->setY_range(0, _CC_current+0.5);
 
-        _target_current = _CC_current;
+        _target_current_max = _CC_current;
     }
 
     info = _command_panel->getTermination_information();
-    _termination_type = static_cast<int>(info.at(COMMAND_PANEL_TERMINATION_TYPE_TYPE_INDEX));
+    _termination_type = static_cast<int>(info.at(COMMAND_PANEL_TERMINATION_TYPE_INDEX));
     if(_termination_type == COMMAND_PANEL_TERMINATION_TYPE_COULOMB_COUNTING){
         _TCC_coulomb = info.at(COMMAND_PANEL_TCC_COULOMB_INDEX);
         _target_capacity_pie_controller->setCapacity(_TCC_coulomb);
+        _max_mAh = _TCC_coulomb;
     } else {
         _TVOC_voltage = info.at(COMMAND_PANEL_TVOC_VOLTAGE_INDEX);
     }
@@ -643,38 +649,58 @@ void MainController::startExecution(uint8_t resistance)
 }
 
 /******************************************************************************
- *             Name: startCalibration
+ *             Name: startCalibration_max
  *      Function ID: 303
  *      Create date: 28/02/2019
- * Last modify date: 28/02/2019
- *      Description: Start calibration of meausuremnt.
+ * Last modify date: 07/03/2019
+ *      Description: Start calibration of max current.
  ******************************************************************************/
-void MainController::startCalibration()
+void MainController::startCalibration_max()
 {
-    _execution_command = MAINCONTROLLER_EXE_COMMAND_CALIBRATION;
-    _control_resistance = 255;
+    _execution_command = MAINCONTROLLER_EXE_COMMAND_CALIBRATION_MAX;
+    _control_resistance_max = 255;
     _calibration_factor = 0;
 
-    _execution_elapsed_timer->start(); // not really used during calibration
-
-    _BC_controller->sendMCU_Value(static_cast<char>(_control_resistance));
+    _BC_controller->sendMCU_Value(static_cast<char>(_control_resistance_max));
 
     _DMM_controller_current->writeDMM_command(":SYST:REM", false);
     _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
 }
 
 /******************************************************************************
- *             Name: startMeasurement
+ *             Name: startCalibration_min
  *      Function ID: 304
+ *      Create date: 07/03/2019
+ * Last modify date: 07/03/2019
+ *      Description: Start calibration of min current.
+ ******************************************************************************/
+void MainController::startCalibration_min()
+{
+    _execution_command = MAINCONTROLLER_EXE_COMMAND_CALIBRATION_MIN;
+    _control_resistance_min = 255;
+    _calibration_factor = 0;
+
+    _BC_controller->sendMCU_Value(static_cast<char>(_control_resistance_min));
+
+    _execution_capture_timer->start(0);
+//    _DMM_controller_current->writeDMM_command(":SYST:REM", false);
+//    _DMM_controller_current->writeDMM_command(MEASUREMENTUI_VOLTAGE_COMMAND);
+}
+
+/******************************************************************************
+ *             Name: startMeasurement
+ *      Function ID: 305
  *      Create date: 05/03/2019
  * Last modify date: 07/03/2019
  *      Description: Start meausuremnt from capturing OCV.
  ******************************************************************************/
 void MainController::startMeasurement()
 {
+    _execution_elapsed_timer->start();
     retrieveCommand_panel_data();
-
+    _toggle_flag = MAINCONTROLLER_TOGGLE_FLAG_ON;
     _total_mAh = 0;
+    _start_record = false;
 
     _battery_voltage_chart_view_controller->setY_range(2.0, 4.5);
 
