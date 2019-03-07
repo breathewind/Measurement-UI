@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 22/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Main window controller.
  *                   - Functional slots.
  ******************************************************************************/
@@ -91,7 +91,7 @@ void MainController::slot_read_serial_buffer()
  *             Name: slot_retrieveDMM_data_for_current
  *      Function ID: 753
  *      Create date: 28/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Slot for retrieving data from DMM during current
  *                   measurement when one data to read is ready.
  ******************************************************************************/
@@ -118,7 +118,7 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
 //            _DMM_controller_current->closeSerial();
 //            _BC_controller->closeSerial();
              startExecution(_control_resistance);
-             _resistance_change_flag = false;
+//             _resistance_change_flag = false;
             _toggle_flag = MAINCONTROLLER_TOGGLE_FLAG_ON;
             if(_last_step_current > _data_read_buffer_current){
                 _min_step_current = _last_step_current - _data_read_buffer_current;
@@ -177,7 +177,7 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
  *             Name: slot_change_load_current
  *      Function ID: 755
  *      Create date: 27/02/2019
- * Last modify date: 06/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Slot for changing load current when execution timer
  *                   timeout is reached.
  ******************************************************************************/
@@ -192,15 +192,15 @@ void MainController::slot_change_load_current()
             } else {
                 startExecution(_control_resistance);
             }
-            if(_resistance_change_flag){
-                if(_last_last_step_current>_last_step_current){
-                    _min_step_current = _last_last_step_current-_last_step_current;
-                }
-                _resistance_change_flag = false;
-#ifdef MAINCONTROLLER_DEBUG
-                qDebug() << "+ MainController: " << __FUNCTION__ << "- new _min_step_current: " << _min_step_current;
-#endif
-            }
+//            if(_resistance_change_flag){
+//                if(_last_last_step_current>_last_step_current){
+//                    _min_step_current = _last_last_step_current-_last_step_current;
+//                }
+//                _resistance_change_flag = false;
+//#ifdef MAINCONTROLLER_DEBUG
+//                qDebug() << "+ MainController: " << __FUNCTION__ << "- new _min_step_current: " << _min_step_current;
+//#endif
+//            }
 
              _last_last_step_current = _last_step_current;
             _last_step_current = _data_read_buffer_current;
@@ -213,10 +213,10 @@ void MainController::slot_change_load_current()
 
             if(_last_step_current >_target_current + _min_step_current/2){
                 _control_resistance--;
-                _resistance_change_flag = true;
+//                _resistance_change_flag = true;
             } else if(_last_step_current < _target_current - _min_step_current/2 ){
                 _control_resistance++;
-                _resistance_change_flag = true;
+//                _resistance_change_flag = true;
             }
 
 //            if(_different_factor >0){
