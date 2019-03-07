@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -11,7 +11,7 @@
  *             Name: handleStart
  *      Function ID: 236
  *      Create date: 18/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Function for handle operations related to Start.
  ******************************************************************************/
 void MainController::handleStart()
@@ -40,8 +40,6 @@ void MainController::handleStart()
 
     _battery_voltage_chart_view_controller->reset();
     _load_current_chart_view_controller->reset();
-    _battery_capacity_pie_controller->reset();
-    _target_capacity_pie_controller->reset();
 
     _main_elapsed_timer.start();
     _last_elapsed_time = _main_elapsed_timer.elapsed();
@@ -53,18 +51,14 @@ void MainController::handleStart()
     _voltage_timer_timeout = 100;
     _voltage_capture_timer->start(_voltage_timer_timeout);
 
-    _total_mAh = 0;
-
     _DMM_controller_current->writeDMM_command(":SYST:REM", false);
 
 #ifdef MAINCONTROLLER_DEBUG
     test_counter = 0;
 #endif
 
-    _load_current_chart_view_controller->setY_range(0, 1);
-    _battery_voltage_chart_view_controller->setY_range(2.5, 4.5);
 
-    startMeasurement(0.5);
+    startMeasurement();
 //    startExecution(80);
 //    captureOne_measurement();
 }

@@ -40,7 +40,6 @@ bool MainController::handleNew_Project()
     _bc_parity      = MEASUREMENTUI_BC_PARITY;
     _bc_flowcontrol = MEASUREMENTUI_BC_FLOWCONTROL;
 
-
     /** Create directory. */
     QDir dir(_project_path);
     if(dir.exists()){
@@ -57,7 +56,7 @@ bool MainController::handleNew_Project()
     QTextStream out_stream(&file);
 
     out_stream << MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT      << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT << " 1" << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT  << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
 
     out_stream << MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT    << " " << __serial_definitions.getBaudrate(_dmm_baudrate)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
@@ -74,6 +73,9 @@ bool MainController::handleNew_Project()
 
     file.flush();
     file.close();
+
+    _main_window->setCommand_panel_action_checked(true);
+    _command_panel->showDialog();
 
     _setting_dialog_controller->resetAll_frames();
     _battery_voltage_chart_view_controller->reset();

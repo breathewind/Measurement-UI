@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 06/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -227,6 +227,47 @@ int MainController::writeOCV(QString file_path, double value)
 }
 
 /******************************************************************************
+ *             Name: retrieveCommand_panel_data
+ *      Function ID: 009
+ *      Create date: 07/03/2019
+ * Last modify date: 07/03/2019
+ *      Description: Retrieve all information about battery and discharging
+ *                   from command panel.
+ ******************************************************************************/
+void MainController::retrieveCommand_panel_data()
+{
+    QList<double> info = _command_panel->getDischarge_information();
+    _discharge_type = static_cast<int>(info.at(COMMAND_PANEL_DISCHARGE_TYPE_TYPE_INDEX));
+    if(_discharge_type == COMMNAD_PANEL_DISCHARGE_TYPE_SQUARE_WAVE){
+        _SW_min_current = info.at(COMMAND_PANEL_SW_MIN_CURRENT_INDEX);
+        _SW_max_current = info.at(COMMAND_PANEL_SW_MAX_CURRENT_INDEX);
+        _SW_period = static_cast<qint64>(info.at(COMMAND_PANEL_SW_PERIOD_INDEX));
+
+        _load_current_chart_view_controller->setY_range(_SW_min_current-0.5>0?_SW_min_current-0.5:0, _SW_max_current+0.5);
+
+        _target_current = _SW_max_current;
+    }else {
+        _CC_current = info.at(COMMAND_PANEL_CC_CURRENT_INDEX);
+
+        _load_current_chart_view_controller->setY_range(0, _CC_current+0.5);
+
+        _target_current = _CC_current;
+    }
+
+    info = _command_panel->getTermination_information();
+    _termination_type = static_cast<int>(info.at(COMMAND_PANEL_TERMINATION_TYPE_TYPE_INDEX));
+    if(_termination_type == COMMAND_PANEL_TERMINATION_TYPE_COULOMB_COUNTING){
+        _TCC_coulomb = info.at(COMMAND_PANEL_TCC_COULOMB_INDEX);
+        _target_capacity_pie_controller->setCapacity(_TCC_coulomb);
+    } else {
+        _TVOC_voltage = info.at(COMMAND_PANEL_TVOC_VOLTAGE_INDEX);
+    }
+
+    _battery_capacity = _command_panel->getBattery_information();
+    _battery_capacity_pie_controller->setCapacity(_battery_capacity);
+}
+
+/******************************************************************************
  *             Name: initMain_Window
  *      Function ID: 200
  *      Create date: 18/02/2019
@@ -334,7 +375,7 @@ void MainController::initSerial_operaiton()
  *             Name: initChart_operaiton
  *      Function ID: 205
  *      Create date: 21/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Initilize functions related to Chart operations.
  ******************************************************************************/
 void MainController::initChart_operaiton(){
@@ -342,9 +383,9 @@ void MainController::initChart_operaiton(){
     _main_window->addBettery_voltage_chart_view(_battery_voltage_chart_view_controller->getChart_view());
     _load_current_chart_view_controller = new Chart_Controller(tr("Load Current"), CHART_CONTROLLER_DEFAULT_TIME_RANGE, tr("A"));
     _main_window->addLoad_current_chart_view(_load_current_chart_view_controller->getChart_view());
-    _battery_capacity_pie_controller = new Pie_Controller("Battery Capatity 2600mAh", 2600);
+    _battery_capacity_pie_controller = new Pie_Controller("Battery Capatity");
     _main_window->addBattery_capacity_chart_view(_battery_capacity_pie_controller->getChart_view());
-    _target_capacity_pie_controller  = new Pie_Controller(QString("Target Capatity %1mAh").arg(MAINCONTTROLLER_TARGET_MAH), MAINCONTTROLLER_TARGET_MAH);
+    _target_capacity_pie_controller  = new Pie_Controller(QString("Target Capatity"));
     _main_window->addTarget_capacity_chart_view(_target_capacity_pie_controller->getChart_view());
 }
 
@@ -623,15 +664,20 @@ void MainController::startCalibration()
 }
 
 /******************************************************************************
- *             Name: startCalibration
+ *             Name: startMeasurement
  *      Function ID: 304
  *      Create date: 05/03/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Start meausuremnt from capturing OCV.
  ******************************************************************************/
-void MainController::startMeasurement(double target_current)
+void MainController::startMeasurement()
 {
-    _target_current = target_current;
+    retrieveCommand_panel_data();
+
+    _total_mAh = 0;
+
+    _battery_voltage_chart_view_controller->setY_range(2.0, 4.5);
+
     _BC_controller->sendMCU_Value(0);
     _OCV_timer->start(500);
 }

@@ -177,7 +177,7 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
  *             Name: slot_change_load_current
  *      Function ID: 755
  *      Create date: 27/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 06/03/2019
  *      Description: Slot for changing load current when execution timer
  *                   timeout is reached.
  ******************************************************************************/
@@ -187,7 +187,7 @@ void MainController::slot_change_load_current()
     switch(_execution_command){
     case MAINCONTROLLER_EXE_COMMAND_RUN:
         if(_toggle_flag == MAINCONTROLLER_TOGGLE_FLAG_ON){
-            if(MAINCONTTROLLER_PWM){
+            if(_discharge_type == COMMNAD_PANEL_DISCHARGE_TYPE_SQUARE_WAVE){
                 startExecution(0);
             } else {
                 startExecution(_control_resistance);

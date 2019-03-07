@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -33,7 +33,7 @@
 #define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 2000
 
 #define MAINCONTTROLLER_TARGET_MAH 500
-#define MAINCONTTROLLER_PWM false
+//#define MAINCONTTROLLER_PWM false
 
 #define MAINCONTTROLLER_RESISTANCE 0.53
 
@@ -105,6 +105,8 @@ private:
     int saveWave_data(QString file_path, qint64 time1, double value1, qint64 time2, double value2, double power_consumption);
     /** Function 008: Write OCV to file with specific file path. */
     int writeOCV(QString file_path, double value);
+    /** Function 009: Retrieve all information about battery and discharging from command panel. */
+    void retrieveCommand_panel_data();
 
     /** Function 200: Initilize functions related to Main Window. */
     void initMainwindow();
@@ -178,7 +180,7 @@ private:
     /** Function 303: Start calibration of meausuremnt.. */
     void startCalibration();
     /** Function 304: Start meausuremnt from capturing OCV. */
-    void startMeasurement(double target_current);
+    void startMeasurement();
 
     /** Function 600: Print data read from project file. */
     void printData_read_from_project_file(QString domain, QString content);
@@ -280,6 +282,18 @@ private:
     char _different_factor;
 
     qint64 _last_elapsed_time;
+
+    int _discharge_type;
+    double _SW_min_current;
+    double _SW_max_current;
+    qint64 _SW_period;
+    double _CC_current;
+
+    int _termination_type;
+    double _TCC_coulomb;
+    double _TVOC_voltage;
+
+    double _battery_capacity;
 
 #ifdef MAINCONTROLLER_DEBUG
     QElapsedTimer _elapsed_timer;

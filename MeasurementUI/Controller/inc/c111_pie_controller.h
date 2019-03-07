@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 05/03/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 07/03/2019
  *      Description: Pie chart controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -35,7 +35,7 @@ class Pie_Controller : public QObject
     Q_OBJECT
 public:
     /** Function 000: Construction function. */
-    explicit Pie_Controller(QString chart_title, double target_capacity, QObject *parent = nullptr);
+    explicit Pie_Controller(QString chart_title, QObject *parent = nullptr);
 
     /** Function 300: Set the current capacity and calculate used percenetage. */
     void setUsed_capacity(double current_capacity);
@@ -44,12 +44,14 @@ public:
 
     /** Function 800: Get chart view. */
     QChartView *getChart_view();
+    /** Function 801: Set capacity. */
+    void setCapacity(double capacity);
 
 public slots:
 
 private:
     /** Function 002: Set the pie chart using default values. */
-    void init(QString chart_title);
+    void init();
 
     QPieSeries *_series;
     QPieSlice *_slice0;
@@ -59,6 +61,7 @@ private:
     QChartView *_chart_view;
 
     double _target_capacity;
+    QString _chart_title;
 
 signals:
 };
