@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 07/03/2019
+ * Last modify date: 08/03/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -67,7 +67,7 @@ void MainController::handleStart()
  *             Name: handleStop
  *      Function ID: 237
  *      Create date: 18/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 08/03/2019
  *      Description: Function for handle operations related to Stop.
  ******************************************************************************/
 void MainController::handleStop()
@@ -78,7 +78,7 @@ void MainController::handleStop()
 
     _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
 
-    _voltage_capture_timer->stop();
+
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__;
 #endif

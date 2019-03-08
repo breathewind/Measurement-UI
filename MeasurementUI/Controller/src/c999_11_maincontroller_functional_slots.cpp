@@ -224,7 +224,7 @@ void MainController::slot_retrieveDMM_data_for_current(QString received_data)
  *             Name: slot_change_load_current
  *      Function ID: 755
  *      Create date: 27/02/2019
- * Last modify date: 07/03/2019
+ * Last modify date: 08/03/2019
  *      Description: Slot for changing load current when execution timer
  *                   timeout is reached.
  ******************************************************************************/
@@ -298,6 +298,8 @@ void MainController::slot_change_load_current()
     case MAINCONTROLLER_EXE_COMMAND_STOP:
         writeOCV(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _output_file_name, _realtime_battery_voltage);
         writeOCV(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _raw_output_file_name, _realtime_battery_voltage);
+
+        _voltage_capture_timer->stop();
         _BC_controller->closeSerial();
         _DMM_controller_current->closeSerial();
         break;
