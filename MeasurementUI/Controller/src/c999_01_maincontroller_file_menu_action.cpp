@@ -262,9 +262,4 @@ void MainController::handleClose_Project()
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
-    _main_window->setCommand_panel_action_checked(false);
-    _command_panel->hideDialog();
-    _main_window->setCommand_panel_action_checked(false);
-    _command_panel->hideDialog();
-    _main_window->setWindowTitle(QString(APP_NAME));
 }
