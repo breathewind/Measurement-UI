@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 06/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -106,7 +106,7 @@ void MainController::updateProject_information(QString project_name, QString pro
  *             Name: updateProject_information
  *      Function ID: 005
  *      Create date: 18/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Update project information according to project file full
  *                   path.
  ******************************************************************************/
@@ -116,6 +116,7 @@ void MainController::updateProject_information(QString project_file_full_path)
     _project_file = Global_Functions::extractFile_full_name(project_file_full_path);
     _project_path = Global_Functions::extractFile_path(project_file_full_path);
     _project_file_full_path = project_file_full_path;
+    _project_output_path = _project_path + MEASUREMENTUI_DIR_SYMBOL + MEASUREMENTUI_DEFAUTL_OUTPUT_PAHT;
     synchronizeCurrent_path(_project_path);
 }
 
@@ -809,7 +810,7 @@ void MainController::slot_save_project_as(QString project_file_full_path)
  *             Name: slot_close_project
  *      Function ID: 704
  *      Create date: 18/02/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Slot for current project closed.
  ******************************************************************************/
 void MainController::slot_close_project()
@@ -822,6 +823,11 @@ void MainController::slot_close_project()
     _command_panel->hide();
     _settings_dialog->hide();
     _main_window->setWindowTitle(QString(APP_NAME));
+
+    _battery_voltage_chart_view_controller->reset();
+    _load_current_chart_view_controller->reset();
+    _battery_capacity_pie_controller->reset();
+    _target_capacity_pie_controller->reset();
 
 #ifdef MAINCONTROLLER_DEBUG
     clearProject_information();
