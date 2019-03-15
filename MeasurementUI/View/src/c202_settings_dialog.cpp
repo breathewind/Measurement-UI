@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Settings dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -77,37 +77,5 @@ void Settings_Dialog::showDialog()
  ******************************************************************************/
 void Settings_Dialog::on_pushButton_Apply_clicked()
 {
-    emit accepted();
-}
-
-/******************************************************************************
- *             Name: accept
- *      Function ID: 790
- *      Create date: 20/02/2019
- * Last modify date: 20/02/2019
- *      Description: Rewrite slot accect().
- ******************************************************************************/
-void Settings_Dialog::accept()
-{
-#ifdef SETTINGS_DIALOG_DEBUG
-    qDebug() << "+ Settings_Dialog: " << __FUNCTION__;
-#endif
-    emit accepted();
-    hide();
-}
-
-/******************************************************************************
- *             Name: reject
- *      Function ID: 791
- *      Create date: 20/02/2019
- * Last modify date: 20/02/2019
- *      Description: Rewrite slot reject().
- ******************************************************************************/
-void Settings_Dialog::reject()
-{
-#ifdef SETTINGS_DIALOG_DEBUG
-    qDebug() << "+ Settings_Dialog: " << __FUNCTION__;
-#endif
-    emit rejected();
-    hide();
+    emit accept_button_clicked();
 }

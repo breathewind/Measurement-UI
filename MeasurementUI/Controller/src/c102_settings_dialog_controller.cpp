@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 21/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Settings dialog controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -16,19 +16,19 @@
  *             Name: Settings_Dialog_Controller
  *      Function ID: 000
  *      Create date: 21/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Construction function.
  ******************************************************************************/
 Settings_Dialog_Controller::Settings_Dialog_Controller(Settings_Dialog *setting_dialog) :
     _setting_dialog(setting_dialog)
 {
-
     initSerial_Port_Frame();
 
     _current_widget = SETTINGS_DIALOG_CONTROLLER_SERIAL_PORT;
     _setting_dialog->setCurrent_frame(_serial_port_frame);
 
     connect(_setting_dialog, &Settings_Dialog::accepted, this, &Settings_Dialog_Controller::slot_modification_accepted);
+    connect(_setting_dialog, &Settings_Dialog::accept_button_clicked, this, &Settings_Dialog_Controller::slot_modification_accepted);
 }
 
 /******************************************************************************

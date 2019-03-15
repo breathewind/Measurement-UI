@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Settings dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -42,11 +42,6 @@ private slots:
     /** Function 700: Slot for Apply pushbutton clicked. */
     void on_pushButton_Apply_clicked();
 
-    /** Function 790: Rewrite slot accect(). */
-    void accept();
-    /** Function 791: Rewrite slot reject(). */
-    void reject();
-
 private:
 
     Ui::Settings_Dialog *ui;
@@ -54,8 +49,8 @@ private:
     QWidget *_previous_widget;
 
     Settings_DIalog_Serial_Port_Frame *_serial_port_frame;
-//signals:
-//    void
+signals:
+    void accept_button_clicked();
 };
 
 #endif // C202_SETTINGS_DIALOG_H
