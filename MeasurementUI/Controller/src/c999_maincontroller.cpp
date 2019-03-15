@@ -830,7 +830,14 @@ void MainController::slot_save_project()
 void MainController::slot_save_project_as(QString project_file_full_path)
 {
     if(project_file_full_path.length() > 0){
-        updateProject_information(project_file_full_path);
+        if(!updateProject_information(Global_Functions::extractFile_name(project_file_full_path),
+                                      Global_Functions::extractFile_path(project_file_full_path))){
+            if(handleNew_Project()){
+                _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
+                _main_window->changeDisplay_status(MAINWINDOW_PROJECT_ACTIVATE);
+            }
+        }
+        QString previous_project_name = _project_name;
 
         handleSave_Project_As();
     }

@@ -66,10 +66,17 @@ bool MainController::handleNew_Project()
 
     file.flush();
     file.close();
-
+    /** Show command panel when a new project is created. */
     _main_window->setCommand_panel_action_checked(true);
     _command_panel->showDialog();
+    /** Hide settings dialog when a new project is created. */
+    _main_window->setSettings_action_checked(false);
+    _settings_dialog->hide();
+    /** Hide output panel when a new project is created. */
+    _main_window->setOutput_panel_action_checked(false);
+    _output_panel->hide();
 
+    /** Reset all dialogs */
     _setting_dialog_controller->resetAll_frames();
     _battery_voltage_chart_view_controller->reset();
     _load_current_chart_view_controller->reset();
