@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 20/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Serial Port frame of Settings dialog.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -78,7 +78,7 @@ void Settings_DIalog_Serial_Port_Frame::initBC_group(QStringList *data)
  *             Name: updateDMM_Combobox
  *      Function ID: 004
  *      Create date: 21/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Update all DMM combo boxes.
  ******************************************************************************/
 void Settings_DIalog_Serial_Port_Frame::updateDMM_combobox(QStringList data)
@@ -88,13 +88,16 @@ void Settings_DIalog_Serial_Port_Frame::updateDMM_combobox(QStringList data)
     ui->comboBox_DMM_stopbits->setCurrentText(data.at(MEASUREMENTUI_INDEX_STOPBITS));
     ui->comboBox_DMM_parity->setCurrentText(data.at(MEASUREMENTUI_INDEX_PARITY));
     ui->comboBox_DMM_flowcontrol->setCurrentText(data.at(MEASUREMENTUI_INDEX_FLOWCONTROL));
+    if(data.size() > 5){
+        ui->comboBox_DMM_port->setCurrentText(data.at(MEASUREMENTUI_INDEX_PORT));
+    }
 }
 
 /******************************************************************************
  *             Name: updateBC_Combobox
  *      Function ID: 005
  *      Create date: 21/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Update all BC combo boxes.
  ******************************************************************************/
 void Settings_DIalog_Serial_Port_Frame::updateBC_combobox(QStringList data)
@@ -104,6 +107,9 @@ void Settings_DIalog_Serial_Port_Frame::updateBC_combobox(QStringList data)
     ui->comboBox_BC_stopbits->setCurrentText(data.at(MEASUREMENTUI_INDEX_STOPBITS));
     ui->comboBox_BC_parity->setCurrentText(data.at(MEASUREMENTUI_INDEX_PARITY));
     ui->comboBox_BC_flowcontrol->setCurrentText(data.at(MEASUREMENTUI_INDEX_FLOWCONTROL));
+    if(data.size() > 5){
+        ui->comboBox_BC_port->setCurrentText(data.at(MEASUREMENTUI_INDEX_PORT));
+    }
 }
 
 /******************************************************************************

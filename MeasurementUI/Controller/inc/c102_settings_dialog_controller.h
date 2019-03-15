@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 21/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Settings dialog controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -35,7 +35,7 @@ public:
     /** Function 300: Set all frames as default values. */
     void resetAll_frames();
     /** Function 301: Update all frames. */
-    void updataeAll_frames(QStringList *data);
+    void updataeAll_frames(QList<QStringList> data);
 
 private:
     /** Function 002: Initialize serial port frame and controller. */

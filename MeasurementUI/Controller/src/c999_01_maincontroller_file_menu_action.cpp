@@ -185,9 +185,10 @@ bool MainController::handleOpen_Project()
     }
     file.close();
 
-    UpdateSettings();
     QStringList available_ports = Serial_definitions::getSerial_port_name();
     _dmm_port = available_ports.size() > 0? available_ports.at(0):QString();
+
+    updateSettings();
 
     _battery_voltage_chart_view_controller->reset();
     _load_current_chart_view_controller->reset();

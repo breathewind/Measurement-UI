@@ -180,7 +180,7 @@ private:
     void handleOutput_Panel();
 
     /** Function 300: Update all settings opertions. */
-    void UpdateSettings();
+    void updateSettings();
     /** Function 301: Capture one measurement. */
     void captureOne_measurement();
     /** Function 302: Start exeuction of meausuremnt.. */

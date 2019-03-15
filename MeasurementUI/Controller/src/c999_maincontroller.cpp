@@ -606,24 +606,31 @@ void MainController::showMainwindow()
  *             Name: UpdateSettings
  *      Function ID: 300
  *      Create date: 21/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Update all settings opertions.
  ******************************************************************************/
-void MainController::UpdateSettings()
+void MainController::updateSettings()
 {
-    QStringList data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_SIZE];
+    QList<QStringList> data_list;
+    QStringList data_list_dmm;
+    QStringList data_list_bc;
 
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_baudrate);
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_databits);
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_stopbits);
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_parity);
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_DMM].append(_dmm_flowcontrol);
+    data_list_dmm.append(_dmm_baudrate);
+    data_list_dmm.append(_dmm_databits);
+    data_list_dmm.append(_dmm_stopbits);
+    data_list_dmm.append(_dmm_parity);
+    data_list_dmm.append(_dmm_flowcontrol);
+    data_list_dmm.append(_dmm_port);
 
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_baudrate);
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_databits);
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_stopbits);
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_parity);
-    data_list[SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_INDEX_BC].append(_bc_flowcontrol);
+    data_list_bc.append(_bc_baudrate);
+    data_list_bc.append(_bc_databits);
+    data_list_bc.append(_bc_stopbits);
+    data_list_bc.append(_bc_parity);
+    data_list_bc.append(_bc_flowcontrol);
+    data_list_bc.append(_bc_port);
+
+    data_list.append(data_list_dmm);
+    data_list.append(data_list_bc);
 
     _setting_dialog_controller->updataeAll_frames(data_list);
 }

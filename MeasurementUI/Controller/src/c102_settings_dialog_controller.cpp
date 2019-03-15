@@ -60,13 +60,13 @@ void Settings_Dialog_Controller::resetAll_frames()
  *             Name: updataeAll_frames
  *      Function ID: 301
  *      Create date: 21/02/2019
- * Last modify date: 22/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Update all frames..
  ******************************************************************************/
-void Settings_Dialog_Controller::updataeAll_frames(QStringList* data)
+void Settings_Dialog_Controller::updataeAll_frames(QList<QStringList> data)
 {
-    _serial_port_frame_controller->updateDMM(data[SETTINGS_DIALOG_CONTROLLER_DATA_DMM]);
-    _serial_port_frame_controller->updateBC(data[SETTINGS_DIALOG_CONTROLLER_DATA_BC]);
+    _serial_port_frame_controller->updateDMM(data.at(SETTINGS_DIALOG_CONTROLLER_DATA_DMM));
+    _serial_port_frame_controller->updateBC(data.at(SETTINGS_DIALOG_CONTROLLER_DATA_BC));
 
 //    for (int i=0; i<SETTINGS_DIALOG_SERIAL_PORT_FRAME_CONTROLLER_DATA_SET_SIZE; i++) {
 //        for (int j=0 ; j<5; j++) {
