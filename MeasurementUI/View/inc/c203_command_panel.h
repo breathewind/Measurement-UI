@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 07/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Command Panel dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -54,6 +54,8 @@ public:
 
     /** Function 300: Show window and record its postion. */
     void showDialog();
+    /** Function 301: Hide window. */
+    void hideDialog();
 
     /** Function 800: Get discharge type and information. */
     QList<double> getDischarge_information();

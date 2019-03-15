@@ -89,6 +89,7 @@ void Settings_DIalog_Serial_Port_Frame::updateDMM_combobox(QStringList data)
     ui->comboBox_DMM_parity->setCurrentText(data.at(MEASUREMENTUI_INDEX_PARITY));
     ui->comboBox_DMM_flowcontrol->setCurrentText(data.at(MEASUREMENTUI_INDEX_FLOWCONTROL));
 }
+
 /******************************************************************************
  *             Name: updateBC_Combobox
  *      Function ID: 005

@@ -557,7 +557,7 @@ void MainController::initQuit()
 
 /******************************************************************************
  *             Name: showMain_Window
- *      Function ID: 300
+ *      Function ID: 299
  *      Create date: 16/02/2019
  * Last modify date: 16/02/2019
  *      Description: Show main window.
@@ -945,7 +945,7 @@ void MainController::debug_slot_printDebug_info2()
 
 /******************************************************************************
  *             Name: debug_printSerial_inforation -Debug function
- *      Function ID: 904
+ *      Function ID: 903
  *      Create date: 24/02/2019
  * Last modify date: 24/02/2019
  *      Description: Print serial information.

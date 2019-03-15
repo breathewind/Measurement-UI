@@ -92,7 +92,7 @@ public:
     /** Function 000: Construction function. */
     MainController();
 
-    /** Function 300: Show main window. */
+    /** Function 299: Show main window. */
     void showMainwindow();
 
 private:

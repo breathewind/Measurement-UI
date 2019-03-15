@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -90,7 +90,7 @@ bool MainController::handleNew_Project()
  *             Name: handleOpen_Project
  *      Function ID: 232
  *      Create date: 18/02/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Function for handle operations related to Open Project.
  ******************************************************************************/
 bool MainController::handleOpen_Project()
@@ -187,13 +187,7 @@ bool MainController::handleOpen_Project()
 
     UpdateSettings();
     QStringList available_ports = Serial_definitions::getSerial_port_name();
-    if(available_ports.size() > 0){
-        _dmm_port = available_ports.at(0);
-        _bc_port = available_ports.at(0);
-    } else {
-        _dmm_port = QString();
-        _bc_port = QString();
-    }
+    _dmm_port = available_ports.size() > 0? available_ports.at(0):QString();
 
     _battery_voltage_chart_view_controller->reset();
     _load_current_chart_view_controller->reset();
@@ -260,7 +254,7 @@ void MainController::handleSave_Project_As()
  *             Name: handle_CloseProject
  *      Function ID: 235
  *      Create date: 18/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Function for handle operations related to Close Project.
  ******************************************************************************/
 void MainController::handleClose_Project()
@@ -268,5 +262,9 @@ void MainController::handleClose_Project()
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__;
 #endif
+    _main_window->setCommand_panel_action_checked(false);
+    _command_panel->hideDialog();
+    _main_window->setCommand_panel_action_checked(false);
+    _command_panel->hideDialog();
     _main_window->setWindowTitle(QString(APP_NAME));
 }

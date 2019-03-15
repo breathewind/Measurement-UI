@@ -65,6 +65,18 @@ void Command_Panel::showDialog()
 }
 
 /******************************************************************************
+ *             Name: hideDialog
+ *      Function ID: 301
+ *      Create date: 15/03/2019
+ * Last modify date: 15/03/2019
+ *      Description: Hide window.
+ ******************************************************************************/
+void Command_Panel::hideDialog()
+{
+    hide();
+}
+
+/******************************************************************************
  *             Name: getDischarge_information
  *      Function ID: 800
  *      Create date: 06/03/2019
