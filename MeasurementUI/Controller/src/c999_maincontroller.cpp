@@ -761,16 +761,16 @@ void MainController::printData_read_from_project_file(QString domain, QString co
  *             Name: slot_create_new_project
  *      Function ID: 700
  *      Create date: 16/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Slot for new project created.
  ******************************************************************************/
 void MainController::slot_create_new_project(QString project_name, QString project_path)
 {
-    updateProject_information(project_name, project_path);
-
-    if(handleNew_Project()){
-        _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
-        _main_window->changeDisplay_status(MAINWINDOW_PROJECT_ACTIVATE);
+    if(!updateProject_information(project_name, project_path)){
+        if(handleNew_Project()){
+            _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
+            _main_window->changeDisplay_status(MAINWINDOW_PROJECT_ACTIVATE);
+        }
     }
 
 #ifdef MAINCONTROLLER_DEBUG
