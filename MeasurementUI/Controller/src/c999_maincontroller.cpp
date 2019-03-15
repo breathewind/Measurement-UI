@@ -692,12 +692,13 @@ void MainController::startCalibration_min()
  *             Name: startMeasurement
  *      Function ID: 305
  *      Create date: 05/03/2019
- * Last modify date: 07/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Start meausuremnt from capturing OCV.
  ******************************************************************************/
 void MainController::startMeasurement()
 {
     _execution_elapsed_timer->start();
+    _execution_command = MAINCONTROLLER_EXE_COMMAND_PREPARATION;
     retrieveCommand_panel_data();
     _toggle_flag = MAINCONTROLLER_TOGGLE_FLAG_ON;
     _total_mAh = 0;

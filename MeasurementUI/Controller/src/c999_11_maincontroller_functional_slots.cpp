@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 22/02/2019
- * Last modify date: 07/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Main window controller.
  *                   - Functional slots.
  ******************************************************************************/
@@ -353,7 +353,7 @@ void MainController::slot_battery_voltage_received(QString voltage_value)
  *             Name: slot_read_battery_voltage
  *      Function ID: 758
  *      Create date: 04/03/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Slot for sending read voltage comand to MCU when voltage
  *                    capture timer timeout is reached.
  ******************************************************************************/
@@ -361,14 +361,15 @@ void MainController::slot_read_battery_voltage()
 {
     _voltage_capture_timer->stop();
     _BC_controller->readVoltage();
-    _voltage_capture_timer->start(_voltage_timer_timeout);
+    if( _execution_command != MAINCONTROLLER_EXE_COMMAND_STOP)
+        _voltage_capture_timer->start(_voltage_timer_timeout);
 }
 
 /******************************************************************************
  *             Name: slot_save_OCV
  *      Function ID: 759
  *      Create date: 05/03/2019
- * Last modify date: 07/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Slot for writing OCV to file when OCV capture timer
  *                   timeout is reached.
  ******************************************************************************/
@@ -376,7 +377,7 @@ void MainController::slot_save_OCV()
 {
     _OCV_timer->stop();
     qDebug() << "+ MainController: " << __FUNCTION__ << "- voltage: " << _realtime_battery_voltage;
-    if(!_start_record){
+//    if(!_start_record){
         if(_toggle_flag == MAINCONTROLLER_TOGGLE_FLAG_ON){
             if(_realtime_battery_voltage < _start_exe_OCV){
                 qDebug() << "+ MainController: " << __FUNCTION__ << "- 0: ";
@@ -395,7 +396,7 @@ void MainController::slot_save_OCV()
             _BC_controller->sendMCU_Value(0);
         }
         _OCV_timer->start(1000);
-    }
+//    }
 
     _toggle_flag = !_toggle_flag;
 #ifdef MAINCONTROLLER_DEBUG

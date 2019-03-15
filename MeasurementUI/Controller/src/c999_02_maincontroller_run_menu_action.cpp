@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 08/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -67,17 +67,21 @@ void MainController::handleStart()
  *             Name: handleStop
  *      Function ID: 237
  *      Create date: 18/02/2019
- * Last modify date: 08/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Function for handle operations related to Stop.
  ******************************************************************************/
 void MainController::handleStop()
 {
     _BC_controller->sendMCU_Value(0);
+    if(_execution_command == MAINCONTROLLER_EXE_COMMAND_PREPARATION){
+        _OCV_timer->stop();
+        _BC_controller->closeSerial();
+        _DMM_controller->closeSerial();
+    }
     _sampling_command = MAINCONTROLLER_VOLT_COMMAND_STOP;
 //    _sampling_command_current = MAINCONTROLLER_CURR_COMMAND_STOP;
 
     _execution_command = MAINCONTROLLER_EXE_COMMAND_STOP;
-
 
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: " << __FUNCTION__;

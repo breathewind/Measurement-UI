@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 07/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -54,6 +54,7 @@
 #define MAINCONTROLLER_EXE_COMMAND_PAUSE 2
 #define MAINCONTROLLER_EXE_COMMAND_CALIBRATION_MAX 3
 #define MAINCONTROLLER_EXE_COMMAND_CALIBRATION_MIN 4
+#define MAINCONTROLLER_EXE_COMMAND_PREPARATION 5
 
 
 #define MAINCONTROLLER_FIRST_HALF true
