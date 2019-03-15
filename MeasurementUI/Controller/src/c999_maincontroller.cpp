@@ -821,6 +821,7 @@ void MainController::slot_close_project()
     _main_window->resetAll_menu_actions();
     _command_panel->hide();
     _settings_dialog->hide();
+    _main_window->setWindowTitle(QString(APP_NAME));
 
 #ifdef MAINCONTROLLER_DEBUG
     clearProject_information();
