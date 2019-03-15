@@ -18,7 +18,7 @@
  *             Name: Settings_Dialog
  *      Function ID: 000
  *      Create date: 19/02/2019
- * Last modify date: 21/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Construction function.
  ******************************************************************************/
 Settings_Dialog::Settings_Dialog(QWidget *parent) :
@@ -28,6 +28,7 @@ Settings_Dialog::Settings_Dialog(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowTitle("Settings");
+    setFixedSize(480, 556);
 }
 
 /******************************************************************************

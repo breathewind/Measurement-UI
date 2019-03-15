@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 30/01/2019
- * Last modify date: 05/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Main window of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -18,7 +18,7 @@
  *             Name: MainWindow
  *      Function ID: 000
  *      Create date: 30/01/2019
- * Last modify date: 19/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Construction function.
  ******************************************************************************/
 MainWindow::MainWindow(QWidget *parent) :
@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("MeasurementUI");
+    setFixedSize(800, 600);
 
     initializeRun_time_group();
     initializeFile_group();
