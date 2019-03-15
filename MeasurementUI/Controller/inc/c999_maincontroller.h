@@ -56,6 +56,8 @@
 #define MAINCONTROLLER_EXE_COMMAND_CALIBRATION_MIN 4
 #define MAINCONTROLLER_EXE_COMMAND_PREPARATION 5
 
+#define MAINCONTROLLER_DIR_CREATE_SUCCEED 0
+#define MAINCONTROLLER_DIR_CREATE_FAIL    1
 
 #define MAINCONTROLLER_FIRST_HALF true
 #define MAINCONTROLLER_SECOND_HALF false
@@ -102,7 +104,7 @@ private:
     /** Function 003: Synchronize project path. */
     void synchronizeCurrent_path(QString current_path);
     /** Function 004: Update project information according to project name and project path. */
-    void updateProject_information(QString project_name, QString project_path);
+    int updateProject_information(QString project_name, QString project_path);
     /** Function 005: Update project information according to project file full path. */
     void updateProject_information(QString project_file_full_path);
     /** Function 006: Create a new wave block by current measurement and update it to chart. */

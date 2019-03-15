@@ -87,19 +87,52 @@ void MainController::synchronizeCurrent_path(QString current_path)
  *             Name: updateProject_information
  *      Function ID: 004
  *      Create date: 18/02/2019
- * Last modify date: 04/03/2019
+ * Last modify date: 15/03/2019
  *      Description: Update project information according to project name and
  *                   project path.
  ******************************************************************************/
-void MainController::updateProject_information(QString project_name, QString project_path)
+int MainController::updateProject_information(QString project_name, QString project_path)
 {
+    QString previous_project_name = _project_name;
+    QString previous_project_path = _project_path;
+
     _project_name = project_name;
-    _project_file = _project_name + MEASUREMENTUI_DAFAULT_PROJECT_SUFFIX;
     _project_path = project_path + MEASUREMENTUI_DIR_SYMBOL + _project_name;
+    /** Create directory. */
+    QDir dir(_project_path);
+    if(dir.exists()){
+        int ret = QMessageBox::warning(_main_window, tr("Directory already exists."),
+                                       QString("%1 already exists, do you want to rewrite it?\n"
+                                               "If you are not sure, please contact System Administrator").arg(_project_path),
+                                       QMessageBox::Yes | QMessageBox::Cancel,
+                                       QMessageBox::Yes);
+
+        switch(ret){
+        case QMessageBox::Yes:
+            // Yes was clicked
+            dir.removeRecursively();
+            break;
+        case QMessageBox::Cancel:
+            // Cancel was clicked
+            _project_name = previous_project_name;
+            _project_path = previous_project_path;
+            return MAINCONTROLLER_DIR_CREATE_FAIL;
+        default:
+            // should never be reached
+            break;
+        }
+    }
+
+    _project_file = _project_name + MEASUREMENTUI_DAFAULT_PROJECT_SUFFIX;
     _project_file_full_path = _project_path + MEASUREMENTUI_DIR_SYMBOL +
                               _project_name + MEASUREMENTUI_DAFAULT_PROJECT_SUFFIX;
     _project_output_path = _project_path + MEASUREMENTUI_DIR_SYMBOL + MEASUREMENTUI_DEFAUTL_OUTPUT_PAHT;
     synchronizeCurrent_path(project_path);
+
+    QDir().mkdir(_project_path);
+    QDir().mkdir(_project_output_path);
+
+    return MAINCONTROLLER_DIR_CREATE_SUCCEED;
 }
 
 /******************************************************************************
