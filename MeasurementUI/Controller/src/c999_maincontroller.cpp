@@ -824,7 +824,7 @@ void MainController::slot_save_project()
  *             Name: slot_save_project_as
  *      Function ID: 703
  *      Create date: 18/02/2019
- * Last modify date: 20/02/2019
+ * Last modify date: 15/03/2019
  *      Description: Slot for saving project as another project.
  ******************************************************************************/
 void MainController::slot_save_project_as(QString project_file_full_path)
@@ -832,14 +832,9 @@ void MainController::slot_save_project_as(QString project_file_full_path)
     if(project_file_full_path.length() > 0){
         if(!updateProject_information(Global_Functions::extractFile_name(project_file_full_path),
                                       Global_Functions::extractFile_path(project_file_full_path))){
-            if(handleNew_Project()){
-                _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
-                _main_window->changeDisplay_status(MAINWINDOW_PROJECT_ACTIVATE);
-            }
+            handleSave_Project_As();
+            _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
         }
-        QString previous_project_name = _project_name;
-
-        handleSave_Project_As();
     }
 #ifdef MAINCONTROLLER_DEBUG
     qDebug() << "+ MainController: Save Project as";
