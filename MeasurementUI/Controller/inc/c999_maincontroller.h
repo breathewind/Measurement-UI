@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 15/03/2019
+ * Last modify date: 18/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -104,7 +104,7 @@ private:
     /** Function 003: Synchronize project path. */
     void synchronizeCurrent_path(QString current_path);
     /** Function 004: Update project information according to project name and project path. */
-    int updateProject_information(QString project_name, QString project_path);
+    int updateProject_information(QString project_name, QString project_path, QString output_file);
     /** Function 005: Update project information according to project file full path. */
     void updateProject_information(QString project_file_full_path);
     /** Function 006: Create a new wave block by current measurement and update it to chart. */

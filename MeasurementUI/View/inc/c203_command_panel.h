@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 15/03/2019
+ * Last modify date: 18/03/2019
  *      Description: Command Panel dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -34,6 +34,19 @@
 
 #define COMMAND_PANEL_TVOC_VOLTAGE_INDEX 1
 
+#define COMMAND_PANEL_SAVE_FILE_UNCHECKED 0
+#define COMMAND_PANEL_SAVE_FILE_CHECKED   1
+
+#define COMMAND_PANEL_DEFAULT_SW_MIN_I   1
+#define COMMAND_PANEL_DEFAULT_SW_MAX_I   3
+#define COMMAND_PANEL_DEFAULT_SW_PERIOD  4
+#define COMMAND_PANEL_DEFAULT_CC_CURRENT 2
+
+#define COMMAND_PANEL_DEFAULT_TCC_COULOMB 2000
+#define COMMAND_PANEL_DEFAULT_TOCV_OCV    3.0
+
+#define COMMAND_PANEL_DEFAULT_RATE_CAPACITY 3200
+
 #include <QDialog>
 
 #include "h000_global_parameters.h"
@@ -51,11 +64,24 @@ public:
     explicit Command_Panel(QWidget *parent = nullptr);
     /** Function 001: Destruction function. */
     ~Command_Panel();
+    /** Function 002: Set display logic for discharge type. */
+    void setLogic_type(int type);
+    /** Function 003: Set display logic for stop discharging options. */
+    void setLogic_option(int option);
+    /** Function 004: Set display logic for save file. */
+    void setLogic_save_file(int save_file_flag);
 
     /** Function 300: Show window and record its postion. */
     void showDialog();
     /** Function 301: Hide window. */
     void hideDialog();
+    /** Function 302: Set all options in command window as default value. */
+    void setDefault(QString output_file);
+    /** Function 303: Update all options in command window. */
+    void updateInformation(int type, double min_i, double max_i, double period, double current,
+                           int options, int coulomb, double ocv,
+                           int capacity,
+                           int save_file_checked, QString output_file);
 
     /** Function 800: Get discharge type and information. */
     QList<double> getDischarge_information();

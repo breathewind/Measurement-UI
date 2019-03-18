@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 07/03/2019
+ * Last modify date: 18/03/2019
  *      Description: Command Panel dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -18,7 +18,7 @@
  *             Name: Command_Panel
  *      Function ID: 000
  *      Create date: 19/02/2019
- * Last modify date: 07/03/2019
+ * Last modify date: 18/03/2019
  *      Description: Construction function.
  ******************************************************************************/
 Command_Panel::Command_Panel(QWidget *parent) :
@@ -29,13 +29,7 @@ Command_Panel::Command_Panel(QWidget *parent) :
 
     setWindowTitle("Command Panel");
 
-    ui->radioButton_SW->setChecked(true);
-    ui->radioButton_CC->setChecked(false);
-
-    ui->radioButton_TCC->setChecked(true);
-    ui->radioButton_TOCV->setChecked(false);
-
-    setFixedSize(480,465);
+    setFixedSize(480,540);
 }
 
 /******************************************************************************
@@ -48,6 +42,58 @@ Command_Panel::Command_Panel(QWidget *parent) :
 Command_Panel::~Command_Panel()
 {
     delete ui;
+}
+
+/******************************************************************************
+ *             Name: setLogic_type
+ *      Function ID: 002
+ *      Create date: 18/03/2019
+ * Last modify date: 18/03/2019
+ *      Description: Set display logic for discharge type.
+ ******************************************************************************/
+void Command_Panel::setLogic_type(int type)
+{
+    if(type == COMMNAD_PANEL_DISCHARGE_TYPE_SQUARE_WAVE){
+        ui->groupBox_SW->setEnabled(true);
+        ui->groupBox_CC->setEnabled(false);
+    } else {
+        ui->groupBox_SW->setEnabled(false);
+        ui->groupBox_CC->setEnabled(true);
+    }
+}
+
+/******************************************************************************
+ *             Name: setLogic_option
+ *      Function ID: 003
+ *      Create date: 18/03/2019
+ * Last modify date: 18/03/2019
+ *      Description: Set display logic for stop discharging options.
+ ******************************************************************************/
+void Command_Panel::setLogic_option(int option)
+{
+    if(option == COMMAND_PANEL_TERMINATION_TYPE_COULOMB_COUNTING){
+        ui->groupBox_TCC->setEnabled(true);
+        ui->groupBox_TOCV->setEnabled(false);
+    } else {
+        ui->groupBox_TCC->setEnabled(false);
+        ui->groupBox_TOCV->setEnabled(true);
+    }
+}
+
+/******************************************************************************
+ *             Name: setLogic_save_file
+ *      Function ID: 004
+ *      Create date: 18/03/2019
+ * Last modify date: 18/03/2019
+ *      Description: Set display logic for save file.
+ ******************************************************************************/
+void Command_Panel::setLogic_save_file(int save_file_flag)
+{
+    if(save_file_flag == COMMAND_PANEL_SAVE_FILE_CHECKED){
+        ui->groupBox_save_file->setEnabled(true);
+    } else {
+        ui->groupBox_save_file->setEnabled(false);
+    }
 }
 
 /******************************************************************************
@@ -74,6 +120,84 @@ void Command_Panel::showDialog()
 void Command_Panel::hideDialog()
 {
     hide();
+}
+
+/******************************************************************************
+ *             Name: setDefault
+ *      Function ID: 302
+ *      Create date: 18/03/2019
+ * Last modify date: 18/03/2019
+ *      Description: Set all options in command window as default value.
+ ******************************************************************************/
+void Command_Panel::setDefault(QString output_file)
+{
+    /** Initialize discharge type */
+    ui->lineEdit_SW_min_current->setText(QString::number(COMMAND_PANEL_DEFAULT_SW_MIN_I));
+    ui->lineEdit_SW_max_current->setText(QString::number(COMMAND_PANEL_DEFAULT_SW_MAX_I));
+    ui->lineEdit_SW_period->setText(QString::number(COMMAND_PANEL_DEFAULT_SW_PERIOD));
+    ui->lineEdit_CC_discharge_current->setText(QString::number(COMMAND_PANEL_DEFAULT_CC_CURRENT));
+
+    ui->radioButton_SW->setChecked(true);
+    ui->radioButton_CC->setChecked(false);
+    setLogic_type(COMMNAD_PANEL_DISCHARGE_TYPE_SQUARE_WAVE);
+
+    /** Initialize stop discharging options */
+    ui->lineEdit_TCC_target_coulomb->setText(QString::number(COMMAND_PANEL_DEFAULT_TCC_COULOMB));
+    ui->lineEdit_TOCV_target_OCV->setText(QString::number(COMMAND_PANEL_DEFAULT_TOCV_OCV));
+
+    ui->radioButton_TCC->setChecked(true);
+    ui->radioButton_TOCV->setChecked(false);
+    setLogic_option(COMMAND_PANEL_TERMINATION_TYPE_COULOMB_COUNTING);
+
+    /** Initialize battery information */
+    ui->lineEdit_rated_capacity->setText(QString::number(COMMAND_PANEL_DEFAULT_RATE_CAPACITY));
+
+    /** Initialize save file */
+    ui->lineEdit_file_path->setText(output_file);
+
+    ui->checkBox_save_file->setChecked(true);
+    setLogic_save_file(COMMAND_PANEL_SAVE_FILE_CHECKED);
+}
+
+/******************************************************************************
+ *             Name: updateInformation
+ *      Function ID: 303
+ *      Create date: 18/03/2019
+ * Last modify date: 18/03/2019
+ *      Description: Update all options in command window.
+ ******************************************************************************/
+void Command_Panel::updateInformation(int type, double min_i, double max_i, double period, double current,
+                                      int options, int coulomb, double ocv,
+                                      int capacity,
+                                      int save_file_checked, QString output_file)
+{
+    /** Update discharge type information */
+    ui->lineEdit_SW_min_current->setText(QString::number(min_i));
+    ui->lineEdit_SW_max_current->setText(QString::number(max_i));
+    ui->lineEdit_SW_period->setText(QString::number(period));
+    ui->lineEdit_CC_discharge_current->setText(QString::number(current));
+
+    ui->radioButton_SW->setChecked(true);
+    ui->radioButton_CC->setChecked(false);
+    setLogic_type(type);
+
+    /** Update stop discharging options information */
+    ui->lineEdit_TCC_target_coulomb->setText(QString::number(coulomb));
+    ui->lineEdit_TOCV_target_OCV->setText(QString::number(ocv));
+
+    ui->radioButton_TCC->setChecked(true);
+    ui->radioButton_TOCV->setChecked(false);
+    setLogic_option(options);
+
+    /** Update battery information information */
+    ui->lineEdit_rated_capacity->setText(QString::number(capacity));
+
+    /** Update save file information */
+    ui->lineEdit_file_path->setText(output_file);
+
+    ui->checkBox_save_file->setChecked(true);
+    setLogic_save_file(save_file_checked);
+
 }
 
 /******************************************************************************

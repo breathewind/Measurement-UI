@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>480</width>
-    <height>465</height>
+    <height>540</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,9 @@
   <widget class="QGroupBox" name="groupBox_discharge_type">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>20</x>
      <y>10</y>
-     <width>421</width>
+     <width>441</width>
      <height>201</height>
     </rect>
    </property>
@@ -56,7 +56,7 @@
      <rect>
       <x>20</x>
       <y>50</y>
-      <width>381</width>
+      <width>401</width>
       <height>71</height>
      </rect>
     </property>
@@ -66,7 +66,7 @@
     <widget class="QLabel" name="label_SW_max_current">
      <property name="geometry">
       <rect>
-       <x>190</x>
+       <x>210</x>
        <y>10</y>
        <width>121</width>
        <height>16</height>
@@ -92,7 +92,7 @@
     <widget class="QLineEdit" name="lineEdit_SW_max_current">
      <property name="geometry">
       <rect>
-       <x>280</x>
+       <x>300</x>
        <y>8</y>
        <width>51</width>
        <height>21</height>
@@ -131,7 +131,7 @@
     <widget class="QLabel" name="label_SW_max_current_A">
      <property name="geometry">
       <rect>
-       <x>340</x>
+       <x>360</x>
        <y>10</y>
        <width>31</width>
        <height>16</height>
@@ -159,7 +159,7 @@
       <rect>
        <x>150</x>
        <y>38</y>
-       <width>181</width>
+       <width>201</width>
        <height>21</height>
       </rect>
      </property>
@@ -170,7 +170,7 @@
     <widget class="QLabel" name="label_SW_period_s">
      <property name="geometry">
       <rect>
-       <x>340</x>
+       <x>360</x>
        <y>40</y>
        <width>31</width>
        <height>16</height>
@@ -186,7 +186,7 @@
      <rect>
       <x>20</x>
       <y>140</y>
-      <width>381</width>
+      <width>401</width>
       <height>41</height>
      </rect>
     </property>
@@ -211,7 +211,7 @@
       <rect>
        <x>150</x>
        <y>8</y>
-       <width>181</width>
+       <width>201</width>
        <height>21</height>
       </rect>
      </property>
@@ -222,7 +222,7 @@
     <widget class="QLabel" name="label_CC_discharge_current_A">
      <property name="geometry">
       <rect>
-       <x>340</x>
+       <x>360</x>
        <y>10</y>
        <width>21</width>
        <height>16</height>
@@ -237,9 +237,9 @@
   <widget class="QGroupBox" name="groupBox_stop_discharging_options">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>20</x>
      <y>220</y>
-     <width>421</width>
+     <width>441</width>
      <height>161</height>
     </rect>
    </property>
@@ -277,7 +277,7 @@
      <rect>
       <x>20</x>
       <y>110</y>
-      <width>381</width>
+      <width>401</width>
       <height>41</height>
      </rect>
     </property>
@@ -302,7 +302,7 @@
       <rect>
        <x>150</x>
        <y>8</y>
-       <width>181</width>
+       <width>201</width>
        <height>21</height>
       </rect>
      </property>
@@ -313,7 +313,7 @@
     <widget class="QLabel" name="label_TOCV_target_OCV_V">
      <property name="geometry">
       <rect>
-       <x>340</x>
+       <x>360</x>
        <y>10</y>
        <width>31</width>
        <height>16</height>
@@ -329,7 +329,7 @@
      <rect>
       <x>20</x>
       <y>50</y>
-      <width>381</width>
+      <width>401</width>
       <height>41</height>
      </rect>
     </property>
@@ -354,7 +354,7 @@
       <rect>
        <x>150</x>
        <y>8</y>
-       <width>181</width>
+       <width>201</width>
        <height>21</height>
       </rect>
      </property>
@@ -365,7 +365,7 @@
     <widget class="QLabel" name="label_TCC_target_coulomb_mAh">
      <property name="geometry">
       <rect>
-       <x>340</x>
+       <x>360</x>
        <y>10</y>
        <width>31</width>
        <height>16</height>
@@ -380,9 +380,9 @@
   <widget class="QGroupBox" name="groupBox_battery_information">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>20</x>
      <y>390</y>
-     <width>421</width>
+     <width>441</width>
      <height>61</height>
     </rect>
    </property>
@@ -407,7 +407,7 @@
      <rect>
       <x>170</x>
       <y>28</y>
-      <width>181</width>
+      <width>201</width>
       <height>21</height>
      </rect>
     </property>
@@ -418,7 +418,7 @@
    <widget class="QLabel" name="label_rated_capacity_A">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>380</x>
       <y>30</y>
       <width>31</width>
       <height>16</height>
@@ -426,6 +426,68 @@
     </property>
     <property name="text">
      <string>mAh</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_save_file">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>450</y>
+     <width>331</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Save measurement to file</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_save_file">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>470</y>
+     <width>441</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QLabel" name="label_file_path">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>File path:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_file_path">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>19</y>
+      <width>271</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_browse">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>14</y>
+      <width>81</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Browse</string>
     </property>
    </widget>
   </widget>

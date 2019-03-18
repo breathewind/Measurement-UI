@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 15/03/2019
+ * Last modify date: 18/03/2019
  *      Description: Settings dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -50,7 +50,8 @@ private:
 
     Settings_DIalog_Serial_Port_Frame *_serial_port_frame;
 signals:
-    void accept_button_clicked();
+    /** Signal 001: Signal emitted when accept button is clicked. */
+    void signal_accept_button_clicked();
 };
 
 #endif // C202_SETTINGS_DIALOG_H
