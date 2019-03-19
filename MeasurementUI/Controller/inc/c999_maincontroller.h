@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 14/02/2019
- * Last modify date: 18/03/2019
+ * Last modify date: 19/03/2019
  *      Description: Main window controller.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -28,6 +28,18 @@
 #define MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT     "bc_stopbits"
 #define MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT       "bc_parity"
 #define MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT  "bc_flowcontrol"
+
+#define MAINCONTTROLLER_DISCHARGE_TYPE_TEXT              "discharge_type"
+#define MAINCONTTROLLER_MIN_DISCHARGE_CURRENT_TEXT       "min_discharge_current"
+#define MAINCONTTROLLER_MAX_DISCHARGE_CURRENT_TEXT       "max_discharge_current"
+#define MAINCONTTROLLER_SQUARE_WAVE_PERIOD_TEXT          "square_wave_period"
+#define MAINCONTTROLLER_CONSTANT_DISCHARGE_CURRENT_TEXT  "constant_discharge_current"
+#define MAINCONTTROLLER_TERMINATION_TYPE_TEXT            "termination_type"
+#define MAINCONTTROLLER_TARGET_TCC_TEXT                  "target_tcc"
+#define MAINCONTTROLLER_TARGET_TOCV_TEXT                 "target_tocv"
+#define MAINCONTTROLLER_RATE_CAPACITY_TEXT               "rate_capacity"
+#define MAINCONTTROLLER_SAVE_FLAG_TEXT                   "save_flag"
+#define MAINCONTTROLLER_SAVE_PATH_TEXT                   "save_path"
 
 #define MAINCONTTROLLER_DEFAULT_CAPTURE_TIMER_TIMEOUT   1000
 #define MAINCONTTROLLER_DEFAULT_EXECUTION_TIMER_TIMEOUT 2000

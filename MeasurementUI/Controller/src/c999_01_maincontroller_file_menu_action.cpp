@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 18/03/2019
+ * Last modify date: 19/03/2019
  *      Description: Main window controller.
  *                   - Functions related to file menu actions.
  ******************************************************************************/
@@ -11,7 +11,7 @@
  *             Name: handleNew_Project
  *      Function ID: 231
  *      Create date: 18/02/2019
- * Last modify date: 18/03/2019
+ * Last modify date: 19/03/2019
  *      Description: Function for handle operations related to New Project.
  ******************************************************************************/
 bool MainController::handleNew_Project()
@@ -46,12 +46,12 @@ bool MainController::handleNew_Project()
         emit signal_warning_occurs(QString("Fail to create file: %1").arg(_project_file_full_path));
         return false;
     }
-    QTextStream out_stream(&file);
-
+    QTextStream out_stream(&file);    
+/************************* GENERAL SETTINGS *************************/
     out_stream << MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT      << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT << " 1" << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT  << " 0" << MEASUREMENTUI_DAFAULT_NEW_LINE;
-
+/************************* SERIAL SETTINGS FROM SETTINGS DIALOG *************************/
     out_stream << MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT    << " " << __serial_definitions.getBaudrate(_dmm_baudrate)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT    << " " << __serial_definitions.getDataBits(_dmm_databits)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT    << " " << __serial_definitions.getStopBits(_dmm_stopbits)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
@@ -63,12 +63,25 @@ bool MainController::handleNew_Project()
     out_stream << MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT    << " " << __serial_definitions.getStopBits(_bc_stopbits)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT      << " " << __serial_definitions.getParity(_bc_parity)        << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT << " " << __serial_definitions.getFlowcontrol(_bc_flowcontrol) << MEASUREMENTUI_DAFAULT_NEW_LINE;
+/************************* DISCHARGE SETTINGS FROM COMMAND PANEL *************************/
+    out_stream << MAINCONTTROLLER_DISCHARGE_TYPE_TEXT             <<  " " << COMMNAD_PANEL_DISCHARGE_TYPE_SQUARE_WAVE        << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_MIN_DISCHARGE_CURRENT_TEXT      <<  " " << COMMAND_PANEL_DEFAULT_SW_MIN_I                  << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_MAX_DISCHARGE_CURRENT_TEXT      <<  " " << COMMAND_PANEL_DEFAULT_SW_MAX_I                  << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SQUARE_WAVE_PERIOD_TEXT         <<  " " << COMMAND_PANEL_DEFAULT_SW_PERIOD                 << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_CONSTANT_DISCHARGE_CURRENT_TEXT <<  " " << COMMAND_PANEL_DEFAULT_CC_CURRENT                << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_TERMINATION_TYPE_TEXT           <<  " " << COMMAND_PANEL_TERMINATION_TYPE_COULOMB_COUNTING << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_TARGET_TCC_TEXT                 <<  " " << COMMAND_PANEL_DEFAULT_TCC_COULOMB               << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_TARGET_TOCV_TEXT                <<  " " << COMMAND_PANEL_DEFAULT_TOCV_OCV                  << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_RATE_CAPACITY_TEXT              <<  " " << COMMAND_PANEL_DEFAULT_RATE_CAPACITY             << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SAVE_FLAG_TEXT                  <<  " " << COMMAND_PANEL_SAVE_FILE_CHECKED                 << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SAVE_PATH_TEXT                  <<  " " << _project_output_path + MEASUREMENTUI_DIR_SYMBOL + _output_file_name  << MEASUREMENTUI_DAFAULT_NEW_LINE;
 
     file.flush();
     file.close();
     /** Show command panel when a new project is created. */
-    _main_window->setCommand_panel_action_checked(true);
     _command_panel->setDefault(_project_output_path + MEASUREMENTUI_DIR_SYMBOL + _output_file_name);
+
+    _main_window->setCommand_panel_action_checked(true);
     _command_panel->showDialog();
     /** Hide settings dialog when a new project is created. */
     _main_window->setSettings_action_checked(false);
@@ -108,6 +121,8 @@ bool MainController::handleOpen_Project()
     while(!in_stream.atEnd()) {
         QString line = in_stream.readLine();
         QStringList fields = line.split(" ");
+
+ /************************* GENERAL SETTINGS *************************/
         if(fields.at(0) == MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT) {
             /************************* SETTINGS_DISPLAY *************************/
             printData_read_from_project_file(MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT, fields.at(1));
@@ -138,7 +153,9 @@ bool MainController::handleOpen_Project()
                 _main_window->setOutput_panel_action_checked(false);
                 _output_panel->hide();
             }
-        } else if (fields.at(0) == MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT) {
+        } else
+/************************* SERIAL SETTINGS FROM SETTINGS DIALOG *************************/
+            if (fields.at(0) == MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT) {
             /************************* DMM_BAUDRATE *************************/
             _dmm_baudrate = __serial_definitions.getBaudrate_string(fields.at(1).toInt());
             printData_read_from_project_file(MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT, _dmm_baudrate);
@@ -178,6 +195,52 @@ bool MainController::handleOpen_Project()
             /************************* BC_FLOWCONTROL *************************/
             _bc_flowcontrol = __serial_definitions.getFlowcontrol_string(fields.at(1).toInt());
             printData_read_from_project_file(MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT, _bc_flowcontrol);
+        } else
+/************************* DISCHARGE SETTINGS FROM COMMAND PANEL *************************/
+            if (fields.at(0) == MAINCONTTROLLER_DISCHARGE_TYPE_TEXT) {
+            /************************* DISCHARGE_TYPE *************************/
+            _command_panel->setDischargeType(fields.at(1).toInt());
+            printData_read_from_project_file(MAINCONTTROLLER_DISCHARGE_TYPE_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_MIN_DISCHARGE_CURRENT_TEXT) {
+            /************************* MIN_DISCHARGE_CURRENT *************************/
+            _command_panel->setMinDischargeCurrent(fields.at(1));
+            printData_read_from_project_file(MAINCONTTROLLER_MIN_DISCHARGE_CURRENT_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_MAX_DISCHARGE_CURRENT_TEXT) {
+            /************************* MAX_DISCHARGE_CURRENT *************************/
+            _command_panel->setMaxDischargeCurrent(fields.at(1));
+            printData_read_from_project_file(MAINCONTTROLLER_MAX_DISCHARGE_CURRENT_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_SQUARE_WAVE_PERIOD_TEXT) {
+            /************************* SQUARE_WAVE_PERIOD *************************/
+            _command_panel->setSquareWavePeriod(fields.at(1));
+            printData_read_from_project_file(MAINCONTTROLLER_SQUARE_WAVE_PERIOD_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_CONSTANT_DISCHARGE_CURRENT_TEXT) {
+            /************************* CONSTANT_DISCHARGE_CURRENT *************************/
+            _command_panel->setConstantDischargeCurrent(fields.at(1));
+            printData_read_from_project_file(MAINCONTTROLLER_CONSTANT_DISCHARGE_CURRENT_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_TERMINATION_TYPE_TEXT) {
+             /************************* TERMINATION_TYPE *************************/
+             _command_panel->setTerminationType(fields.at(1).toInt());
+             printData_read_from_project_file(MAINCONTTROLLER_TERMINATION_TYPE_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_TARGET_TCC_TEXT) {
+             /************************* TARGET_TCC *************************/
+             _command_panel->setTargetCoulomb(fields.at(1));
+             printData_read_from_project_file(MAINCONTTROLLER_TARGET_TCC_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_TARGET_TOCV_TEXT) {
+             /************************* TARGET_TOCV *************************/
+             _command_panel->setTargetOCV(fields.at(1));
+             printData_read_from_project_file(MAINCONTTROLLER_TARGET_TOCV_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_RATE_CAPACITY_TEXT) {
+             /************************* RATE_CAPACITY *************************/
+             _command_panel->setRateCapacity(fields.at(1));
+             printData_read_from_project_file(MAINCONTTROLLER_RATE_CAPACITY_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_SAVE_FLAG_TEXT) {
+             /************************* SAVE_FLAG *************************/
+             _command_panel->setSaveFlag(fields.at(1).toInt());
+             printData_read_from_project_file(MAINCONTTROLLER_SAVE_FLAG_TEXT, fields.at(1));
+        } else if (fields.at(0) == MAINCONTTROLLER_SAVE_PATH_TEXT) {
+             /************************* SAVE_PATH *************************/
+             _command_panel->setSavePath(fields.at(1));
+             printData_read_from_project_file(MAINCONTTROLLER_SAVE_PATH_TEXT, fields.at(1));
         } else {
             file.close();
             emit signal_warning_occurs(QString("Unknow parameter: %1").arg(fields.at(0)));
@@ -186,10 +249,9 @@ bool MainController::handleOpen_Project()
     }
     file.close();
 
+    updateSettings();
     QStringList available_ports = Serial_definitions::getSerial_port_name();
     _dmm_port = available_ports.size() > 0? available_ports.at(0):QString();
-
-    updateSettings();
 
     _battery_voltage_chart_view_controller->reset();
     _load_current_chart_view_controller->reset();
@@ -203,7 +265,7 @@ bool MainController::handleOpen_Project()
  *             Name: handleSave_Project
  *      Function ID: 233
  *      Create date: 18/02/2019
- * Last modify date: 24/02/2019
+ * Last modify date: 19/03/2019
  *      Description: Function for handle operations related to Save Project.
  ******************************************************************************/
 void MainController::handleSave_Project()
@@ -217,22 +279,39 @@ void MainController::handleSave_Project()
         emit signal_warning_occurs(QString("Fail to open file: %1").arg(_project_file_full_path));
         return;
     }
-    QTextStream out_stream(&file);
-    out_stream << MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT << " " << _main_window->getSettings_action_checked() << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT << " " << _main_window->getCommand_panel_action_checked() << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT << " " << _main_window->getOutput_panel_action_checked()<< MEASUREMENTUI_DAFAULT_NEW_LINE;
 
-    out_stream << MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT    << " " << __serial_definitions.getBaudrate(_dmm_baudrate)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT    << " " << __serial_definitions.getDataBits(_dmm_databits)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT    << " " << __serial_definitions.getStopBits(_dmm_stopbits)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_SERIAL_DMM_PARITY_TEXT      << " " << __serial_definitions.getParity(_dmm_parity)        << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    QStringList discharge_settings = _command_panel->getAllInformation();
+
+    QTextStream out_stream(&file);
+/************************* GENERAL SETTINGS *************************/
+    out_stream << MAINCONTTROLLER_SETTINGS_DISPLAY_TEXT      << " " << _main_window->getSettings_action_checked()      << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_COMMAND_PANEL_DISPLAY_TEXT << " " << _main_window->getCommand_panel_action_checked() << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_OUTPUT_PANEL_DISPLAY_TEXT  << " " << _main_window->getOutput_panel_action_checked()  << MEASUREMENTUI_DAFAULT_NEW_LINE;
+/************************* SERIAL SETTINGS FROM SETTINGS DIALOG *************************/
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_BAUDRATE_TEXT    << " " << __serial_definitions.getBaudrate(_dmm_baudrate)       << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_DATABITS_TEXT    << " " << __serial_definitions.getDataBits(_dmm_databits)       << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_STOPBITS_TEXT    << " " << __serial_definitions.getStopBits(_dmm_stopbits)       << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_DMM_PARITY_TEXT      << " " << __serial_definitions.getParity(_dmm_parity)           << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_SERIAL_DMM_FLOWCONTROL_TEXT << " " << __serial_definitions.getFlowcontrol(_dmm_flowcontrol) << MEASUREMENTUI_DAFAULT_NEW_LINE;
 
-    out_stream << MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT    << " " << __serial_definitions.getBaudrate(_bc_baudrate)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_SERIAL_BC_DATABITS_TEXT    << " " << __serial_definitions.getDataBits(_bc_databits)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT    << " " << __serial_definitions.getStopBits(_bc_stopbits)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
-    out_stream << MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT      << " " << __serial_definitions.getParity(_bc_parity)        << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_BAUDRATE_TEXT    << " " << __serial_definitions.getBaudrate(_bc_baudrate)       << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_DATABITS_TEXT    << " " << __serial_definitions.getDataBits(_bc_databits)       << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_STOPBITS_TEXT    << " " << __serial_definitions.getStopBits(_bc_stopbits)       << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SERIAL_BC_PARITY_TEXT      << " " << __serial_definitions.getParity(_bc_parity)           << MEASUREMENTUI_DAFAULT_NEW_LINE;
     out_stream << MAINCONTTROLLER_SERIAL_BC_FLOWCONTROL_TEXT << " " << __serial_definitions.getFlowcontrol(_bc_flowcontrol) << MEASUREMENTUI_DAFAULT_NEW_LINE;
+/************************* DISCHARGE SETTINGS FROM COMMAND PANEL *************************/
+    out_stream << MAINCONTTROLLER_DISCHARGE_TYPE_TEXT             <<  " " << discharge_settings.at(COMMAND_PANEL_DISCHARGE_TYPE_ALL_INDEX)   << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_MIN_DISCHARGE_CURRENT_TEXT      <<  " " << discharge_settings.at(COMMAND_PANEL_SW_MIN_CURRENT_ALL_INDEX)   << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_MAX_DISCHARGE_CURRENT_TEXT      <<  " " << discharge_settings.at(COMMAND_PANEL_SW_MAX_CURRENT_ALL_INDEX)   << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SQUARE_WAVE_PERIOD_TEXT         <<  " " << discharge_settings.at(COMMAND_PANEL_SW_PERIOD_ALL_INDEX)        << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_CONSTANT_DISCHARGE_CURRENT_TEXT <<  " " << discharge_settings.at(COMMAND_PANEL_CC_CURRENT_ALL_INDEX)       << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_TERMINATION_TYPE_TEXT           <<  " " << discharge_settings.at(COMMAND_PANEL_TERMINATION_TYPE_ALL_INDEX) << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_TARGET_TCC_TEXT                 <<  " " << discharge_settings.at(COMMAND_PANEL_TCC_COULOMB_ALL_INDEX)      << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_TARGET_TOCV_TEXT                <<  " " << discharge_settings.at(COMMAND_PANEL_TVOC_VOLTAGE_ALL_INDEX)     << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_RATE_CAPACITY_TEXT              <<  " " << discharge_settings.at(COMMAND_PANEL_RATE_CAPACITY_ALL_INDEX)    << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SAVE_FLAG_TEXT                  <<  " " << discharge_settings.at(COMMAND_PANEL_SAVE_FLAG_ALL_INDEX)        << MEASUREMENTUI_DAFAULT_NEW_LINE;
+    out_stream << MAINCONTTROLLER_SAVE_PATH_TEXT                  <<  " " << discharge_settings.at(COMMAND_PANEL_SAVE_PATH_ALL_INDEX)        << MEASUREMENTUI_DAFAULT_NEW_LINE;
+
     file.flush();
     file.close();
 }
