@@ -60,7 +60,6 @@ void New_Project_Dialog::on_pushButton_Browse_clicked()
         _current_path = project_name;
     }
     ui->lineEdit_Loaction->setText(_current_path);
-
 }
 
 /******************************************************************************

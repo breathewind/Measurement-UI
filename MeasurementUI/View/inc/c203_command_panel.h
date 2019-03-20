@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 19/02/2019
- * Last modify date: 19/03/2019
+ * Last modify date: 20/03/2019
  *      Description: Command Panel dialog of MeasurementUI application.
  *
  *  Function Number: 0XX - Normal logic functions
@@ -62,8 +62,10 @@
 #define COMMAND_PANEL_SAVE_PATH_ALL_INDEX        10
 
 #include <QDialog>
+#include <QFileDialog>
 
 #include "h000_global_parameters.h"
+#include "Entities/inc/c950_global_functions.h"
 
 namespace Ui {
 class Command_Panel;
@@ -136,6 +138,10 @@ private:
     void setLogic_save_file(int save_file_flag);
 
     Ui::Command_Panel *ui;
+
+private slots:
+    /** Function 700: Slot for Browse button clicked. */
+    void on_pushButton_browse_clicked();
 };
 
 #endif // C203_COMMAND_PANEL_H

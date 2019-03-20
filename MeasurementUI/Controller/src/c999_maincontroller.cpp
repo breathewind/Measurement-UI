@@ -24,7 +24,7 @@ MainController::MainController()
     _sense_resistance = MAINCONTTROLLER_RESISTANCE;
     _control_resistance_max = 0;
     _start_exe_OCV = MAINCONTTROLLER_DEFAULT_START_EXECUTION_OCV;
-    _raw_output_file_name = MEASUREMENTUI_DEFAUTL_RAW_OUTPUT_FILE_NAME;
+    _raw_output_file_name = MEASUREMENTUI_DEFAULT_RAW_OUTPUT_FILE_NAME;
 
     _max_mAh = 0;
 
@@ -124,7 +124,7 @@ int MainController::updateProject_information(QString project_name, QString proj
     _project_file = _project_name + MEASUREMENTUI_DAFAULT_PROJECT_SUFFIX;
     _project_file_full_path = _project_path + MEASUREMENTUI_DIR_SYMBOL +
                               _project_name + MEASUREMENTUI_DAFAULT_PROJECT_SUFFIX;
-    _project_output_path = _project_path + MEASUREMENTUI_DIR_SYMBOL + MEASUREMENTUI_DEFAUTL_OUTPUT_PAHT;
+    _project_output_path = _project_path + MEASUREMENTUI_DIR_SYMBOL + MEASUREMENTUI_DEFAULT_OUTPUT_PAHT;
     synchronizeCurrent_path(project_path);
 
     _output_file_name = output_file;
@@ -149,7 +149,7 @@ void MainController::updateProject_information(QString project_file_full_path)
     _project_file = Global_Functions::extractFile_full_name(project_file_full_path);
     _project_path = Global_Functions::extractFile_path(project_file_full_path);
     _project_file_full_path = project_file_full_path;
-    _project_output_path = _project_path + MEASUREMENTUI_DIR_SYMBOL + MEASUREMENTUI_DEFAUTL_OUTPUT_PAHT;
+    _project_output_path = _project_path + MEASUREMENTUI_DIR_SYMBOL + MEASUREMENTUI_DEFAULT_OUTPUT_PAHT;
     synchronizeCurrent_path(_project_path);
 }
 
@@ -773,7 +773,7 @@ void MainController::printData_read_from_project_file(QString domain, QString co
  ******************************************************************************/
 void MainController::slot_create_new_project(QString project_name, QString project_path)
 {
-    if(!updateProject_information(project_name, project_path, MEASUREMENTUI_DEFAUTL_OUTPUT_FILE_NAME)){
+    if(!updateProject_information(project_name, project_path, MEASUREMENTUI_DEFAULT_OUTPUT_FILE_NAME)){
         if(handleNew_Project()){
             _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
             _main_window->changeDisplay_status(MAINWINDOW_PROJECT_ACTIVATE);
@@ -839,7 +839,7 @@ void MainController::slot_save_project_as(QString project_file_full_path)
     if(project_file_full_path.length() > 0){
         if(!updateProject_information(Global_Functions::extractFile_name(project_file_full_path),
                                       Global_Functions::extractFile_path(project_file_full_path),
-                                      MEASUREMENTUI_DEFAUTL_OUTPUT_FILE_NAME)){
+                                      MEASUREMENTUI_DEFAULT_OUTPUT_FILE_NAME)){
             handleSave_Project_As();
             _main_window->setWindowTitle(QString("%1 - %2").arg(APP_NAME).arg(_project_name));
         }
