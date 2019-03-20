@@ -45,5 +45,6 @@
 #define PIE_CONTROLLER_DEBUG
 #endif
 
+/** Todo: update all discharge paramenters at starting measurement. */
 
 #endif // H000_GLOBAL_PARAMETERS_H

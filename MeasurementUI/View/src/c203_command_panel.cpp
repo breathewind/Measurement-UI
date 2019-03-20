@@ -257,6 +257,45 @@ void Command_Panel::on_pushButton_browse_clicked()
 }
 
 /******************************************************************************
+ *             Name: on_radioButton_SW_toggled
+ *      Function ID: 701
+ *      Create date: 20/03/2019
+ * Last modify date: 20/03/2019
+ *      Description: Slot for square wave radio button toggled.
+ ******************************************************************************/
+void Command_Panel::on_radioButton_SW_toggled(bool checked)
+{
+    ui->groupBox_SW->setEnabled(checked);
+    ui->groupBox_CC->setEnabled(!checked);
+}
+
+/******************************************************************************
+ *             Name: on_radioButton_TCC_toggled
+ *      Function ID: 702
+ *      Create date: 20/03/2019
+ * Last modify date: 20/03/2019
+ *      Description: Slot for terminating by coulomb counting radio button
+ *                   toggled.
+ ******************************************************************************/
+void Command_Panel::on_radioButton_TCC_toggled(bool checked)
+{
+    ui->groupBox_TCC->setEnabled(checked);
+    ui->groupBox_TOCV->setEnabled(!checked);
+}
+
+/******************************************************************************
+ *             Name: on_checkBox_save_file_toggled
+ *      Function ID: 703
+ *      Create date: 20/03/2019
+ * Last modify date: 20/03/2019
+ *      Description: Slot for save file check box toggled.
+ ******************************************************************************/
+void Command_Panel::on_checkBox_save_file_toggled(bool checked)
+{
+    ui->groupBox_save_file->setEnabled(checked);
+}
+
+/******************************************************************************
  *             Name: getDischarge_information
  *      Function ID: 800
  *      Create date: 06/03/2019
@@ -488,5 +527,4 @@ void Command_Panel::setSavePath(QString path)
 {
     ui->lineEdit_file_path->setText(path);
 }
-
 

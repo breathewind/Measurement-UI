@@ -108,7 +108,8 @@ qint64 Serial_Controller::writeDMM_command(QString command,  bool command_feedba
     qDebug() << c_command;
 #endif
     ret = _serial_port->write(c_command, ba.length());
-    if(!_serial_port->waitForBytesWritten()){
+/** For the lower Qt version */
+    if(!_serial_port->waitForBytesWritten(0)){
         ret = -2;
     }
     _databuffer.clear();

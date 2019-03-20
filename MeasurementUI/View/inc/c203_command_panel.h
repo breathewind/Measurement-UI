@@ -142,6 +142,12 @@ private:
 private slots:
     /** Function 700: Slot for Browse button clicked. */
     void on_pushButton_browse_clicked();
+    /** Function 701: Slot for square wave radio button toggled. */
+    void on_radioButton_SW_toggled(bool checked);
+    /** Function 702: Slot for terminating by coulomb counting radio button toggled. */
+    void on_radioButton_TCC_toggled(bool checked);
+    /** Function 703: Slot for save file check box toggled. */
+    void on_checkBox_save_file_toggled(bool checked);
 };
 
 #endif // C203_COMMAND_PANEL_H
