@@ -286,6 +286,8 @@ void MainController::handleSave_Project()
     }
 
     QStringList discharge_settings = _command_panel->getAllInformation();
+    _output_file_name = Global_Functions::extractFile_full_name(discharge_settings.at(COMMAND_PANEL_SAVE_PATH_ALL_INDEX));
+    _project_output_path = Global_Functions::extractFile_path(discharge_settings.at(COMMAND_PANEL_SAVE_PATH_ALL_INDEX));
 
     QTextStream out_stream(&file);
 /************************* GENERAL SETTINGS *************************/
