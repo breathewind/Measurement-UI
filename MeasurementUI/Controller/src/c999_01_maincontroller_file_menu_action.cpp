@@ -239,8 +239,13 @@ bool MainController::handleOpen_Project()
              printData_read_from_project_file(MAINCONTTROLLER_SAVE_FLAG_TEXT, fields.at(1));
         } else if (fields.at(0) == MAINCONTTROLLER_SAVE_PATH_TEXT) {
              /************************* SAVE_PATH *************************/
-             _command_panel->setSavePath(fields.at(1));
-             printData_read_from_project_file(MAINCONTTROLLER_SAVE_PATH_TEXT, fields.at(1));
+             QString path = Global_Functions::extractSecondString(line);
+             _command_panel->setSavePath(path);
+             _output_file_name = Global_Functions::extractFile_full_name(path);
+             _project_output_path = Global_Functions::extractFile_path(path);
+             printData_read_from_project_file(MAINCONTTROLLER_SAVE_PATH_TEXT, path);
+             printData_read_from_project_file("_output_file_name", _output_file_name);
+             printData_read_from_project_file("_project_output_path", _project_output_path);
         } else {
             file.close();
             emit signal_warning_occurs(QString("Unknow parameter: %1").arg(fields.at(0)));

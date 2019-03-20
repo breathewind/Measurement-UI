@@ -1,7 +1,7 @@
 /******************************************************************************
  *           Author: Wenlong Wang
  *      Create date: 18/02/2019
- * Last modify date: 18/02/2019
+ * Last modify date: 20/03/2019
  *      Description: Global functions.
  ******************************************************************************/
 #include "Entities/inc/c950_global_functions.h"
@@ -69,4 +69,17 @@ QString Global_Functions::extractFile_type(QString file_full_path)
     }else{
         return QString();
     }
+}
+
+/***********************************************************************
+ *             Name: extractSecondString
+ *      Function ID: 006
+ *      Create date: 20/03/2019
+ * Last modify date: 20/03/2019
+ *      Description: Extract second part string in a QString separated
+ *                   by a space.
+ ***********************************************************************/
+QString Global_Functions::extractSecondString(QString string)
+{
+     return string.right(string.size() - string.indexOf(" ") - 1);
 }
